@@ -1,0 +1,8 @@
+# Keep the Docker build context minimal for the local backend demo.
+# The Unity project is intentionally excluded to speed up builds.
+*
+
+!server/**
+!docker-compose.yml
+!.dockerignore
+

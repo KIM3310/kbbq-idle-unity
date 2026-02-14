@@ -17,7 +17,7 @@
 - **Save**: `SaveSystem` stores `SaveData` in PlayerPrefs (`KBBQ_IDLE_SAVE`).
 - **State**: `GameStateMachine` (Boot/Tutorial/MainLoop/Pause/OfflineCalc).
 - **UI**: `UIController` binds views for missions, prestige, queue, upgrades, debug/perf overlay, tutorial, leaderboard, and monetization.
-- **Analytics**: `AnalyticsService` logs events to console (stub).
+- **Analytics**: `AnalyticsService` logs events to console and can optionally forward events to the local backend (best-effort) when networking is enabled.
 
 ## Data & content
 - ScriptableObject assets in `Assets/Data`:
@@ -33,14 +33,25 @@
 - `MonetizationConfig` defines rewarded boost, interstitial reward, and IAP packs.
 - `MonetizationService` grants currency/boosts directly (no real ad/IAP SDK wired in).
 
-## Networking
-- Optional network layer (`AuthClient`, `LeaderboardClient`, `FriendsClient`) using `UnityWebRequest` with HMAC-signed headers.
-- `ApiConfig` gates network usage; base URL is a placeholder by default.
-- `LeaderboardView` currently uses mock data (not live API).
+## Networking & backend (optional)
+- Unity network clients (`AuthClient`, `LeaderboardClient`, `FriendsClient`, `AnalyticsClient`) use `UnityWebRequest` with HMAC-signed headers + nonce replay protection.
+- `ApiConfig` gates network usage; networking ships **disabled by default** for safety (`enableNetwork=false`).
+- When networking is enabled and the backend is running, `LeaderboardView` will:
+  - ensure guest auth,
+  - submit the current score (best-effort),
+  - fetch the live top list (fallbacks to mock data on failure).
+- A small local backend is included under `server/` (FastAPI + SQLite) implementing:
+  - guest auth: `POST /auth/guest`
+  - leaderboard: `POST /leaderboard/submit`, `GET /leaderboard/top`
+  - friends: `POST /friends/invite`, `GET /friends/list`
+  - analytics: `POST /analytics/event`
 
-## Editor utilities & artifacts
+## Portfolio hardening (quality signals)
+- **Data validation**: `KBBQ/Validate Data (Portfolio)` checks duplicate IDs, tuning sanity, and safe network defaults.
+- **Unity tests**: EditMode tests cover math invariants + save integrity guards.
+- **WebGL pipeline**: `KBBQ/Build WebGL (docs)` generates build output into `docs/` for GitHub Pages (build artifacts generated locally to keep the repo lightweight).
 - `Assets/Editor/KBBQAutoSetup.cs` can auto-create folders, data assets, prefabs, and `Main.unity` via menu **KBBQ/Run Auto Setup**.
-  - Note: build/cache artifacts (e.g., `Library/`, `Builds/`) are intentionally excluded from this repo.
+  - Build/cache artifacts (e.g., `Library/`, `Builds/`) are intentionally excluded from this repo.
 
 ## Gaps / notes
 - Main documentation is in `README.md` (with `README.en.md` / `README.ko.md`).
