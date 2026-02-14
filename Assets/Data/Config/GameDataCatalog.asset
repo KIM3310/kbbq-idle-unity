@@ -1,0 +1,53 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: bf8154d057ed24552a3fa7d594c17f5f, type: 3}
+  m_Name: GameDataCatalog
+  m_EditorClassIdentifier: Assembly-CSharp::GameDataCatalog
+  menuItems:
+  - {fileID: 11400000, guid: 28448291c6bc348b49399e5e5a311c67, type: 2}
+  - {fileID: 11400000, guid: d5f0579356cdc457eb1671102fe44276, type: 2}
+  - {fileID: 11400000, guid: a87cc29ae2ce445f6bac60e412812b5b, type: 2}
+  - {fileID: 11400000, guid: c5573e25fc350469dab5e1ca7f426663, type: 2}
+  - {fileID: 11400000, guid: 321dc723aa1d74fada4dff25f07fb4b5, type: 2}
+  - {fileID: 11400000, guid: a9c2db87b07e447fba0870e91b759c0d, type: 2}
+  - {fileID: 11400000, guid: 55c2cd762145e4c06ac64ac07a1bdd83, type: 2}
+  - {fileID: 11400000, guid: b7abd2fbc217d43348ef1ca2af2794f8, type: 2}
+  - {fileID: 11400000, guid: 7541d7431351e404aad4e5e2fba534bb, type: 2}
+  - {fileID: 11400000, guid: 5d59a568d33e846909f7da86b5e59cea, type: 2}
+  - {fileID: 11400000, guid: b1f3c5b18ba5e4b4b902fc545efb0add, type: 2}
+  - {fileID: 11400000, guid: de41da603ef744f2c8194235c76a7159, type: 2}
+  - {fileID: 11400000, guid: 20129e4a14d7e4a1abb9e27bfcac3bce, type: 2}
+  - {fileID: 11400000, guid: 242b3e88b99544acb9b401bf7e8e9160, type: 2}
+  - {fileID: 11400000, guid: d99050fcd1244496eb18f9cdbf2b7a64, type: 2}
+  upgrades:
+  - {fileID: 11400000, guid: d69c314bae41f488e99ae001995e845f, type: 2}
+  - {fileID: 11400000, guid: 9bd9fa7f717ba479cbf906c6d753988a, type: 2}
+  - {fileID: 11400000, guid: 43e140a27d1cf4cbdb62a5a3af292d4f, type: 2}
+  - {fileID: 11400000, guid: 52e8d142c15d54eed972f6601de5bf84, type: 2}
+  - {fileID: 11400000, guid: d7533e4524a9149d9bf2e6aad6f5ed1d, type: 2}
+  - {fileID: 11400000, guid: 60a2d791c72214664b8d17909fbd9780, type: 2}
+  - {fileID: 11400000, guid: 48221f8a4001045f4b9f6b40da707847, type: 2}
+  - {fileID: 11400000, guid: 63a22cd5265354b64b360486e30ea36e, type: 2}
+  - {fileID: 11400000, guid: 078c0c97e07b148a181d72f443ac11c9, type: 2}
+  storeTiers:
+  - {fileID: 11400000, guid: a14913fc0b347442d84437cc0ca24b25, type: 2}
+  - {fileID: 11400000, guid: 6dab5c68aae3a4f0396b25034a6900f3, type: 2}
+  - {fileID: 11400000, guid: d73ef3959bc094e8e89d5d75bcc647bd, type: 2}
+  - {fileID: 11400000, guid: 0d109da0637124f1f9f8a98ec4bf9ede, type: 2}
+  - {fileID: 11400000, guid: c7e26fbd23edd49baa7dbe856af9d95a, type: 2}
+  customerTypes:
+  - {fileID: 11400000, guid: fbf979b372b97404bbb057fe80d1d4df, type: 2}
+  - {fileID: 11400000, guid: 04bf5bdaf636145c9aa7fe30df413045, type: 2}
+  - {fileID: 11400000, guid: 6c0593da2fa804768b70e2f4d49d7901, type: 2}
+  economyTuning: {fileID: 11400000, guid: 2264849c82c3642b7882dd4e938098d0, type: 2}
+  monetizationConfig: {fileID: 11400000, guid: 7e47554d0d97a46dab4343f578e60a46, type: 2}
+  apiConfig: {fileID: 11400000, guid: d4be608ea1ead4b438b4a88d8e83c906, type: 2}

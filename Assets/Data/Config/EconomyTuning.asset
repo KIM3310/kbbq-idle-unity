@@ -1,0 +1,422 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 8c22dab1d5b8a4929a4f6ba5a69d34df, type: 3}
+  m_Name: EconomyTuning
+  m_EditorClassIdentifier: Assembly-CSharp::EconomyTuning
+  maxLevel: 100
+  baseRequirement: 50
+  requirementGrowth: 1.28
+  baseIncomePerSec: 1
+  incomeGrowth: 1.22
+  baseUpgradeCost: 10
+  upgradeGrowth: 1.3
+  levels:
+  - level: 1
+    totalIncomeRequired: 50
+    targetIncomePerSec: 1
+    targetUpgradeCost: 10
+  - level: 2
+    totalIncomeRequired: 64
+    targetIncomePerSec: 1.22
+    targetUpgradeCost: 13
+  - level: 3
+    totalIncomeRequired: 81.92
+    targetIncomePerSec: 1.4884
+    targetUpgradeCost: 16.900000000000002
+  - level: 4
+    totalIncomeRequired: 104.8576
+    targetIncomePerSec: 1.815848
+    targetUpgradeCost: 21.970000000000002
+  - level: 5
+    totalIncomeRequired: 134.21772800000002
+    targetIncomePerSec: 2.2153345599999996
+    targetUpgradeCost: 28.561000000000003
+  - level: 6
+    totalIncomeRequired: 171.79869184000003
+    targetIncomePerSec: 2.7027081631999996
+    targetUpgradeCost: 37.12930000000001
+  - level: 7
+    totalIncomeRequired: 219.90232555520004
+    targetIncomePerSec: 3.2973039591039996
+    targetUpgradeCost: 48.268090000000015
+  - level: 8
+    totalIncomeRequired: 281.47497671065605
+    targetIncomePerSec: 4.022710830106879
+    targetUpgradeCost: 62.74851700000002
+  - level: 9
+    totalIncomeRequired: 360.28797018963974
+    targetIncomePerSec: 4.907707212730393
+    targetUpgradeCost: 81.57307210000003
+  - level: 10
+    totalIncomeRequired: 461.1686018427389
+    targetIncomePerSec: 5.987402799531079
+    targetUpgradeCost: 106.04499373000004
+  - level: 11
+    totalIncomeRequired: 590.2958103587058
+    targetIncomePerSec: 7.304631415427917
+    targetUpgradeCost: 137.85849184900007
+  - level: 12
+    totalIncomeRequired: 755.5786372591434
+    targetIncomePerSec: 8.911650326822057
+    targetUpgradeCost: 179.2160394037001
+  - level: 13
+    totalIncomeRequired: 967.1406556917036
+    targetIncomePerSec: 10.87221339872291
+    targetUpgradeCost: 232.98085122481015
+  - level: 14
+    totalIncomeRequired: 1237.9400392853806
+    targetIncomePerSec: 13.26410034644195
+    targetUpgradeCost: 302.8751065922532
+  - level: 15
+    totalIncomeRequired: 1584.5632502852873
+    targetIncomePerSec: 16.182202422659177
+    targetUpgradeCost: 393.7376385699292
+  - level: 16
+    totalIncomeRequired: 2028.2409603651677
+    targetIncomePerSec: 19.742286955644197
+    targetUpgradeCost: 511.85893014090794
+  - level: 17
+    totalIncomeRequired: 2596.1484292674145
+    targetIncomePerSec: 24.08559008588592
+    targetUpgradeCost: 665.4166091831803
+  - level: 18
+    totalIncomeRequired: 3323.069989462291
+    targetIncomePerSec: 29.38441990478082
+    targetUpgradeCost: 865.0415919381344
+  - level: 19
+    totalIncomeRequired: 4253.529586511732
+    targetIncomePerSec: 35.8489922838326
+    targetUpgradeCost: 1124.5540695195748
+  - level: 20
+    totalIncomeRequired: 5444.517870735018
+    targetIncomePerSec: 43.73577058627577
+    targetUpgradeCost: 1461.9202903754474
+  - level: 21
+    totalIncomeRequired: 6968.982874540823
+    targetIncomePerSec: 53.35764011525644
+    targetUpgradeCost: 1900.4963774880816
+  - level: 22
+    totalIncomeRequired: 8920.298079412254
+    targetIncomePerSec: 65.09632094061286
+    targetUpgradeCost: 2470.645290734506
+  - level: 23
+    totalIncomeRequired: 11417.981541647685
+    targetIncomePerSec: 79.41751154754768
+    targetUpgradeCost: 3211.838877954858
+  - level: 24
+    totalIncomeRequired: 14615.016373309038
+    targetIncomePerSec: 96.88936408800816
+    targetUpgradeCost: 4175.390541341316
+  - level: 25
+    totalIncomeRequired: 18707.22095783557
+    targetIncomePerSec: 118.20502418736996
+    targetUpgradeCost: 5428.00770374371
+  - level: 26
+    totalIncomeRequired: 23945.242826029527
+    targetIncomePerSec: 144.21012950859134
+    targetUpgradeCost: 7056.410014866824
+  - level: 27
+    totalIncomeRequired: 30649.910817317796
+    targetIncomePerSec: 175.93635800048142
+    targetUpgradeCost: 9173.333019326872
+  - level: 28
+    totalIncomeRequired: 39231.88584616678
+    targetIncomePerSec: 214.64235676058732
+    targetUpgradeCost: 11925.332925124934
+  - level: 29
+    totalIncomeRequired: 50216.81388309348
+    targetIncomePerSec: 261.86367524791655
+    targetUpgradeCost: 15502.932802662415
+  - level: 30
+    totalIncomeRequired: 64277.52177035965
+    targetIncomePerSec: 319.4736838024582
+    targetUpgradeCost: 20153.81264346114
+  - level: 31
+    totalIncomeRequired: 82275.22786606035
+    targetIncomePerSec: 389.757894238999
+    targetUpgradeCost: 26199.956436499484
+  - level: 32
+    totalIncomeRequired: 105312.29166855724
+    targetIncomePerSec: 475.50463097157876
+    targetUpgradeCost: 34059.943367449334
+  - level: 33
+    totalIncomeRequired: 134799.73333575326
+    targetIncomePerSec: 580.1156497853261
+    targetUpgradeCost: 44277.92637768413
+  - level: 34
+    totalIncomeRequired: 172543.65866976418
+    targetIncomePerSec: 707.7410927380979
+    targetUpgradeCost: 57561.30429098938
+  - level: 35
+    totalIncomeRequired: 220855.88309729815
+    targetIncomePerSec: 863.4441331404794
+    targetUpgradeCost: 74829.69557828619
+  - level: 36
+    totalIncomeRequired: 282695.5303645416
+    targetIncomePerSec: 1053.401842431385
+    targetUpgradeCost: 97278.60425177205
+  - level: 37
+    totalIncomeRequired: 361850.2788666133
+    targetIncomePerSec: 1285.1502477662896
+    targetUpgradeCost: 126462.18552730366
+  - level: 38
+    totalIncomeRequired: 463168.356949265
+    targetIncomePerSec: 1567.8833022748731
+    targetUpgradeCost: 164400.84118549476
+  - level: 39
+    totalIncomeRequired: 592855.4968950592
+    targetIncomePerSec: 1912.8176287753452
+    targetUpgradeCost: 213721.0935411432
+  - level: 40
+    totalIncomeRequired: 758855.0360256758
+    targetIncomePerSec: 2333.637507105921
+    targetUpgradeCost: 277837.4216034862
+  - level: 41
+    totalIncomeRequired: 971334.4461128651
+    targetIncomePerSec: 2847.0377586692234
+    targetUpgradeCost: 361188.64808453206
+  - level: 42
+    totalIncomeRequired: 1243308.0910244675
+    targetIncomePerSec: 3473.3860655764524
+    targetUpgradeCost: 469545.2425098917
+  - level: 43
+    totalIncomeRequired: 1591434.3565113184
+    targetIncomePerSec: 4237.531000003272
+    targetUpgradeCost: 610408.8152628592
+  - level: 44
+    totalIncomeRequired: 2037035.9763344876
+    targetIncomePerSec: 5169.787820003992
+    targetUpgradeCost: 793531.459841717
+  - level: 45
+    totalIncomeRequired: 2607406.0497081443
+    targetIncomePerSec: 6307.14114040487
+    targetUpgradeCost: 1031590.8977942322
+  - level: 46
+    totalIncomeRequired: 3337479.7436264246
+    targetIncomePerSec: 7694.712191293942
+    targetUpgradeCost: 1341068.167132502
+  - level: 47
+    totalIncomeRequired: 4271974.071841824
+    targetIncomePerSec: 9387.54887337861
+    targetUpgradeCost: 1743388.6172722527
+  - level: 48
+    totalIncomeRequired: 5468126.811957534
+    targetIncomePerSec: 11452.809625521904
+    targetUpgradeCost: 2266405.2024539285
+  - level: 49
+    totalIncomeRequired: 6999202.319305644
+    targetIncomePerSec: 13972.427743136723
+    targetUpgradeCost: 2946326.7631901074
+  - level: 50
+    totalIncomeRequired: 8958978.968711225
+    targetIncomePerSec: 17046.3618466268
+    targetUpgradeCost: 3830224.7921471396
+  - level: 51
+    totalIncomeRequired: 11467493.079950368
+    targetIncomePerSec: 20796.561452884696
+    targetUpgradeCost: 4979292.229791282
+  - level: 52
+    totalIncomeRequired: 14678391.142336471
+    targetIncomePerSec: 25371.80497251933
+    targetUpgradeCost: 6473079.898728667
+  - level: 53
+    totalIncomeRequired: 18788340.662190683
+    targetIncomePerSec: 30953.602066473584
+    targetUpgradeCost: 8415003.868347267
+  - level: 54
+    totalIncomeRequired: 24049076.047604077
+    targetIncomePerSec: 37763.39452109777
+    targetUpgradeCost: 10939505.028851448
+  - level: 55
+    totalIncomeRequired: 30782817.34093322
+    targetIncomePerSec: 46071.34131573928
+    targetUpgradeCost: 14221356.537506882
+  - level: 56
+    totalIncomeRequired: 39402006.19639452
+    targetIncomePerSec: 56207.03640520192
+    targetUpgradeCost: 18487763.498758946
+  - level: 57
+    totalIncomeRequired: 50434567.93138498
+    targetIncomePerSec: 68572.58441434635
+    targetUpgradeCost: 24034092.54838663
+  - level: 58
+    totalIncomeRequired: 64556246.95217278
+    targetIncomePerSec: 83658.55298550254
+    targetUpgradeCost: 31244320.31290262
+  - level: 59
+    totalIncomeRequired: 82631996.09878115
+    targetIncomePerSec: 102063.43464231309
+    targetUpgradeCost: 40617616.4067734
+  - level: 60
+    totalIncomeRequired: 105768955.00643988
+    targetIncomePerSec: 124517.39026362197
+    targetUpgradeCost: 52802901.328805424
+  - level: 61
+    totalIncomeRequired: 135384262.40824306
+    targetIncomePerSec: 151911.2161216188
+    targetUpgradeCost: 68643771.72744705
+  - level: 62
+    totalIncomeRequired: 173291855.88255113
+    targetIncomePerSec: 185331.68366837496
+    targetUpgradeCost: 89236903.24568117
+  - level: 63
+    totalIncomeRequired: 221813575.52966547
+    targetIncomePerSec: 226104.65407541743
+    targetUpgradeCost: 116007974.21938552
+  - level: 64
+    totalIncomeRequired: 283921376.6779718
+    targetIncomePerSec: 275847.6779720093
+    targetUpgradeCost: 150810366.48520118
+  - level: 65
+    totalIncomeRequired: 363419362.1478039
+    targetIncomePerSec: 336534.1671258513
+    targetUpgradeCost: 196053476.43076155
+  - level: 66
+    totalIncomeRequired: 465176783.54918903
+    targetIncomePerSec: 410571.6838935386
+    targetUpgradeCost: 254869519.35999003
+  - level: 67
+    totalIncomeRequired: 595426282.9429619
+    targetIncomePerSec: 500897.45435011707
+    targetUpgradeCost: 331330375.16798705
+  - level: 68
+    totalIncomeRequired: 762145642.1669912
+    targetIncomePerSec: 611094.8943071428
+    targetUpgradeCost: 430729487.7183832
+  - level: 69
+    totalIncomeRequired: 975546421.9737488
+    targetIncomePerSec: 745535.7710547142
+    targetUpgradeCost: 559948334.0338981
+  - level: 70
+    totalIncomeRequired: 1248699420.1263986
+    targetIncomePerSec: 909553.6406867513
+    targetUpgradeCost: 727932834.2440675
+  - level: 71
+    totalIncomeRequired: 1598335257.7617903
+    targetIncomePerSec: 1109655.4416378366
+    targetUpgradeCost: 946312684.5172879
+  - level: 72
+    totalIncomeRequired: 2045869129.9350915
+    targetIncomePerSec: 1353779.6387981607
+    targetUpgradeCost: 1230206489.8724742
+  - level: 73
+    totalIncomeRequired: 2618712486.316917
+    targetIncomePerSec: 1651611.159333756
+    targetUpgradeCost: 1599268436.8342166
+  - level: 74
+    totalIncomeRequired: 3351951982.485654
+    targetIncomePerSec: 2014965.6143871823
+    targetUpgradeCost: 2079048967.8844817
+  - level: 75
+    totalIncomeRequired: 4290498537.581637
+    targetIncomePerSec: 2458258.0495523624
+    targetUpgradeCost: 2702763658.2498264
+  - level: 76
+    totalIncomeRequired: 5491838128.104495
+    targetIncomePerSec: 2999074.820453882
+    targetUpgradeCost: 3513592755.7247744
+  - level: 77
+    totalIncomeRequired: 7029552803.973754
+    targetIncomePerSec: 3658871.280953736
+    targetUpgradeCost: 4567670582.442206
+  - level: 78
+    totalIncomeRequired: 8997827589.086405
+    targetIncomePerSec: 4463822.962763558
+    targetUpgradeCost: 5937971757.174869
+  - level: 79
+    totalIncomeRequired: 11517219314.030598
+    targetIncomePerSec: 5445864.014571541
+    targetUpgradeCost: 7719363284.32733
+  - level: 80
+    totalIncomeRequired: 14742040721.959166
+    targetIncomePerSec: 6643954.09777728
+    targetUpgradeCost: 10035172269.625528
+  - level: 81
+    totalIncomeRequired: 18869812124.10773
+    targetIncomePerSec: 8105623.999288281
+    targetUpgradeCost: 13045723950.513187
+  - level: 82
+    totalIncomeRequired: 24153359518.857895
+    targetIncomePerSec: 9888861.279131703
+    targetUpgradeCost: 16959441135.667145
+  - level: 83
+    totalIncomeRequired: 30916300184.138107
+    targetIncomePerSec: 12064410.760540677
+    targetUpgradeCost: 22047273476.36729
+  - level: 84
+    totalIncomeRequired: 39572864235.69678
+    targetIncomePerSec: 14718581.127859626
+    targetUpgradeCost: 28661455519.277477
+  - level: 85
+    totalIncomeRequired: 50653266221.69188
+    targetIncomePerSec: 17956668.975988742
+    targetUpgradeCost: 37259892175.06072
+  - level: 86
+    totalIncomeRequired: 64836180763.76561
+    targetIncomePerSec: 21907136.150706265
+    targetUpgradeCost: 48437859827.57894
+  - level: 87
+    totalIncomeRequired: 82990311377.61998
+    targetIncomePerSec: 26726706.10386164
+    targetUpgradeCost: 62969217775.85262
+  - level: 88
+    totalIncomeRequired: 106227598563.35358
+    targetIncomePerSec: 32606581.4467112
+    targetUpgradeCost: 81859983108.60841
+  - level: 89
+    totalIncomeRequired: 135971326161.09258
+    targetIncomePerSec: 39780029.364987664
+    targetUpgradeCost: 106417978041.19095
+  - level: 90
+    totalIncomeRequired: 174043297486.1985
+    targetIncomePerSec: 48531635.82528495
+    targetUpgradeCost: 138343371453.54825
+  - level: 91
+    totalIncomeRequired: 222775420782.33408
+    targetIncomePerSec: 59208595.70684764
+    targetUpgradeCost: 179846382889.61273
+  - level: 92
+    totalIncomeRequired: 285152538601.38763
+    targetIncomePerSec: 72234486.76235412
+    targetUpgradeCost: 233800297756.49655
+  - level: 93
+    totalIncomeRequired: 364995249409.7762
+    targetIncomePerSec: 88126073.85007203
+    targetUpgradeCost: 303940387083.44556
+  - level: 94
+    totalIncomeRequired: 467193919244.51355
+    targetIncomePerSec: 107513810.09708788
+    targetUpgradeCost: 395122503208.47925
+  - level: 95
+    totalIncomeRequired: 598008216632.9774
+    targetIncomePerSec: 131166848.3184472
+    targetUpgradeCost: 513659254171.023
+  - level: 96
+    totalIncomeRequired: 765450517290.211
+    targetIncomePerSec: 160023554.94850558
+    targetUpgradeCost: 667757030422.33
+  - level: 97
+    totalIncomeRequired: 979776662131.4702
+    targetIncomePerSec: 195228737.03717682
+    targetUpgradeCost: 868084139549.0289
+  - level: 98
+    totalIncomeRequired: 1254114127528.282
+    targetIncomePerSec: 238179059.18535572
+    targetUpgradeCost: 1128509381413.7375
+  - level: 99
+    totalIncomeRequired: 1605266083236.201
+    targetIncomePerSec: 290578452.20613396
+    targetUpgradeCost: 1467062195837.859
+  - level: 100
+    totalIncomeRequired: 2054740586542.3372
+    targetIncomePerSec: 354505711.69148344
+    targetUpgradeCost: 1907180854589.2166
