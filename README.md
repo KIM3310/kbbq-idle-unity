@@ -32,6 +32,7 @@ dotnet test sim/KbbqIdle.Sim.Tests/KbbqIdle.Sim.Tests.csproj
 This repo includes a small FastAPI + SQLite backend in `server/` that matches the Unity network clients:
 - `POST /auth/guest` (guest auth)
 - `POST /leaderboard/submit`, `GET /leaderboard/top`
+- `POST /analytics/event` (lightweight event ingestion)
 - `POST /friends/invite`, `GET /friends/list`
 
 Run with Docker:

@@ -55,3 +55,13 @@ public class FriendInviteRequest
     public long timestamp;
     public string nonce;
 }
+
+[Serializable]
+public class AnalyticsEventRequest
+{
+    public string playerId;
+    public string eventName;
+    public string[] kv;
+    public long timestamp;
+    public string nonce;
+}

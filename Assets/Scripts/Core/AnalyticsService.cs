@@ -1,8 +1,16 @@
+using System.Threading.Tasks;
 using UnityEngine;
 
 public class AnalyticsService : MonoBehaviour
 {
     [SerializeField] private bool enableLogs = true;
+    [SerializeField] private bool enableNetwork = true;
+    [SerializeField] private NetworkService networkService;
+
+    public void BindNetwork(NetworkService network)
+    {
+        networkService = network;
+    }
 
     public void LogBoost()
     {
@@ -21,18 +29,41 @@ public class AnalyticsService : MonoBehaviour
 
     private void LogEvent(string eventName, params string[] kv)
     {
-        if (!enableLogs)
+        if (enableLogs)
+        {
+            if (kv == null || kv.Length == 0)
+            {
+                Debug.Log("[Analytics] " + eventName);
+            }
+            else
+            {
+                var payload = string.Join(",", kv);
+                Debug.Log("[Analytics] " + eventName + " {" + payload + "}");
+            }
+        }
+
+        _ = TrySendNetworkEventAsync(eventName, kv);
+    }
+
+    private async Task TrySendNetworkEventAsync(string eventName, string[] kv)
+    {
+        if (!enableNetwork)
         {
             return;
         }
 
-        if (kv == null || kv.Length == 0)
+        if (networkService == null || !networkService.IsNetworkEnabled() || networkService.Analytics == null)
         {
-            Debug.Log("[Analytics] " + eventName);
             return;
         }
 
-        var payload = string.Join(",", kv);
-        Debug.Log("[Analytics] " + eventName + " {" + payload + "}");
+        try
+        {
+            await networkService.Analytics.Track(eventName, kv);
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("[Analytics] network track failed: " + ex.Message);
+        }
     }
 }

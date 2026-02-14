@@ -4,6 +4,7 @@ This is an optional backend to demonstrate:
 - guest auth (token issuance),
 - HMAC-signed request headers (replay-resistant),
 - leaderboard submit/fetch,
+- lightweight analytics event ingestion,
 - simple friends list/invite flow,
 - SQLite persistence.
 

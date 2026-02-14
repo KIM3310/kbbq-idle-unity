@@ -28,6 +28,6 @@ Unity `2022.3.62f3` LTS 기반의 K‑BBQ 방치형/타이쿤 게임 프로젝�
 - 선택 사항: **KBBQ/Run Auto Setup**으로 데이터/프리팹 재생성.
 
 ## 포트폴리오용 보강
-- 선택 백엔드(`server/`): 게스트 인증 + HMAC 서명 기반 리더보드/친구 API(FastAPI + SQLite).
+- 선택 백엔드(`server/`): 게스트 인증 + HMAC 서명 기반 리더보드/친구 API + 경량 이벤트 수집(FastAPI + SQLite).
 - 결정적 시뮬레이터(`sim/`): 경제/진행도 수식 .NET 유닛 테스트.
 - WebGL 빌드(`docs/`): GitHub Pages 배포를 위한 WebGL 빌드(`KBBQ/Build WebGL (docs)`).
