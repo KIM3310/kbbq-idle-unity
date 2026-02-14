@@ -27,3 +27,7 @@ This is a Unity `2022.3.62f3` LTS project for an idle/tycoon K‑BBQ restaurant 
 - Load `Assets/Scenes/Main.unity` and press Play.
 - Optional: run **KBBQ/Run Auto Setup** to regenerate data assets and UI prefabs.
 
+## Portfolio Add-ons
+- Optional backend (`server/`): guest auth + HMAC-signed leaderboard/friends endpoints (FastAPI + SQLite).
+- Deterministic simulator (`sim/`): .NET unit tests for economy/progression math.
+- WebGL build to `docs/` for GitHub Pages (`KBBQ/Build WebGL (docs)`).

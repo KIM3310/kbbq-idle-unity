@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Threading.Tasks;
 using UnityEngine;
 using UnityEngine.UI;
 
@@ -41,6 +42,59 @@ public class LeaderboardView : MonoBehaviour
 
     public void Refresh()
     {
+        if (refreshButton != null)
+        {
+            refreshButton.interactable = false;
+        }
+
+        // Fire-and-forget refresh so UI stays responsive.
+        _ = RefreshAsync();
+    }
+
+    private async Task RefreshAsync()
+    {
+        try
+        {
+            var network = gameManager != null ? gameManager.GetNetworkService() : null;
+            if (network != null && network.IsNetworkEnabled())
+            {
+                // Ensure guest auth and token are present.
+                await network.EnsureGuestAuth();
+
+                // Submit current score before fetching top list (best-effort).
+                try
+                {
+                    await network.Leaderboard.SubmitScore(gameManager.GetTotalEarned());
+                }
+                catch (System.Exception ex)
+                {
+                    Debug.LogWarning("SubmitScore failed (fallback to fetch): " + ex.Message);
+                }
+
+                var response = await network.Leaderboard.FetchTop("KR", 10);
+                if (response != null && response.entries != null && response.entries.Count > 0)
+                {
+                    cached.Clear();
+                    cached.AddRange(response.entries);
+                    Render();
+                    gameManager?.GetAudioManager()?.PlayButton();
+                    return;
+                }
+            }
+        }
+        catch (System.Exception ex)
+        {
+            Debug.LogWarning("Leaderboard live refresh failed, using mock data: " + ex.Message);
+        }
+        finally
+        {
+            if (refreshButton != null)
+            {
+                refreshButton.interactable = true;
+            }
+        }
+
+        // Fallback path: mock entries.
         cached.Clear();
         cached.AddRange(BuildMockEntries());
         Render();

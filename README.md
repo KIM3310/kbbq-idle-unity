@@ -27,3 +27,31 @@ To keep the math reviewable outside Unity, `sim/` contains a small .NET project 
 ```bash
 dotnet test sim/KbbqIdle.Sim.Tests/KbbqIdle.Sim.Tests.csproj
 ```
+
+## Optional Backend (Leaderboard + Friends)
+This repo includes a small FastAPI + SQLite backend in `server/` that matches the Unity network clients:
+- `POST /auth/guest` (guest auth)
+- `POST /leaderboard/submit`, `GET /leaderboard/top`
+- `POST /friends/invite`, `GET /friends/list`
+
+Run with Docker:
+```bash
+export KBBQ_HMAC_SECRET="CHANGE_ME"
+docker compose up --build
+```
+Details: `server/README.md`.
+
+## Data Validation (Editor Utility)
+In Unity, run:
+- `KBBQ/Validate Data (Portfolio)`
+
+This checks common issues (duplicate IDs, invalid tuning values, unsafe network defaults) and is also covered by EditMode tests.
+
+## WebGL Demo (GitHub Pages)
+This repo is prepared to host a WebGL build via GitHub Pages under `docs/`.
+
+Build output:
+- Unity Editor: `KBBQ/Build WebGL (docs)`
+- CLI: `tools/build_webgl_docs.sh` (requires Unity installed)
+
+After building, commit the generated `docs/` folder and push to `main`. The `pages` workflow will deploy it.
