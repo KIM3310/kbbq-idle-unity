@@ -46,3 +46,13 @@ crashlytics-build.properties
 # macOS
 .DS_Store
 
+# Backend / local dev (portfolio demo)
+kbbq.db
+*.db
+*.sqlite
+*.sqlite3
+.venv/
+__pycache__/
+*.py[cod]
+server/.env
+build_webgl.log

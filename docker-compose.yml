@@ -1,0 +1,20 @@
+services:
+  kbbq-api:
+    build:
+      context: .
+      dockerfile: server/Dockerfile
+    ports:
+      - "8000:8000"
+    environment:
+      # Use the same value in Unity ApiConfig.hmacSecret when enabling networking.
+      - KBBQ_HMAC_SECRET=${KBBQ_HMAC_SECRET:-CHANGE_ME}
+      - KBBQ_DB_PATH=/data/kbbq.db
+      - KBBQ_TOKEN_SALT=${KBBQ_TOKEN_SALT:-dev-only-salt}
+      - KBBQ_NONCE_TTL_SECONDS=600
+      - KBBQ_MAX_CLOCK_SKEW_SECONDS=300
+    volumes:
+      - kbbq_data:/data
+
+volumes:
+  kbbq_data:
+

@@ -179,6 +179,7 @@ public class GameManager : MonoBehaviour
     public float GetQueueServiceMultiplier() => customerSystem != null ? customerSystem.ServiceRateMultiplier : 1f;
     public AudioManager GetAudioManager() => audioManager;
     public MonetizationService GetMonetizationService() => monetizationService;
+    public NetworkService GetNetworkService() => networkService;
 
     public void AddPlayerLevels(int amount)
     {
