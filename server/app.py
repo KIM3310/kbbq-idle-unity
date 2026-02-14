@@ -5,7 +5,6 @@ import uuid
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.responses import RedirectResponse
 
 from server.db import get_db
 from server.models import (
@@ -27,7 +26,20 @@ from server.security import (
 )
 
 
-app = FastAPI(title="KBBQ Idle Backend", version="0.1")
+def _is_truthy(value: str) -> bool:
+    return (value or "").strip().lower() in ("1", "true", "yes", "on")
+
+
+EXPOSE_DOCS = _is_truthy(os.getenv("KBBQ_EXPOSE_DOCS", "0"))
+
+app = FastAPI(
+    title="KBBQ Idle Backend",
+    version="0.1",
+    # Reviewers don't need a public Swagger UI by default.
+    docs_url="/docs" if EXPOSE_DOCS else None,
+    redoc_url=None,
+    openapi_url="/openapi.json" if EXPOSE_DOCS else None,
+)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],
@@ -38,8 +50,7 @@ app.add_middleware(
 
 @app.get("/", include_in_schema=False)
 def root():
-    # Portfolio/demo quality-of-life: opening the base URL should show something useful.
-    return RedirectResponse(url="/docs")
+    return {"ok": True, "service": "kbbq-idle-backend", "health": "/health", "docs": "/docs" if EXPOSE_DOCS else None}
 
 
 @app.get("/favicon.ico", include_in_schema=False)
