@@ -8,6 +8,7 @@ public class NetworkService : MonoBehaviour
     public AuthClient Auth { get; private set; }
     public LeaderboardClient Leaderboard { get; private set; }
     public FriendsClient Friends { get; private set; }
+    public AnalyticsClient Analytics { get; private set; }
 
     private void Awake()
     {
@@ -19,10 +20,12 @@ public class NetworkService : MonoBehaviour
         Auth = new AuthClient();
         Leaderboard = new LeaderboardClient();
         Friends = new FriendsClient();
+        Analytics = new AnalyticsClient();
 
         Auth.Initialize(apiConfig);
         Leaderboard.Initialize(apiConfig);
         Friends.Initialize(apiConfig);
+        Analytics.Initialize(apiConfig);
     }
 
     public bool IsNetworkEnabled()
@@ -55,6 +58,7 @@ public class NetworkService : MonoBehaviour
 
         Leaderboard.SetAuth(response.playerId, response.token);
         Friends.SetAuth(response.playerId, response.token);
+        Analytics.SetAuth(response.playerId, response.token);
         return true;
     }
 }

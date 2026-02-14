@@ -44,3 +44,10 @@ class FriendInviteRequest(BaseModel):
     nonce: str
 
 
+class AnalyticsEventRequest(BaseModel):
+    playerId: str
+    eventName: str
+    kv: list[str] = Field(default_factory=list)
+    timestamp: int
+    nonce: str
+

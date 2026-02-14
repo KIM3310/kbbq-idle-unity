@@ -8,6 +8,7 @@ from fastapi.middleware.cors import CORSMiddleware
 
 from server.db import get_db
 from server.models import (
+    AnalyticsEventRequest,
     AuthResponse,
     FriendInviteRequest,
     FriendListResponse,
@@ -175,6 +176,39 @@ async def friends_list(request: Request):
 
     friends = [{"playerId": str(r["friend_player_id"]), "displayName": str(r["display_name"])} for r in rows]
     return {"friends": friends}
+
+
+@app.post("/analytics/event")
+async def analytics_event(request: Request):
+    db = get_db()
+    player_id = require_bearer_player_id(request, db)
+
+    raw = (await request.body()).decode("utf-8")
+    try:
+        payload = AnalyticsEventRequest.model_validate_json(raw)
+    except Exception:
+        raise HTTPException(status_code=400, detail="invalid json body")
+
+    if payload.playerId != player_id:
+        raise HTTPException(status_code=401, detail="player mismatch")
+
+    verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+
+    event_name = (payload.eventName or "").strip()
+    if not event_name:
+        raise HTTPException(status_code=400, detail="missing eventName")
+
+    kv = payload.kv or []
+    if len(kv) > 50:
+        kv = kv[:50]
+
+    ts = int(payload.timestamp) if payload.timestamp else int(time.time())
+    db.execute(
+        "INSERT INTO analytics_events(player_id, event_name, kv_json, ts) VALUES(?,?,?,?)",
+        (player_id, event_name, json.dumps(kv), ts),
+    )
+    db.commit()
+    return {"ok": True}
 
 
 @app.post("/friends/invite")

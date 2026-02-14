@@ -81,6 +81,23 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
             );
             """
         )
+        conn.execute(
+            """
+            CREATE TABLE IF NOT EXISTS analytics_events (
+              id INTEGER PRIMARY KEY AUTOINCREMENT,
+              player_id TEXT NOT NULL,
+              event_name TEXT NOT NULL,
+              kv_json TEXT NOT NULL,
+              ts INTEGER NOT NULL
+            );
+            """
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_analytics_events_player_ts ON analytics_events(player_id, ts);"
+        )
+        conn.execute(
+            "CREATE INDEX IF NOT EXISTS idx_analytics_events_name_ts ON analytics_events(event_name, ts);"
+        )
         conn.commit()
 
         # Opportunistic cleanup (nonce TTL)
@@ -88,4 +105,3 @@ def _ensure_schema(conn: sqlite3.Connection) -> None:
         cutoff = int(time.time()) - max(1, ttl)
         conn.execute("DELETE FROM nonces WHERE ts < ?", (cutoff,))
         conn.commit()
-

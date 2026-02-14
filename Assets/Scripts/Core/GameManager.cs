@@ -627,6 +627,7 @@ public class GameManager : MonoBehaviour
         {
             monetizationService.Bind(this, monetizationConfig);
         }
+        analyticsService?.BindNetwork(networkService);
         ApplyDebugSettingsFromSave();
         UpdateProgressionFromIncome();
     }
