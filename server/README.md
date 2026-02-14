@@ -25,6 +25,11 @@ Health check:
 curl -s http://127.0.0.1:8000/health | jq .
 ```
 
+Optional (enable Swagger UI for local debugging):
+```bash
+export KBBQ_EXPOSE_DOCS=1
+```
+
 ## Quickstart (Docker)
 ```bash
 export KBBQ_HMAC_SECRET="CHANGE_ME"
