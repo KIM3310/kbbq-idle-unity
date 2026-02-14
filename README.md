@@ -2,6 +2,8 @@
 
 An idle/tycoon-style K-BBQ restaurant game built in Unity (2022.3 LTS). The gameplay centers on passive income, upgrades, queue management, unlock progression, and prestige for long-term growth.
 
+License: MIT (see `LICENSE`). Third-party notices: `THIRD_PARTY_NOTICES.md`.
+
 ## Docs
 - English: `README.en.md`
 - Korean: `README.ko.md`
