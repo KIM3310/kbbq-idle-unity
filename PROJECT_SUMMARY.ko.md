@@ -17,7 +17,7 @@
 - **세이브**: `SaveSystem`이 PlayerPrefs(`KBBQ_IDLE_SAVE`)에 `SaveData`를 저장합니다.
 - **상태 머신**: Boot/Tutorial/MainLoop/Pause/OfflineCalc.
 - **UI**: `UIController`가 미션/프레스티지/큐/업그레이드/디버그/퍼포먼스/튜토리얼/리더보드/상점 UI를 바인딩합니다.
-- **분석**: `AnalyticsService`는 콘솔 로그 수준의 스텁입니다.
+- **분석**: `AnalyticsService`는 콘솔 로그를 남기며, 네트워크를 활성화한 경우 로컬 백엔드로 이벤트를 best-effort로 전송할 수도 있습니다.
 
 ## 데이터/콘텐츠
 - `Assets/Data`에 ScriptableObject 기반 데이터:
@@ -33,12 +33,23 @@
 - `MonetizationConfig`에 보상형 광고 부스트, 전면 광고 보상, IAP 패키지 정의.
 - `MonetizationService`는 실제 SDK 연동 없이 보상/통화만 지급하는 스텁입니다.
 
-## 네트워크
-- `AuthClient`/`LeaderboardClient`/`FriendsClient`가 `UnityWebRequest` + HMAC 서명 헤더로 통신.
-- `ApiConfig` 설정에 따라 네트워크 사용 여부가 결정되며 기본 URL은 예시 값입니다.
-- `LeaderboardView`는 현재 모의 데이터로 표시됩니다.
+## 네트워크 & 백엔드(선택)
+- `AuthClient`/`LeaderboardClient`/`FriendsClient`/`AnalyticsClient`가 `UnityWebRequest` + HMAC 서명 헤더 + nonce 리플레이 방지로 통신합니다.
+- `ApiConfig` 설정에 따라 네트워크 사용 여부가 결정되며, 이 레포는 **기본적으로 네트워크가 비활성화**(`enableNetwork=false`)된 상태로 배포됩니다.
+- 네트워크를 활성화하고 백엔드를 실행하면 `LeaderboardView`는:
+  - 게스트 인증을 보장하고,
+  - 현재 점수를 제출(best-effort)한 뒤,
+  - 라이브 Top 리스트를 가져옵니다(실패 시 모의 데이터로 폴백).
+- `server/`에 포함된 로컬 백엔드(FastAPI + SQLite)는 다음 API를 제공합니다:
+  - 게스트 인증: `POST /auth/guest`
+  - 리더보드: `POST /leaderboard/submit`, `GET /leaderboard/top`
+  - 친구: `POST /friends/invite`, `GET /friends/list`
+  - 이벤트 수집: `POST /analytics/event`
 
-## 에디터 유틸/아티팩트
+## 포트폴리오용 보강(품질 신호)
+- **데이터 검증**: `KBBQ/Validate Data (Portfolio)`로 중복 ID, 튜닝 값, 네트워크 기본값 안전성 등을 검증합니다.
+- **Unity 테스트**: EditMode 테스트로 수식 불변성/세이브 무결성 가드레일을 검증합니다.
+- **WebGL 파이프라인**: `KBBQ/Build WebGL (docs)`로 `docs/`에 WebGL 빌드를 생성해 GitHub Pages로 배포할 수 있습니다(빌드 산출물은 레포 경량화를 위해 로컬에서 생성).
 - `Assets/Editor/KBBQAutoSetup.cs`에서 **KBBQ/Run Auto Setup** 메뉴로 폴더/데이터/프리팹/씬을 자동 생성할 수 있습니다.
   - 참고: 빌드/캐시 아티팩트(`Library/`, `Builds/`)는 레포에서 제외했습니다.
 

@@ -3,6 +3,8 @@
 ## Overview
 This is a Unity `2022.3.62f3` LTS project for an idle/tycoon K‑BBQ restaurant game. The project is built around a single scene at `Assets/Scenes/Main.unity` and focuses on passive income, upgrades, and long‑term progression.
 
+License: MIT (see `LICENSE`). Third-party notices: `THIRD_PARTY_NOTICES.md`.
+
 ## Gameplay Highlights
 - Economy system combines menu income, upgrade multipliers, store tiers, boosts, tips, combos, and prestige.
 - Customer queue with satisfaction + patience, plus optional manual “Serve” for tips and combos.
@@ -20,7 +22,8 @@ This is a Unity `2022.3.62f3` LTS project for an idle/tycoon K‑BBQ restaurant 
 
 ## Monetization & Networking
 - Monetization rewards and IAP packs are configured but use stub services (no real SDK wired).
-- Optional network clients exist (HMAC‑signed headers) but the base URL is a placeholder, and leaderboards use mock data by default.
+- Optional network clients exist (HMAC‑signed headers). The base URL is a placeholder by default, so leaderboards use mock data unless networking is explicitly enabled.
+  - When enabled + backend running, `LeaderboardView` submits the current score (best-effort) and fetches the live top list (fallbacks to mock data on failure).
 
 ## Quick Start
 - Open with Unity `2022.3.62f3`.
@@ -29,5 +32,6 @@ This is a Unity `2022.3.62f3` LTS project for an idle/tycoon K‑BBQ restaurant 
 
 ## Portfolio Add-ons
 - Optional backend (`server/`): guest auth + HMAC-signed leaderboard/friends + lightweight analytics ingestion (FastAPI + SQLite).
+- Data validation + tests: `KBBQ/Validate Data (Portfolio)` and Unity EditMode tests for math invariants and save integrity.
 - Deterministic simulator (`sim/`): .NET unit tests for economy/progression math.
 - WebGL build to `docs/` for GitHub Pages (`KBBQ/Build WebGL (docs)`).
