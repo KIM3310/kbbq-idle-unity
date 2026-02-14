@@ -1,3 +1,4 @@
+using KbbqIdle.Sim;
 using Xunit;
 
 namespace KbbqIdle.Sim.Tests;
@@ -62,4 +63,3 @@ public class MathTests
         Assert.True(l2 >= l1);
     }
 }
-
