@@ -18,7 +18,7 @@ Optional:
 - Run **KBBQ/Run Auto Setup** to regenerate ScriptableObject data assets and UI prefabs.
 
 ## Tech Notes
-- Save: PlayerPrefs JSON (`KBBQ_IDLE_SAVE`) with sanity checks
+- Save integrity: versioned PlayerPrefs JSON (`KBBQ_IDLE_SAVE`) + SHA-256 checksum (`KBBQ_IDLE_SAVE_SHA256`) + defensive sanitize/clamp to handle corruption/tampering cases
 - Economy: menu income x upgrades x store tier x boosts x tips/combos x prestige
 - Sessions: offline earnings, daily login, daily missions
 - Networking/monetization: structured as stubs (no real SDK wired by default)
@@ -58,3 +58,7 @@ Build output:
 - CLI: `tools/build_webgl_docs.sh` (requires Unity installed)
 
 After building, commit the generated `docs/` folder and push to `main`. The `pages` workflow will deploy it.
+
+## Glossary (first-time readers)
+- HMAC: Hash-based Message Authentication Code (request signing)
+- SHA-256: Secure Hash Algorithm 256-bit (checksum / integrity)
