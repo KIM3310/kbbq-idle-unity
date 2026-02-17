@@ -31,7 +31,9 @@
 
 ## 수익화
 - `MonetizationConfig`에 보상형 광고 부스트, 전면 광고 보상, IAP 패키지 정의.
-- `MonetizationService`는 실제 SDK 연동 없이 보상/통화만 지급하는 스텁입니다.
+- `MonetizationService`는 로컬 안전 지급 플로우와 선택적 서버 검증(`POST /iap/verify`) 경로를 지원합니다.
+- 실제 스토어 영수증 검증(App Store / Play Store)은 운영 배포 단계의 연동 과제로 남겨두었습니다.
+  - 백엔드에 `mock` / `structured` / `store` 검증 모드가 추가되어 운영 전환 경로를 제공.
 
 ## 네트워크 & 백엔드(선택)
 - `AuthClient`/`LeaderboardClient`/`FriendsClient`/`AnalyticsClient`가 `UnityWebRequest` + HMAC 서명 헤더 + nonce 리플레이 방지로 통신합니다.
@@ -45,6 +47,9 @@
   - 리더보드: `POST /leaderboard/submit`, `GET /leaderboard/top`
   - 친구: `POST /friends/invite`, `GET /friends/list`
   - 이벤트 수집: `POST /analytics/event`
+  - IAP 검증: `POST /iap/verify` (서버 권한형 보상 지급 + 거래 idempotency)
+  - 준비상태 점검: `GET /readiness` (설정/DB probe)
+  - 모니터링: `GET /metrics`, `GET /ops/alerts`
 
 ## 포트폴리오용 보강(품질 신호)
 - **데이터 검증**: `KBBQ/Validate Data (Portfolio)`로 중복 ID, 튜닝 값, 네트워크 기본값 안전성 등을 검증합니다.
@@ -56,3 +61,4 @@
 ## 비고
 - 문서는 `README.md`(및 `README.en.md` / `README.ko.md`)에 정리했습니다.
 - 포트폴리오용으로 테스트/검증을 점진적으로 추가하는 중입니다.
+- 통합 품질 게이트: `tools/portfolio_quality_gate.sh`.
