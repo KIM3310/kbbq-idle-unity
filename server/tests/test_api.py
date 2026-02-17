@@ -26,6 +26,7 @@ class TestApi(unittest.TestCase):
         os.environ["KBBQ_HMAC_SECRET"] = "unit-test-secret"
         os.environ["KBBQ_TOKEN_SALT"] = "unit-test-salt"
         os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = "9999"
+        os.environ["KBBQ_OPS_TOKEN"] = "unit-ops-token"
 
         from fastapi.testclient import TestClient
         from server.app import app
@@ -73,6 +74,29 @@ class TestApi(unittest.TestCase):
         self.assertEqual(r2.status_code, 401)
         self.assertIn("replay", r2.text.lower())
 
+    def test_readiness_and_metrics_endpoints(self):
+        r = self.client.get("/readiness")
+        self.assertEqual(r.status_code, 200)
+        payload = r.json()
+        self.assertIn("ready", payload)
+        self.assertIn("checks", payload)
+        self.assertTrue(any(c.get("name") == "db" for c in payload.get("checks", [])))
+
+        m = self.client.get("/metrics")
+        self.assertEqual(m.status_code, 200)
+        self.assertIn("kbbq_players_total", m.text)
+        self.assertIn("kbbq_uptime_seconds", m.text)
+
+    def test_ops_alerts_requires_token(self):
+        denied = self.client.get("/ops/alerts")
+        self.assertEqual(denied.status_code, 401)
+
+        allowed = self.client.get("/ops/alerts", headers={"X-Ops-Token": os.environ["KBBQ_OPS_TOKEN"]})
+        self.assertEqual(allowed.status_code, 200)
+        payload = allowed.json()
+        self.assertIn("alerts", payload)
+        self.assertGreaterEqual(len(payload["alerts"]), 1)
+
     def test_submit_score_requires_signed_headers(self):
         r = self.client.post("/auth/guest", json={"deviceId": "device-test-002"})
         self.assertEqual(r.status_code, 200)
@@ -114,4 +138,3 @@ class TestApi(unittest.TestCase):
 
 if __name__ == "__main__":
     unittest.main()
-

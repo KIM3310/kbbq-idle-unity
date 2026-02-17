@@ -31,6 +31,7 @@ def _is_truthy(value: str) -> bool:
 
 
 EXPOSE_DOCS = _is_truthy(os.getenv("KBBQ_EXPOSE_DOCS", "0"))
+APP_STARTED_AT = int(time.time())
 
 app = FastAPI(
     title="KBBQ Idle Backend",
@@ -62,6 +63,126 @@ def favicon():
 @app.get("/health")
 def health():
     return {"ok": True, "ts": int(time.time())}
+
+
+def _ops_token() -> str:
+    return (os.getenv("KBBQ_OPS_TOKEN") or os.getenv("KBBQ_OPS_ADMIN_TOKEN") or "").strip()
+
+
+def _require_ops_token(request: Request) -> None:
+    expected = _ops_token()
+    if not expected:
+        raise HTTPException(status_code=503, detail="ops token is not configured")
+    provided = request.headers.get("x-ops-token", "").strip()
+    if not provided or provided != expected:
+        raise HTTPException(status_code=401, detail="invalid ops token")
+
+
+@app.get("/readiness")
+def readiness():
+    checks = []
+    warnings = []
+    now = int(time.time())
+
+    try:
+        db = get_db()
+        db.execute("SELECT 1").fetchone()
+        checks.append({"name": "db", "ok": True})
+    except Exception as exc:  # noqa: BLE001
+        checks.append({"name": "db", "ok": False, "error": str(exc)})
+
+    if not _ops_token():
+        warnings.append("KBBQ_OPS_TOKEN is not configured")
+
+    if not (os.getenv("KBBQ_HMAC_SECRET") or "").strip() or (os.getenv("KBBQ_HMAC_SECRET") == "CHANGE_ME"):
+        warnings.append("KBBQ_HMAC_SECRET is weak or default")
+
+    if not (os.getenv("KBBQ_TOKEN_SALT") or "").strip() or (os.getenv("KBBQ_TOKEN_SALT") == "dev-only-salt"):
+        warnings.append("KBBQ_TOKEN_SALT is weak or default")
+
+    ready = all(bool(c.get("ok")) for c in checks)
+    return {
+        "ready": ready,
+        "checks": checks,
+        "warnings": warnings,
+        "uptime_seconds": max(0, now - APP_STARTED_AT),
+        "ts": now,
+    }
+
+
+@app.get("/metrics")
+def metrics():
+    db = get_db()
+    players = int(db.execute("SELECT COUNT(*) AS c FROM players").fetchone()["c"])
+    leaderboard_entries = int(db.execute("SELECT COUNT(*) AS c FROM leaderboard").fetchone()["c"])
+    friends_edges = int(db.execute("SELECT COUNT(*) AS c FROM friends").fetchone()["c"])
+    events = int(db.execute("SELECT COUNT(*) AS c FROM analytics_events").fetchone()["c"])
+    nonce_rows = int(db.execute("SELECT COUNT(*) AS c FROM nonces").fetchone()["c"])
+    uptime = max(0, int(time.time()) - APP_STARTED_AT)
+
+    body = "\n".join(
+        [
+            "# HELP kbbq_players_total Total number of registered players.",
+            "# TYPE kbbq_players_total gauge",
+            f"kbbq_players_total {players}",
+            "# HELP kbbq_leaderboard_entries_total Total leaderboard entries.",
+            "# TYPE kbbq_leaderboard_entries_total gauge",
+            f"kbbq_leaderboard_entries_total {leaderboard_entries}",
+            "# HELP kbbq_friends_edges_total Total directed friendship edges.",
+            "# TYPE kbbq_friends_edges_total gauge",
+            f"kbbq_friends_edges_total {friends_edges}",
+            "# HELP kbbq_analytics_events_total Total analytics events.",
+            "# TYPE kbbq_analytics_events_total counter",
+            f"kbbq_analytics_events_total {events}",
+            "# HELP kbbq_nonce_rows_total Nonce rows retained for replay protection.",
+            "# TYPE kbbq_nonce_rows_total gauge",
+            f"kbbq_nonce_rows_total {nonce_rows}",
+            "# HELP kbbq_uptime_seconds Process uptime in seconds.",
+            "# TYPE kbbq_uptime_seconds gauge",
+            f"kbbq_uptime_seconds {uptime}",
+            "",
+        ]
+    )
+    return Response(content=body, media_type="text/plain; version=0.0.4")
+
+
+@app.get("/ops/alerts")
+def ops_alerts(request: Request):
+    _require_ops_token(request)
+    db = get_db()
+    alerts = []
+
+    player_count = int(db.execute("SELECT COUNT(*) AS c FROM players").fetchone()["c"])
+    nonce_count = int(db.execute("SELECT COUNT(*) AS c FROM nonces").fetchone()["c"])
+
+    if player_count == 0:
+        alerts.append(
+            {
+                "level": "info",
+                "code": "no_players",
+                "message": "No players registered yet.",
+            }
+        )
+
+    if nonce_count > 10000:
+        alerts.append(
+            {
+                "level": "warning",
+                "code": "nonce_backlog",
+                "message": f"Nonce table is large ({nonce_count}). Review KBBQ_NONCE_TTL_SECONDS.",
+            }
+        )
+
+    if not alerts:
+        alerts.append(
+            {
+                "level": "info",
+                "code": "healthy",
+                "message": "No active ops alerts.",
+            }
+        )
+
+    return {"alerts": alerts, "ts": int(time.time())}
 
 
 @app.post("/auth/guest", response_model=AuthResponse)
