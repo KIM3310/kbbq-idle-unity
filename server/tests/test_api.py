@@ -135,6 +135,32 @@ class TestApi(unittest.TestCase):
         self.assertEqual(r2.status_code, 401)
         self.assertIn("replay", r2.text.lower())
 
+    def test_invalid_clock_skew_env_uses_fallback(self):
+        r = self.client.post("/auth/guest", json={"deviceId": "device-test-003"})
+        self.assertEqual(r.status_code, 200)
+        data = r.json()
+        player_id = data["playerId"]
+        token = data["token"]
+
+        prev_skew = os.environ.get("KBBQ_MAX_CLOCK_SKEW_SECONDS")
+        os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = "not-a-number"
+        try:
+            secret = os.environ["KBBQ_HMAC_SECRET"]
+            ts = int(time.time())
+            nonce = "nonce-skew-fallback-1"
+            headers = {
+                "Authorization": f"Bearer {token}",
+                **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=""),
+            }
+            res = self.client.get("/leaderboard/top?region=KR&limit=5", headers=headers)
+            self.assertEqual(res.status_code, 200)
+            self.assertIn("entries", res.json())
+        finally:
+            if prev_skew is None:
+                os.environ.pop("KBBQ_MAX_CLOCK_SKEW_SECONDS", None)
+            else:
+                os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = prev_skew
+
 
 if __name__ == "__main__":
     unittest.main()

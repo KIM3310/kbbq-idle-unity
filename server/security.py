@@ -31,6 +31,22 @@ def hmac_b64(secret: str, payload: str) -> str:
     return base64.b64encode(digest).decode("utf-8")
 
 
+def _safe_int_env(name: str, default: int, *, minimum: Optional[int] = None, maximum: Optional[int] = None) -> int:
+    raw = str(os.getenv(name, "")).strip()
+    if not raw:
+        value = default
+    else:
+        try:
+            value = int(raw)
+        except ValueError:
+            value = default
+    if minimum is not None:
+        value = max(minimum, value)
+    if maximum is not None:
+        value = min(maximum, value)
+    return value
+
+
 def require_bearer_player_id(request: Request, db) -> str:
     auth = request.headers.get("authorization", "")
     if not auth.lower().startswith("bearer "):
@@ -73,8 +89,8 @@ def verify_signed_headers(
         raise HTTPException(status_code=401, detail="invalid timestamp")
 
     now = int(time.time())
-    skew = int(os.getenv("KBBQ_MAX_CLOCK_SKEW_SECONDS", "300"))
-    if abs(now - ts) > max(30, skew):
+    skew = _safe_int_env("KBBQ_MAX_CLOCK_SKEW_SECONDS", 300, minimum=30, maximum=86_400)
+    if abs(now - ts) > skew:
         raise HTTPException(status_code=401, detail="timestamp out of range")
 
     payload = f"{player_id}|{nonce}|{ts}|{raw_body or ''}"
@@ -104,10 +120,9 @@ def ensure_friend_code(db, player_id: str) -> str:
 
     # Human-friendly code for demo purposes (avoid ambiguous chars).
     alphabet = "ABCDEFGHJKLMNPQRSTUVWXYZ23456789"
-    code = "".join(secrets.choice(alphabet) for _ in range(6))
-
     # Retry on rare collisions.
-    for _ in range(5):
+    for _ in range(6):
+        code = "".join(secrets.choice(alphabet) for _ in range(6))
         try:
             db.execute(
                 "INSERT INTO friend_codes(player_id, code) VALUES(?,?)",
@@ -115,8 +130,7 @@ def ensure_friend_code(db, player_id: str) -> str:
             )
             db.commit()
             return code
-        except Exception:
-            code = "".join(secrets.choice(alphabet) for _ in range(6))
+        except sqlite3.IntegrityError:
+            continue
 
     raise HTTPException(status_code=500, detail="failed to allocate friend code")
-
