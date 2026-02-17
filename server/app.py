@@ -2,6 +2,7 @@ import json
 import os
 import time
 import uuid
+from contextlib import contextmanager
 
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
@@ -78,6 +79,15 @@ def _require_ops_token(request: Request) -> None:
         raise HTTPException(status_code=401, detail="invalid ops token")
 
 
+@contextmanager
+def _db_session():
+    db = get_db()
+    try:
+        yield db
+    finally:
+        db.close()
+
+
 @app.get("/readiness")
 def readiness():
     checks = []
@@ -85,8 +95,8 @@ def readiness():
     now = int(time.time())
 
     try:
-        db = get_db()
-        db.execute("SELECT 1").fetchone()
+        with _db_session() as db:
+            db.execute("SELECT 1").fetchone()
         checks.append({"name": "db", "ok": True})
     except Exception as exc:  # noqa: BLE001
         checks.append({"name": "db", "ok": False, "error": str(exc)})
@@ -112,12 +122,12 @@ def readiness():
 
 @app.get("/metrics")
 def metrics():
-    db = get_db()
-    players = int(db.execute("SELECT COUNT(*) AS c FROM players").fetchone()["c"])
-    leaderboard_entries = int(db.execute("SELECT COUNT(*) AS c FROM leaderboard").fetchone()["c"])
-    friends_edges = int(db.execute("SELECT COUNT(*) AS c FROM friends").fetchone()["c"])
-    events = int(db.execute("SELECT COUNT(*) AS c FROM analytics_events").fetchone()["c"])
-    nonce_rows = int(db.execute("SELECT COUNT(*) AS c FROM nonces").fetchone()["c"])
+    with _db_session() as db:
+        players = int(db.execute("SELECT COUNT(*) AS c FROM players").fetchone()["c"])
+        leaderboard_entries = int(db.execute("SELECT COUNT(*) AS c FROM leaderboard").fetchone()["c"])
+        friends_edges = int(db.execute("SELECT COUNT(*) AS c FROM friends").fetchone()["c"])
+        events = int(db.execute("SELECT COUNT(*) AS c FROM analytics_events").fetchone()["c"])
+        nonce_rows = int(db.execute("SELECT COUNT(*) AS c FROM nonces").fetchone()["c"])
     uptime = max(0, int(time.time()) - APP_STARTED_AT)
 
     body = "\n".join(
@@ -149,11 +159,10 @@ def metrics():
 @app.get("/ops/alerts")
 def ops_alerts(request: Request):
     _require_ops_token(request)
-    db = get_db()
     alerts = []
-
-    player_count = int(db.execute("SELECT COUNT(*) AS c FROM players").fetchone()["c"])
-    nonce_count = int(db.execute("SELECT COUNT(*) AS c FROM nonces").fetchone()["c"])
+    with _db_session() as db:
+        player_count = int(db.execute("SELECT COUNT(*) AS c FROM players").fetchone()["c"])
+        nonce_count = int(db.execute("SELECT COUNT(*) AS c FROM nonces").fetchone()["c"])
 
     if player_count == 0:
         alerts.append(
@@ -193,216 +202,211 @@ async def auth_guest(request: Request):
         # Allow demo calls from curl.
         device_id = "demo-" + uuid.uuid4().hex
 
-    db = get_db()
-    existing = db.execute(
-        "SELECT player_id, token_sha256 FROM players WHERE device_id = ?",
-        (device_id,),
-    ).fetchone()
+    with _db_session() as db:
+        existing = db.execute(
+            "SELECT player_id, token_sha256 FROM players WHERE device_id = ?",
+            (device_id,),
+        ).fetchone()
 
-    salt = os.getenv("KBBQ_TOKEN_SALT", "dev-only-salt")
-    if existing:
-        player_id = str(existing["player_id"])
+        salt = os.getenv("KBBQ_TOKEN_SALT", "dev-only-salt")
+        if existing:
+            player_id = str(existing["player_id"])
+            token = new_token()
+            token_hash = token_sha256(token, salt)
+            db.execute(
+                "UPDATE players SET token_sha256 = ? WHERE player_id = ?",
+                (token_hash, player_id),
+            )
+            db.commit()
+            ensure_friend_code(db, player_id)
+            return AuthResponse(playerId=player_id, token=token)
+
+        player_id = "p_" + uuid.uuid4().hex
         token = new_token()
         token_hash = token_sha256(token, salt)
+        region = "KR"
+        display_name = "Guest-" + player_id[-4:].upper()
+
         db.execute(
-            "UPDATE players SET token_sha256 = ? WHERE player_id = ?",
-            (token_hash, player_id),
+            "INSERT INTO players(player_id, device_id, display_name, token_sha256, region, created_at) VALUES(?,?,?,?,?,?)",
+            (player_id, device_id, display_name, token_hash, region, int(time.time())),
         )
         db.commit()
         ensure_friend_code(db, player_id)
         return AuthResponse(playerId=player_id, token=token)
 
-    player_id = "p_" + uuid.uuid4().hex
-    token = new_token()
-    token_hash = token_sha256(token, salt)
-    region = "KR"
-    display_name = "Guest-" + player_id[-4:].upper()
-
-    db.execute(
-        "INSERT INTO players(player_id, device_id, display_name, token_sha256, region, created_at) VALUES(?,?,?,?,?,?)",
-        (player_id, device_id, display_name, token_hash, region, int(time.time())),
-    )
-    db.commit()
-    ensure_friend_code(db, player_id)
-    return AuthResponse(playerId=player_id, token=token)
-
 
 @app.post("/leaderboard/submit")
 async def leaderboard_submit(request: Request):
-    db = get_db()
-    player_id = require_bearer_player_id(request, db)
-
     raw = (await request.body()).decode("utf-8")
     try:
         payload = ScoreSubmitRequest.model_validate_json(raw)
     except Exception:
         raise HTTPException(status_code=400, detail="invalid json body")
 
-    if payload.playerId != player_id:
-        raise HTTPException(status_code=401, detail="player mismatch")
+    with _db_session() as db:
+        player_id = require_bearer_player_id(request, db)
+        if payload.playerId != player_id:
+            raise HTTPException(status_code=401, detail="player mismatch")
 
-    verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+        verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
 
-    secret = os.getenv("KBBQ_HMAC_SECRET", "CHANGE_ME")
-    # Match Unity client signing: sign a rounded integer score for deterministic cross-language behavior.
-    score_int = int(round(float(payload.score)))
-    body_sig_payload = f"{player_id}|{score_int}|{payload.timestamp}"
-    expected_body_sig = hmac_b64(secret, body_sig_payload)
-    if expected_body_sig != payload.signature:
-        raise HTTPException(status_code=401, detail="bad body signature")
+        secret = os.getenv("KBBQ_HMAC_SECRET", "CHANGE_ME")
+        # Match Unity client signing: sign a rounded integer score for deterministic cross-language behavior.
+        score_int = int(round(float(payload.score)))
+        body_sig_payload = f"{player_id}|{score_int}|{payload.timestamp}"
+        expected_body_sig = hmac_b64(secret, body_sig_payload)
+        if expected_body_sig != payload.signature:
+            raise HTTPException(status_code=401, detail="bad body signature")
 
-    # Upsert score (keep best score).
-    region_row = db.execute(
-        "SELECT region FROM players WHERE player_id = ?",
-        (player_id,),
-    ).fetchone()
-    region = str(region_row["region"]) if region_row else "KR"
+        # Upsert score (keep best score).
+        region_row = db.execute(
+            "SELECT region FROM players WHERE player_id = ?",
+            (player_id,),
+        ).fetchone()
+        region = str(region_row["region"]) if region_row else "KR"
 
-    existing = db.execute(
-        "SELECT score FROM leaderboard WHERE region = ? AND player_id = ?",
-        (region, player_id),
-    ).fetchone()
-    score = float(payload.score)
-    if existing is None:
-        db.execute(
-            "INSERT INTO leaderboard(region, player_id, score, updated_at) VALUES(?,?,?,?)",
-            (region, player_id, score, int(time.time())),
-        )
-    else:
-        best = max(float(existing["score"]), score)
-        db.execute(
-            "UPDATE leaderboard SET score = ?, updated_at = ? WHERE region = ? AND player_id = ?",
-            (best, int(time.time()), region, player_id),
-        )
-    db.commit()
-    return {"ok": True}
+        existing = db.execute(
+            "SELECT score FROM leaderboard WHERE region = ? AND player_id = ?",
+            (region, player_id),
+        ).fetchone()
+        score = float(payload.score)
+        if existing is None:
+            db.execute(
+                "INSERT INTO leaderboard(region, player_id, score, updated_at) VALUES(?,?,?,?)",
+                (region, player_id, score, int(time.time())),
+            )
+        else:
+            best = max(float(existing["score"]), score)
+            db.execute(
+                "UPDATE leaderboard SET score = ?, updated_at = ? WHERE region = ? AND player_id = ?",
+                (best, int(time.time()), region, player_id),
+            )
+        db.commit()
+        return {"ok": True}
 
 
 @app.get("/leaderboard/top", response_model=LeaderboardResponse)
 async def leaderboard_top(request: Request, region: str = "KR", limit: int = 10):
-    db = get_db()
-    player_id = require_bearer_player_id(request, db)
-    verify_signed_headers(request, db=db, player_id=player_id, raw_body="")
+    with _db_session() as db:
+        player_id = require_bearer_player_id(request, db)
+        verify_signed_headers(request, db=db, player_id=player_id, raw_body="")
 
-    limit = max(1, min(100, int(limit)))
-    region = (region or "KR").strip().upper()
+        limit = max(1, min(100, int(limit)))
+        region = (region or "KR").strip().upper()
 
-    rows = db.execute(
-        "SELECT l.player_id, p.display_name, l.score FROM leaderboard l JOIN players p ON p.player_id = l.player_id "
-        "WHERE l.region = ? ORDER BY l.score DESC LIMIT ?",
-        (region, limit),
-    ).fetchall()
+        rows = db.execute(
+            "SELECT l.player_id, p.display_name, l.score FROM leaderboard l JOIN players p ON p.player_id = l.player_id "
+            "WHERE l.region = ? ORDER BY l.score DESC LIMIT ?",
+            (region, limit),
+        ).fetchall()
 
-    entries = []
-    for idx, row in enumerate(rows, start=1):
-        entries.append(
-            LeaderboardEntry(
-                playerId=str(row["player_id"]),
-                displayName=str(row["display_name"]),
-                score=float(row["score"]),
-                rank=idx,
+        entries = []
+        for idx, row in enumerate(rows, start=1):
+            entries.append(
+                LeaderboardEntry(
+                    playerId=str(row["player_id"]),
+                    displayName=str(row["display_name"]),
+                    score=float(row["score"]),
+                    rank=idx,
+                )
             )
-        )
 
-    return LeaderboardResponse(entries=entries)
+        return LeaderboardResponse(entries=entries)
 
 
 @app.get("/friends/list", response_model=FriendListResponse)
 async def friends_list(request: Request):
-    db = get_db()
-    player_id = require_bearer_player_id(request, db)
-    verify_signed_headers(request, db=db, player_id=player_id, raw_body="")
+    with _db_session() as db:
+        player_id = require_bearer_player_id(request, db)
+        verify_signed_headers(request, db=db, player_id=player_id, raw_body="")
 
-    rows = db.execute(
-        "SELECT f.friend_player_id, p.display_name FROM friends f JOIN players p ON p.player_id = f.friend_player_id "
-        "WHERE f.player_id = ? ORDER BY p.display_name ASC LIMIT 50",
-        (player_id,),
-    ).fetchall()
+        rows = db.execute(
+            "SELECT f.friend_player_id, p.display_name FROM friends f JOIN players p ON p.player_id = f.friend_player_id "
+            "WHERE f.player_id = ? ORDER BY p.display_name ASC LIMIT 50",
+            (player_id,),
+        ).fetchall()
 
-    friends = [{"playerId": str(r["friend_player_id"]), "displayName": str(r["display_name"])} for r in rows]
-    return {"friends": friends}
+        friends = [{"playerId": str(r["friend_player_id"]), "displayName": str(r["display_name"])} for r in rows]
+        return {"friends": friends}
 
 
 @app.post("/analytics/event")
 async def analytics_event(request: Request):
-    db = get_db()
-    player_id = require_bearer_player_id(request, db)
-
     raw = (await request.body()).decode("utf-8")
     try:
         payload = AnalyticsEventRequest.model_validate_json(raw)
     except Exception:
         raise HTTPException(status_code=400, detail="invalid json body")
 
-    if payload.playerId != player_id:
-        raise HTTPException(status_code=401, detail="player mismatch")
+    with _db_session() as db:
+        player_id = require_bearer_player_id(request, db)
+        if payload.playerId != player_id:
+            raise HTTPException(status_code=401, detail="player mismatch")
+        verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
 
-    verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+        event_name = (payload.eventName or "").strip()
+        if not event_name:
+            raise HTTPException(status_code=400, detail="missing eventName")
 
-    event_name = (payload.eventName or "").strip()
-    if not event_name:
-        raise HTTPException(status_code=400, detail="missing eventName")
+        kv = payload.kv or []
+        if len(kv) > 50:
+            kv = kv[:50]
 
-    kv = payload.kv or []
-    if len(kv) > 50:
-        kv = kv[:50]
-
-    ts = int(payload.timestamp) if payload.timestamp else int(time.time())
-    db.execute(
-        "INSERT INTO analytics_events(player_id, event_name, kv_json, ts) VALUES(?,?,?,?)",
-        (player_id, event_name, json.dumps(kv), ts),
-    )
-    db.commit()
-    return {"ok": True}
+        ts = int(payload.timestamp) if payload.timestamp else int(time.time())
+        db.execute(
+            "INSERT INTO analytics_events(player_id, event_name, kv_json, ts) VALUES(?,?,?,?)",
+            (player_id, event_name, json.dumps(kv), ts),
+        )
+        db.commit()
+        return {"ok": True}
 
 
 @app.post("/friends/invite")
 async def friends_invite(request: Request):
-    db = get_db()
-    player_id = require_bearer_player_id(request, db)
-
     raw = (await request.body()).decode("utf-8")
     try:
         payload = FriendInviteRequest.model_validate_json(raw)
     except Exception:
         raise HTTPException(status_code=400, detail="invalid json body")
 
-    if payload.playerId != player_id:
-        raise HTTPException(status_code=401, detail="player mismatch")
+    with _db_session() as db:
+        player_id = require_bearer_player_id(request, db)
+        if payload.playerId != player_id:
+            raise HTTPException(status_code=401, detail="player mismatch")
+        verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
 
-    verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+        secret = os.getenv("KBBQ_HMAC_SECRET", "CHANGE_ME")
+        body_sig_payload = f"{player_id}|{payload.code}|{payload.timestamp}"
+        expected_body_sig = hmac_b64(secret, body_sig_payload)
+        if expected_body_sig != payload.signature:
+            raise HTTPException(status_code=401, detail="bad body signature")
 
-    secret = os.getenv("KBBQ_HMAC_SECRET", "CHANGE_ME")
-    body_sig_payload = f"{player_id}|{payload.code}|{payload.timestamp}"
-    expected_body_sig = hmac_b64(secret, body_sig_payload)
-    if expected_body_sig != payload.signature:
-        raise HTTPException(status_code=401, detail="bad body signature")
+        code = (payload.code or "").strip().upper()
+        if len(code) < 4:
+            raise HTTPException(status_code=400, detail="invalid code")
 
-    code = (payload.code or "").strip().upper()
-    if len(code) < 4:
-        raise HTTPException(status_code=400, detail="invalid code")
+        target = db.execute(
+            "SELECT player_id FROM friend_codes WHERE code = ?",
+            (code,),
+        ).fetchone()
+        if not target:
+            raise HTTPException(status_code=404, detail="code not found")
 
-    target = db.execute(
-        "SELECT player_id FROM friend_codes WHERE code = ?",
-        (code,),
-    ).fetchone()
-    if not target:
-        raise HTTPException(status_code=404, detail="code not found")
+        friend_id = str(target["player_id"])
+        if friend_id == player_id:
+            raise HTTPException(status_code=400, detail="cannot friend self")
 
-    friend_id = str(target["player_id"])
-    if friend_id == player_id:
-        raise HTTPException(status_code=400, detail="cannot friend self")
+        now = int(time.time())
+        # Create bidirectional friendship (idempotent).
+        db.execute(
+            "INSERT OR IGNORE INTO friends(player_id, friend_player_id, created_at) VALUES(?,?,?)",
+            (player_id, friend_id, now),
+        )
+        db.execute(
+            "INSERT OR IGNORE INTO friends(player_id, friend_player_id, created_at) VALUES(?,?,?)",
+            (friend_id, player_id, now),
+        )
+        db.commit()
 
-    now = int(time.time())
-    # Create bidirectional friendship (idempotent).
-    db.execute(
-        "INSERT OR IGNORE INTO friends(player_id, friend_player_id, created_at) VALUES(?,?,?)",
-        (player_id, friend_id, now),
-    )
-    db.execute(
-        "INSERT OR IGNORE INTO friends(player_id, friend_player_id, created_at) VALUES(?,?,?)",
-        (friend_id, player_id, now),
-    )
-    db.commit()
-
-    return {"ok": True}
+        return {"ok": True}
