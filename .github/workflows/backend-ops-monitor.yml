@@ -1,0 +1,32 @@
+name: backend-ops-monitor
+
+on:
+  schedule:
+    - cron: "*/30 * * * *"
+  workflow_dispatch:
+
+jobs:
+  health-check:
+    if: ${{ secrets.KBBQ_BACKEND_BASE_URL != '' && secrets.KBBQ_OPS_TOKEN != '' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Probe health/readiness/alerts
+        env:
+          BASE_URL: ${{ secrets.KBBQ_BACKEND_BASE_URL }}
+          OPS_TOKEN: ${{ secrets.KBBQ_OPS_TOKEN }}
+        run: |
+          set -euo pipefail
+          curl -fsS "${BASE_URL%/}/health" >/tmp/health.json
+          curl -fsS "${BASE_URL%/}/readiness" >/tmp/readiness.json
+          curl -fsS -H "X-Ops-Token: $OPS_TOKEN" "${BASE_URL%/}/ops/alerts" >/tmp/alerts.json
+          python - <<'PY'
+          import json
+          with open("/tmp/readiness.json","r",encoding="utf-8") as f:
+              readiness = json.load(f)
+          with open("/tmp/alerts.json","r",encoding="utf-8") as f:
+              alerts = json.load(f)
+          if not readiness.get("ready", False):
+              raise SystemExit("readiness=false")
+          print("readiness=ok warnings=", len(readiness.get("warnings", [])))
+          print("alerts_count=", len(alerts.get("alerts", [])))
+          PY

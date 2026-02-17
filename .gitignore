@@ -33,6 +33,12 @@
 *.VC.db
 *.tsbuildinfo
 
+# Keep deterministic simulator project files versioned.
+!sim/**/*.csproj
+
+# Simulator build outputs
+sim/**/bin/
+
 # Unity3D generated files
 *.pidb.meta
 *.pdb.meta

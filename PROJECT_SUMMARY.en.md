@@ -31,7 +31,9 @@
 
 ## Monetization
 - `MonetizationConfig` defines rewarded boost, interstitial reward, and IAP packs.
-- `MonetizationService` grants currency/boosts directly (no real ad/IAP SDK wired in).
+- `MonetizationService` supports local-safe grant flow and optional backend verification (`/iap/verify`) before currency is granted.
+- Real store receipt verification (App Store / Play Store) remains an integration step for production deployment.
+  - Added production-ready store verification mode hooks (`mock` / `structured` / `store`) on backend.
 
 ## Networking & backend (optional)
 - Unity network clients (`AuthClient`, `LeaderboardClient`, `FriendsClient`, `AnalyticsClient`) use `UnityWebRequest` with HMAC-signed headers + nonce replay protection.
@@ -45,6 +47,9 @@
   - leaderboard: `POST /leaderboard/submit`, `GET /leaderboard/top`
   - friends: `POST /friends/invite`, `GET /friends/list`
   - analytics: `POST /analytics/event`
+  - iap verify: `POST /iap/verify` (server-authoritative rewards + transaction idempotency)
+  - readiness: `GET /readiness` (config + DB probe checks)
+  - monitoring: `GET /metrics`, `GET /ops/alerts`
 
 ## Portfolio hardening (quality signals)
 - **Data validation**: `KBBQ/Validate Data (Portfolio)` checks duplicate IDs, tuning sanity, and safe network defaults.
@@ -56,3 +61,4 @@
 ## Gaps / notes
 - Main documentation is in `README.md` (with `README.en.md` / `README.ko.md`).
 - Tests are added/extended as part of the portfolio hardening work.
+- One-command local validation gate: `tools/portfolio_quality_gate.sh`.
