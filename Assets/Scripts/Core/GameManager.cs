@@ -641,7 +641,7 @@ public class GameManager : MonoBehaviour
         slot.flipped = false;
         grillSlots[slotIndex] = slot;
 
-        audioManager?.PlayButton();
+        audioManager?.PlayGrillLoad();
         uiController?.ShowGrillStatus("Loaded " + item.displayName + " on grill " + (slotIndex + 1) + ".");
         RefreshSecondaryUI();
         Save();
@@ -675,7 +675,7 @@ public class GameManager : MonoBehaviour
 
         slot.flipped = true;
         grillSlots[slotIndex] = slot;
-        audioManager?.PlayBoost();
+        audioManager?.PlayGrillFlip();
         uiController?.ShowGrillStatus("Flip complete on slot " + (slotIndex + 1) + ".");
         RefreshSecondaryUI();
         Save();
@@ -713,7 +713,7 @@ public class GameManager : MonoBehaviour
         if (IsSlotBurned(slot))
         {
             ClearGrillSlot(slotIndex);
-            audioManager?.PlayCustomerReaction(false);
+            audioManager?.PlayGrillBurn();
             uiController?.ShowGrillStatus(item.displayName + " burned. Discarded.");
             RefreshSecondaryUI();
             Save();
@@ -731,7 +731,7 @@ public class GameManager : MonoBehaviour
         }
 
         ClearGrillSlot(slotIndex);
-        audioManager?.PlayCoin();
+        audioManager?.PlayGrillCollect();
         uiController?.ShowGrillStatus(item.displayName + " plated. +" + FormatUtil.FormatCurrency(saleReward));
         RefreshSecondaryUI();
         Save();
@@ -833,6 +833,18 @@ public class GameManager : MonoBehaviour
             slot.cookTime += step;
             grillSlots[i] = slot;
         }
+
+        var occupiedCount = 0;
+        for (int i = 0; i < grillSlots.Length; i++)
+        {
+            if (!string.IsNullOrEmpty(grillSlots[i].menuId))
+            {
+                occupiedCount++;
+            }
+        }
+
+        var sizzleIntensity = grillSlots.Length > 0 ? occupiedCount / (float)grillSlots.Length : 0f;
+        audioManager?.SetSizzleIntensity(sizzleIntensity);
     }
 
     private List<MeatInventoryUiEntry> BuildMeatInventoryUiEntries()
