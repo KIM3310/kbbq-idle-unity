@@ -52,6 +52,8 @@ public class UIController : MonoBehaviour
 
     private GameManager gameManager;
     private Vector2Int lastScreenSize = new Vector2Int(-1, -1);
+    private double latestCurrency;
+    private QueueMetrics latestQueueMetrics;
 
     private void Awake()
     {
@@ -97,15 +99,18 @@ public class UIController : MonoBehaviour
 
     public void UpdateEconomy(double currency, double incomePerSec)
     {
+        latestCurrency = currency;
         if (currencyText != null)
         {
-            currencyText.text = FormatUtil.FormatCurrency(currency);
+            currencyText.text = "$ " + FormatUtil.FormatCurrency(currency);
         }
 
         if (incomeText != null)
         {
-            incomeText.text = FormatUtil.FormatCurrency(incomePerSec) + "/s";
+            incomeText.text = "Income " + FormatUtil.FormatCurrency(incomePerSec) + "/s";
         }
+
+        queueControlView?.RenderMetrics(latestQueueMetrics, latestCurrency);
     }
 
     public void UpdateStoreTier(StoreTier tier)
@@ -174,6 +179,8 @@ public class UIController : MonoBehaviour
 
     public void UpdateQueue(IReadOnlyList<CustomerQueueEntry> queue)
     {
+        queueControlView?.RenderQueue(queue);
+
         if (queueText == null)
         {
             return;
@@ -199,18 +206,21 @@ public class UIController : MonoBehaviour
             lines.Add(entry.customerName + " · " + remaining.ToString("0") + "s");
         }
 
-        queueText.text = string.Join("\n", lines);
+        queueText.text = "Queue " + queue.Count + "\n" + string.Join("\n", lines);
     }
 
     public void UpdateQueueMetrics(QueueMetrics metrics)
     {
+        latestQueueMetrics = metrics;
+        queueControlView?.RenderMetrics(metrics, latestCurrency);
+
         if (queueMetricsText == null)
         {
             return;
         }
 
-        queueMetricsText.text = "Avg wait " + metrics.avgWaitSeconds.ToString("0.0") +
-                                "s\nServed/min " + metrics.servedPerMinute.ToString("0");
+        queueMetricsText.text = "Served " + metrics.totalServed +
+                                "\nAvg " + metrics.avgWaitSeconds.ToString("0.0") + "s";
     }
 
     public void UpdateCombo(int comboCount, float comboTimeRemaining, float comboDuration, float comboMultiplier)
@@ -254,6 +264,11 @@ public class UIController : MonoBehaviour
         {
             grillStationView.ShowMessage(message);
         }
+    }
+
+    public void PlayCustomerEating(string customerName, string menuName, bool happy)
+    {
+        queueControlView?.PlayEating(customerName, menuName, happy);
     }
 
     public void SetDebugPanelVisible(bool visible)
@@ -640,8 +655,12 @@ public class UIController : MonoBehaviour
         {
             canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
             canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
-            canvasScaler.referenceResolution = landscape ? new Vector2(1920f, 1080f) : new Vector2(1080f, 1920f);
-            canvasScaler.matchWidthOrHeight = landscape ? (ultraWide ? 0.62f : 0.52f) : 0.68f;
+            canvasScaler.referenceResolution = landscape
+                ? (compact ? new Vector2(1366f, 768f) : new Vector2(1920f, 1080f))
+                : (compact ? new Vector2(720f, 1280f) : new Vector2(1080f, 1920f));
+            canvasScaler.matchWidthOrHeight = landscape
+                ? (compact ? 0.44f : (ultraWide ? 0.62f : 0.52f))
+                : (compact ? 0.50f : 0.68f);
         }
 
         var canvas = GetComponent<Canvas>();
@@ -652,19 +671,22 @@ public class UIController : MonoBehaviour
         var safeBottom = safeArea.yMin / scaleFactor;
         var safeTop = Mathf.Max(0f, Screen.height - safeArea.yMax) / scaleFactor;
 
-        var margin = panelMargin + (compact ? -4f : 2f);
-        var topHeight = landscape ? 128f : 188f;
-        var bottomHeight = landscape ? 176f : 256f;
+        var margin = panelMargin + (compact ? -8f : 2f);
+        var topHeight = landscape ? (compact ? 92f : 128f) : (compact ? 98f : 188f);
+        var bottomHeight = landscape ? (compact ? 102f : 176f) : (compact ? 124f : 256f);
 
-        var availableWidth = Mathf.Max(760f, uiWidth - safeLeft - safeRight - margin * 4f);
+        var availableWidthRaw = uiWidth - safeLeft - safeRight - margin * 2f;
+        var minAvailableWidth = landscape ? (compact ? 420f : 760f) : (compact ? 260f : 480f);
+        var availableWidth = Mathf.Max(minAvailableWidth, availableWidthRaw);
         var leftWidth = landscape
-            ? Mathf.Clamp(availableWidth * 0.21f, 280f, 420f)
-            : Mathf.Clamp(availableWidth * 0.25f, 220f, 340f);
+            ? Mathf.Clamp(availableWidth * 0.21f, compact ? 120f : 280f, compact ? 230f : 420f)
+            : Mathf.Clamp(availableWidth * 0.24f, compact ? 70f : 220f, compact ? 138f : 340f);
         var rightWidth = landscape
-            ? Mathf.Clamp(availableWidth * 0.27f, 340f, 520f)
-            : Mathf.Clamp(availableWidth * 0.25f, 220f, 340f);
+            ? Mathf.Clamp(availableWidth * 0.27f, compact ? 140f : 340f, compact ? 280f : 520f)
+            : Mathf.Clamp(availableWidth * 0.24f, compact ? 70f : 220f, compact ? 138f : 340f);
 
-        var maxSideTotal = availableWidth - (compact ? 260f : 340f);
+        var centerMinimum = landscape ? (compact ? 180f : 340f) : (compact ? 140f : 220f);
+        var maxSideTotal = availableWidth - centerMinimum;
         if (maxSideTotal > 0f && leftWidth + rightWidth > maxSideTotal)
         {
             var scale = maxSideTotal / Mathf.Max(1f, leftWidth + rightWidth);
@@ -678,10 +700,10 @@ public class UIController : MonoBehaviour
         SetRightColumn(upgradesPanel, margin + safeRight, safeBottom + bottomHeight + margin, rightWidth, safeTop + topHeight + margin);
         SetCenterPanel(grillPanel, margin + safeLeft + leftWidth + margin, safeBottom + bottomHeight + margin, margin + safeRight + rightWidth + margin, safeTop + topHeight + margin);
 
-        var missionWidth = landscape ? 320f : 360f;
-        var missionHeight = landscape ? 144f : 190f;
-        var prestigeWidth = landscape ? 280f : 320f;
-        var prestigeHeight = landscape ? 132f : 168f;
+        var missionWidth = landscape ? (compact ? 190f : 320f) : (compact ? 170f : 360f);
+        var missionHeight = landscape ? (compact ? 88f : 144f) : (compact ? 110f : 190f);
+        var prestigeWidth = landscape ? (compact ? 170f : 280f) : (compact ? 148f : 320f);
+        var prestigeHeight = landscape ? (compact ? 82f : 132f) : (compact ? 96f : 168f);
         SetBottomLeftPanel(dailyMissionPanelRect, margin + safeLeft + 2f, safeBottom + margin + 2f, missionWidth, missionHeight);
         SetBottomRightPanel(prestigePanelRect, margin + safeRight + 2f, safeBottom + margin + 2f, prestigeWidth, prestigeHeight);
         LayoutAuxiliaryPanels(landscape);
@@ -718,15 +740,16 @@ public class UIController : MonoBehaviour
 
     private void LayoutTopBarFields(bool landscape)
     {
-        var row1 = landscape ? 42f : 56f;
-        var row2 = landscape ? 88f : 132f;
-        var slotWidth = landscape ? 320f : 260f;
-        var slotHeight = landscape ? 38f : 54f;
+        var compactTop = topBar != null && topBar.rect.height < 140f;
+        var row1 = landscape ? (compactTop ? 30f : 42f) : (compactTop ? 24f : 56f);
+        var row2 = landscape ? (compactTop ? 64f : 88f) : (compactTop ? 58f : 132f);
+        var slotWidth = landscape ? (compactTop ? 220f : 320f) : (compactTop ? 130f : 260f);
+        var slotHeight = landscape ? (compactTop ? 30f : 38f) : (compactTop ? 24f : 54f);
 
         PlaceTopText(currencyText, 0.16f, row1, slotWidth, slotHeight, TextAnchor.MiddleLeft);
         PlaceTopText(incomeText, 0.16f, row2, slotWidth, slotHeight, TextAnchor.MiddleLeft);
-        PlaceTopText(storeTierText, 0.50f, row1, 280f, slotHeight, TextAnchor.MiddleCenter);
-        PlaceTopText(prestigeText, 0.50f, row2, 280f, slotHeight, TextAnchor.MiddleCenter);
+        PlaceTopText(storeTierText, 0.50f, row1, compactTop ? 150f : 280f, slotHeight, TextAnchor.MiddleCenter);
+        PlaceTopText(prestigeText, 0.50f, row2, compactTop ? 150f : 280f, slotHeight, TextAnchor.MiddleCenter);
         PlaceTopText(dailyMissionsText, 0.84f, row1, slotWidth, slotHeight, TextAnchor.MiddleRight);
         PlaceTopText(loginRewardText, 0.84f, row2, slotWidth, slotHeight, TextAnchor.MiddleRight);
 
@@ -739,8 +762,10 @@ public class UIController : MonoBehaviour
                 rect.anchorMin = new Vector2(0.5f, 0f);
                 rect.anchorMax = new Vector2(0.5f, 0f);
                 rect.pivot = new Vector2(0.5f, 0f);
-                rect.anchoredPosition = new Vector2(0f, landscape ? 10f : 14f);
-                rect.sizeDelta = new Vector2(landscape ? 400f : 460f, landscape ? 16f : 22f);
+                rect.anchoredPosition = new Vector2(0f, compactTop ? 6f : (landscape ? 10f : 14f));
+                rect.sizeDelta = new Vector2(
+                    compactTop ? 220f : (landscape ? 400f : 460f),
+                    compactTop ? 12f : (landscape ? 16f : 22f));
             }
         }
     }
@@ -809,16 +834,25 @@ public class UIController : MonoBehaviour
     {
         var bestButtonRect = FindRectTransformByName("BestUpgradeButton");
         var boostButtonRect = FindRectTransformByName("BoostButton");
+        var compactBottom = bottomBar != null && bottomBar.rect.width < 620f;
 
-        if (landscape)
+        if (landscape && !compactBottom)
         {
             PlaceBottomButton(bestButtonRect, -170f, 0f, 210f, 62f);
             PlaceBottomButton(boostButtonRect, 90f, 0f, 250f, 62f);
         }
         else
         {
-            PlaceBottomButton(bestButtonRect, 0f, 34f, 280f, 66f);
-            PlaceBottomButton(boostButtonRect, 0f, -38f, 320f, 66f);
+            if (compactBottom)
+            {
+                PlaceBottomButton(bestButtonRect, -62f, 0f, 120f, 44f);
+                PlaceBottomButton(boostButtonRect, 62f, 0f, 128f, 44f);
+            }
+            else
+            {
+                PlaceBottomButton(bestButtonRect, 0f, 34f, 280f, 66f);
+                PlaceBottomButton(boostButtonRect, 0f, -38f, 320f, 66f);
+            }
         }
     }
 

@@ -41,7 +41,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private float rushServiceDuration = 3f;
 
     [Header("Kitchen Gameplay")]
-    [SerializeField] private int grillSlotCount = 2;
+    [SerializeField] private int grillSlotCount = 4;
     [SerializeField] private float grillCookSeconds = 7f;
     [SerializeField] private float grillBurnSeconds = 12f;
     [SerializeField] private float grillFlipReadySeconds = 3f;
@@ -205,6 +205,30 @@ public class GameManager : MonoBehaviour
     public AudioManager GetAudioManager() => audioManager;
     public MonetizationService GetMonetizationService() => monetizationService;
     public NetworkService GetNetworkService() => networkService;
+    public int GetGrillSlotCount() => grillSlots != null && grillSlots.Length > 0 ? grillSlots.Length : Mathf.Max(1, grillSlotCount);
+    public int GetUpgradeVisualTier()
+    {
+        if (upgradeSystem == null || upgradesData == null || upgradesData.Count == 0)
+        {
+            return 0;
+        }
+
+        var totalLevel = 0;
+        for (int i = 0; i < upgradesData.Count; i++)
+        {
+            var id = upgradesData[i] != null ? upgradesData[i].id : null;
+            if (string.IsNullOrEmpty(id))
+            {
+                continue;
+            }
+            totalLevel += Mathf.Max(0, upgradeSystem.GetLevel(id));
+        }
+
+        if (totalLevel >= 26) return 3;
+        if (totalLevel >= 14) return 2;
+        if (totalLevel >= 6) return 1;
+        return 0;
+    }
     public IReadOnlyList<GrillSlotUiState> GetGrillSlotsUi() => BuildGrillSlotUiStates();
     public List<MeatInventoryUiEntry> GetMeatInventoryUiEntries() => BuildMeatInventoryUiEntries();
     public GrillSlotUiState GetGrillSlotUiState(int slotIndex)
@@ -436,6 +460,7 @@ public class GameManager : MonoBehaviour
             tutorialSystem?.OnServe();
             uiController?.UpdateSatisfaction(customerSystem.Satisfaction);
             uiController?.ShowGrillStatus(cookedMatch ? "Served fresh grilled meat." : "Served with substitute cut.");
+            uiController?.PlayCustomerEating(result.customerName, result.menuName, happy);
             RefreshSecondaryUI();
             Save();
         }
@@ -786,7 +811,7 @@ public class GameManager : MonoBehaviour
 
         EnsureKitchenStockForUnlockedMenus();
 
-        grillSlotCount = Mathf.Clamp(grillSlotCount, 1, 4);
+        grillSlotCount = 4;
         grillSlots = new GrillSlotStateRuntime[grillSlotCount];
         if (saveData != null && saveData.grillSlots != null)
         {

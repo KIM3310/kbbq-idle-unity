@@ -15,6 +15,7 @@ public class UpgradeListView : MonoBehaviour
     private readonly List<UpgradeRowView> pool = new List<UpgradeRowView>();
     private GameManager gameManager;
     private float lastContentWidth = -1f;
+    private UpgradeModalView modalView;
 
     private void Awake()
     {
@@ -42,6 +43,7 @@ public class UpgradeListView : MonoBehaviour
         EnsureContentLayout();
         BuildPool(initialPoolSize);
         UpdateRowWidths();
+        EnsureModal();
     }
 
     private void LateUpdate()
@@ -64,7 +66,9 @@ public class UpgradeListView : MonoBehaviour
         for (int i = 0; i < pool.Count; i++)
         {
             pool[i].Bind(manager);
+            pool[i].SetRequestUpgradeAction(HandleUpgradeRequested);
         }
+        modalView?.Bind(manager);
     }
 
     public void Render(IReadOnlyList<UpgradeUiEntry> upgrades)
@@ -81,6 +85,7 @@ public class UpgradeListView : MonoBehaviour
                 var row = pool[i];
                 row.gameObject.SetActive(true);
                 row.Bind(gameManager);
+                row.SetRequestUpgradeAction(HandleUpgradeRequested);
                 row.SetData(entry);
             }
             else
@@ -109,8 +114,60 @@ public class UpgradeListView : MonoBehaviour
             ConfigureRowRect(instance.transform as RectTransform);
             instance.gameObject.SetActive(false);
             instance.Bind(gameManager);
+            instance.SetRequestUpgradeAction(HandleUpgradeRequested);
             pool.Add(instance);
         }
+    }
+
+    private void EnsureModal()
+    {
+        if (modalView != null)
+        {
+            return;
+        }
+
+        var canvas = GetComponentInParent<Canvas>();
+        if (canvas == null)
+        {
+            return;
+        }
+
+        var modalGo = new GameObject("UpgradeModalView", typeof(RectTransform), typeof(CanvasRenderer), typeof(Image), typeof(UpgradeModalView));
+        var rect = modalGo.GetComponent<RectTransform>();
+        rect.SetParent(canvas.transform, false);
+        rect.anchorMin = new Vector2(0f, 0f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.offsetMin = Vector2.zero;
+        rect.offsetMax = Vector2.zero;
+
+        var image = modalGo.GetComponent<Image>();
+        image.color = new Color(0f, 0f, 0f, 0.001f);
+        image.raycastTarget = true;
+
+        modalView = modalGo.GetComponent<UpgradeModalView>();
+        modalView.Bind(gameManager);
+        modalGo.SetActive(false);
+    }
+
+    private void HandleUpgradeRequested(UpgradeUiEntry entry)
+    {
+        EnsureModal();
+        if (modalView == null)
+        {
+            if (gameManager != null && !string.IsNullOrEmpty(entry.id))
+            {
+                gameManager.PurchaseUpgrade(entry.id);
+            }
+            return;
+        }
+
+        modalView.Show(entry, () =>
+        {
+            if (gameManager != null)
+            {
+                Render(gameManager.GetUpgradeUiEntries());
+            }
+        });
     }
 
     private void EnsurePoolSize(int count)

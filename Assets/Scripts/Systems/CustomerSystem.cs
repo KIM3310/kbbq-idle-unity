@@ -18,6 +18,7 @@ public struct ServeResult
     public float quality;
     public float waitRatio;
     public float tipMultiplier;
+    public string customerName;
     public string menuId;
     public string menuName;
     public double basePrice;
@@ -48,6 +49,8 @@ public class CustomerSystem
     private int comboMax = 8;
     private float comboStepBonus = 0.05f;
     private bool autoServeEnabled = true;
+    private int totalServed = 0;
+    private int totalArrived = 0;
 
     public float Satisfaction => satisfaction;
     public IReadOnlyList<CustomerQueueEntry> Queue => queue;
@@ -141,10 +144,12 @@ public class CustomerSystem
         result.quality = quality;
         result.waitRatio = waitRatio;
         result.tipMultiplier = served.tipMultiplier;
+        result.customerName = served.customerName;
         result.menuId = served.menuId;
         result.menuName = served.menuName;
         result.basePrice = served.menuBasePrice;
         result.comboCount = comboCount;
+        totalServed++;
         return result;
     }
 
@@ -175,7 +180,9 @@ public class CustomerSystem
         {
             queueCount = queue.Count,
             avgWaitSeconds = count > 0 ? serveWaitSum / count : 0f,
-            servedPerMinute = count
+            servedPerMinute = count,
+            totalServed = totalServed,
+            totalArrived = totalArrived
         };
     }
 
@@ -218,6 +225,7 @@ public class CustomerSystem
             if (queue.Count < maxQueue)
             {
                 queue.Add(GenerateEntry(menuSystem));
+                totalArrived++;
             }
 
             var satisfactionFactor = Mathf.Lerp(1.25f, 0.65f, satisfaction);
@@ -234,6 +242,7 @@ public class CustomerSystem
             var quality = Mathf.Clamp01(0.8f + (serviceQualityMultiplier - 1f) * 0.2f - waitRatio * 0.4f);
             RegisterService(quality);
             RecordServe(served.waitTime);
+            totalServed++;
             var serviceMultiplier = Mathf.Max(0.25f, serviceRateMultiplier);
             serviceTimer = (baseServiceInterval * Random.Range(0.85f, 1.2f)) / serviceMultiplier;
         }

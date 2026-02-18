@@ -7,9 +7,10 @@ public class GrillStationView : MonoBehaviour
 {
     private const float RefreshInterval = 0.15f;
     private const float SlotFxDuration = 0.35f;
-    private const float SlotPixelSize = 152f;
-    private const float SlotGrillWidth = 188f;
-    private const float SlotGrillHeight = 158f;
+    private const float SlotPixelSize = 118f;
+    private const float SlotGrillWidth = 150f;
+    private const float SlotGrillHeight = 116f;
+    private const int MaxSlots = 4;
 
     private GameManager gameManager;
     private RectTransform root;
@@ -18,15 +19,15 @@ public class GrillStationView : MonoBehaviour
     private Text statusText;
     private Button cycleButton;
     private Button buyButton;
-    private readonly Button[] slotButtons = new Button[2];
-    private readonly Text[] slotTexts = new Text[2];
-    private readonly Image[] slotGrillImages = new Image[2];
-    private readonly Image[] slotPixelImages = new Image[2];
-    private readonly Image[] slotSmokeImages = new Image[2];
-    private readonly Image[] slotFxImages = new Image[2];
-    private readonly Image[] slotProgressBacks = new Image[2];
-    private readonly Image[] slotProgressFills = new Image[2];
-    private readonly float[] slotFxTimers = new float[2];
+    private readonly Button[] slotButtons = new Button[MaxSlots];
+    private readonly Text[] slotTexts = new Text[MaxSlots];
+    private readonly Image[] slotGrillImages = new Image[MaxSlots];
+    private readonly Image[] slotPixelImages = new Image[MaxSlots];
+    private readonly Image[] slotSmokeImages = new Image[MaxSlots];
+    private readonly Image[] slotFxImages = new Image[MaxSlots];
+    private readonly Image[] slotProgressBacks = new Image[MaxSlots];
+    private readonly Image[] slotProgressFills = new Image[MaxSlots];
+    private readonly float[] slotFxTimers = new float[MaxSlots];
     private readonly List<MeatInventoryUiEntry> meats = new List<MeatInventoryUiEntry>();
     private Sprite pixelEmptySprite;
     private Sprite pixelRawSprite;
@@ -35,6 +36,9 @@ public class GrillStationView : MonoBehaviour
     private Sprite pixelBurnedSprite;
     private Sprite pixelSparkSprite;
     private Sprite pixelGrillSprite;
+    private Sprite pixelGrillTier1Sprite;
+    private Sprite pixelGrillTier2Sprite;
+    private Sprite pixelGrillTier3Sprite;
     private Sprite pixelSmokeSprite;
 
     private int selectedIndex;
@@ -42,6 +46,8 @@ public class GrillStationView : MonoBehaviour
     private float messageTimer;
     private string transientMessage;
     private bool uiBuilt;
+    private int activeSlotCount = MaxSlots;
+    private int upgradeVisualTier;
 
     private void Awake()
     {
@@ -79,6 +85,7 @@ public class GrillStationView : MonoBehaviour
     {
         gameManager = manager;
         selectedIndex = 0;
+        activeSlotCount = gameManager != null ? Mathf.Clamp(gameManager.GetGrillSlotCount(), 1, MaxSlots) : MaxSlots;
         Refresh();
     }
 
@@ -88,6 +95,8 @@ public class GrillStationView : MonoBehaviour
         {
             return;
         }
+
+        activeSlotCount = Mathf.Clamp(gameManager.GetGrillSlotCount(), 1, MaxSlots);
 
         meats.Clear();
         meats.AddRange(gameManager.GetMeatInventoryUiEntries());
@@ -102,8 +111,19 @@ public class GrillStationView : MonoBehaviour
 
         UpdateSelectionText();
         UpdateInventoryText();
-        UpdateSlotVisual(0);
-        UpdateSlotVisual(1);
+        RefreshUpgradeTier();
+        for (int i = 0; i < slotButtons.Length; i++)
+        {
+            var isActive = i < activeSlotCount;
+            if (slotButtons[i] != null)
+            {
+                slotButtons[i].gameObject.SetActive(isActive);
+            }
+            if (isActive)
+            {
+                UpdateSlotVisual(i);
+            }
+        }
         UpdateStatusText();
     }
 
@@ -152,11 +172,13 @@ public class GrillStationView : MonoBehaviour
         inventoryText = CreateText("InventoryText", hudRect, 14, TextAnchor.UpperLeft, new Color(0.94f, 0.90f, 0.78f, 1f));
         SetRect(inventoryText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(8f, -150f), new Vector2(-8f, -76f));
 
-        BuildSlotUi(0, hudRect, "GrillSlotAButton", new Vector2(0f, 0f), new Vector2(0.5f, 1f), new Vector2(8f, 120f), new Vector2(-6f, -162f));
-        BuildSlotUi(1, hudRect, "GrillSlotBButton", new Vector2(0.5f, 0f), new Vector2(1f, 1f), new Vector2(6f, 120f), new Vector2(-8f, -162f));
+        BuildSlotUi(0, hudRect, "GrillSlot1Button", new Vector2(0f, 0.5f), new Vector2(0.5f, 1f), new Vector2(8f, 6f), new Vector2(-6f, -156f));
+        BuildSlotUi(1, hudRect, "GrillSlot2Button", new Vector2(0.5f, 0.5f), new Vector2(1f, 1f), new Vector2(6f, 6f), new Vector2(-8f, -156f));
+        BuildSlotUi(2, hudRect, "GrillSlot3Button", new Vector2(0f, 0f), new Vector2(0.5f, 0.5f), new Vector2(8f, 100f), new Vector2(-6f, -84f));
+        BuildSlotUi(3, hudRect, "GrillSlot4Button", new Vector2(0.5f, 0f), new Vector2(1f, 0.5f), new Vector2(6f, 100f), new Vector2(-8f, -84f));
 
         statusText = CreateText("StatusText", hudRect, 14, TextAnchor.MiddleCenter, new Color(0.98f, 0.93f, 0.82f, 1f));
-        SetRect(statusText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(8f, 12f), new Vector2(-8f, 104f));
+        SetRect(statusText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(8f, 10f), new Vector2(-8f, 82f));
 
         uiBuilt = true;
     }
@@ -209,7 +231,7 @@ public class GrillStationView : MonoBehaviour
             slotTexts[slotIndex].alignment = TextAnchor.UpperCenter;
             slotTexts[slotIndex].lineSpacing = 1.06f;
             slotTexts[slotIndex].color = new Color(0.99f, 0.94f, 0.86f, 1f);
-            SetRect(slotTexts[slotIndex].rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(8f, 8f), new Vector2(-8f, 66f));
+            SetRect(slotTexts[slotIndex].rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(8f, 8f), new Vector2(-8f, 50f));
         }
     }
 
@@ -249,6 +271,11 @@ public class GrillStationView : MonoBehaviour
     private void HandleSlotAction(int slotIndex)
     {
         if (gameManager == null)
+        {
+            return;
+        }
+
+        if (slotIndex < 0 || slotIndex >= activeSlotCount)
         {
             return;
         }
@@ -363,9 +390,10 @@ public class GrillStationView : MonoBehaviour
         }
 
         var slot = gameManager.GetGrillSlotUiState(slotIndex);
+        var slotTag = "G" + (slotIndex + 1) + " ";
         if (!slot.occupied)
         {
-            label.text = "GRILL " + (slotIndex + 1) + "\nLOAD CUT";
+            label.text = slotTag + "IDLE\nLOAD CUT";
             TintButton(button, new Color(0.29f, 0.12f, 0.09f, 0.92f));
             SetSlotGrillTint(slotIndex, new Color(0.72f, 0.66f, 0.58f, 0.70f));
             SetSlotPixelVisual(slotIndex, pixelEmptySprite, new Color(0.96f, 0.96f, 0.96f, 0.95f), 1.02f);
@@ -378,7 +406,7 @@ public class GrillStationView : MonoBehaviour
 
         if (slot.burned)
         {
-            label.text = slot.displayName + "\nBURNT\nDISCARD";
+            label.text = slotTag + slot.displayName + "\nBURNT\nDISCARD";
             TintButton(button, new Color(0.20f, 0.08f, 0.07f, 0.96f));
             SetSlotGrillTint(slotIndex, new Color(0.48f, 0.41f, 0.36f, 0.85f));
             SetSlotPixelVisual(slotIndex, pixelBurnedSprite, new Color(0.82f, 0.74f, 0.74f, 1f), 1.06f);
@@ -389,7 +417,7 @@ public class GrillStationView : MonoBehaviour
 
         if (slot.readyToCollect)
         {
-            label.text = slot.displayName + "\nREADY\nCOLLECT";
+            label.text = slotTag + slot.displayName + "\nREADY\nCOLLECT";
             TintButton(button, new Color(0.64f, 0.31f, 0.18f, 0.98f));
             SetSlotGrillTint(slotIndex, new Color(0.82f, 0.74f, 0.58f, 0.86f));
             var pulse = 0.95f + Mathf.Sin(Time.unscaledTime * 8.5f) * 0.09f;
@@ -402,7 +430,7 @@ public class GrillStationView : MonoBehaviour
         var percent = Mathf.RoundToInt(progress * 100f);
         if (slot.canFlip)
         {
-            label.text = slot.displayName + "\n" + percent + "%\nFLIP NOW";
+            label.text = slotTag + slot.displayName + "\n" + percent + "%\nFLIP NOW";
             TintButton(button, new Color(0.54f, 0.22f, 0.14f, 0.96f));
             SetSlotGrillTint(slotIndex, new Color(0.80f, 0.70f, 0.56f, 0.84f));
             var pulse = 0.96f + Mathf.Sin(Time.unscaledTime * 7.5f) * 0.06f;
@@ -413,7 +441,7 @@ public class GrillStationView : MonoBehaviour
         }
 
         var phase = slot.flipped ? "BACK SIDE" : "FRONT SIDE";
-        label.text = slot.displayName + "\n" + phase + "\n" + percent + "%";
+        label.text = slotTag + slot.displayName + "\n" + phase + "\n" + percent + "%";
         TintButton(button, new Color(0.42f, 0.18f, 0.12f, 0.95f));
         SetSlotGrillTint(slotIndex, new Color(0.76f, 0.67f, 0.54f, 0.82f));
         SetSlotPixelVisual(
@@ -439,6 +467,74 @@ public class GrillStationView : MonoBehaviour
         }
 
         statusText.text = "Flow: Buy raw -> Grill -> Flip -> Collect -> Serve";
+    }
+
+    private void RefreshUpgradeTier()
+    {
+        if (gameManager == null)
+        {
+            return;
+        }
+
+        var tier = Mathf.Clamp(gameManager.GetUpgradeVisualTier(), 0, 3);
+        if (tier == upgradeVisualTier && slotGrillImages[0] != null)
+        {
+            return;
+        }
+
+        upgradeVisualTier = tier;
+        var sprite = GetGrillSpriteForTier(tier);
+        for (int i = 0; i < slotGrillImages.Length; i++)
+        {
+            var image = slotGrillImages[i];
+            if (image == null)
+            {
+                continue;
+            }
+
+            image.sprite = sprite;
+            image.color = GetTierBaseColor(tier);
+        }
+    }
+
+    private Sprite GetGrillSpriteForTier(int tier)
+    {
+        if (tier >= 3 && pixelGrillTier3Sprite != null)
+        {
+            return pixelGrillTier3Sprite;
+        }
+
+        if (tier == 2 && pixelGrillTier2Sprite != null)
+        {
+            return pixelGrillTier2Sprite;
+        }
+
+        if (tier == 1 && pixelGrillTier1Sprite != null)
+        {
+            return pixelGrillTier1Sprite;
+        }
+
+        return pixelGrillSprite;
+    }
+
+    private Color GetTierBaseColor(int tier)
+    {
+        if (tier >= 3)
+        {
+            return new Color(0.96f, 0.82f, 0.52f, 0.90f);
+        }
+
+        if (tier == 2)
+        {
+            return new Color(0.90f, 0.77f, 0.60f, 0.88f);
+        }
+
+        if (tier == 1)
+        {
+            return new Color(0.84f, 0.72f, 0.60f, 0.86f);
+        }
+
+        return new Color(0.78f, 0.68f, 0.58f, 0.84f);
     }
 
     private void SetSlotPixelVisual(int slotIndex, Sprite sprite, Color color, float scale)
@@ -478,7 +574,12 @@ public class GrillStationView : MonoBehaviour
             return;
         }
 
-        image.color = color;
+        var tierColor = GetTierBaseColor(upgradeVisualTier);
+        image.color = new Color(
+            Mathf.Clamp01(color.r * tierColor.r),
+            Mathf.Clamp01(color.g * tierColor.g),
+            Mathf.Clamp01(color.b * tierColor.b),
+            color.a);
     }
 
     private void UpdateSlotProgress(int slotIndex, float progress01, Color fillColor)
@@ -746,6 +847,66 @@ public class GrillStationView : MonoBehaviour
             ".#============#.",
             ".#=#=#=#=#=#=#.",
             ".#============#.",
+            ".##############.",
+            "................",
+            "................",
+            "................",
+            "................"
+        }, palette);
+
+        pixelGrillTier1Sprite = BuildPixelSprite("pixel_grill_t1", new[]
+        {
+            "................",
+            ".##############.",
+            ".#==cccccccc==#.",
+            ".#=#c#c#c#c#=#.",
+            ".#==cccccccc==#.",
+            ".#=#c#c#c#c#=#.",
+            ".#==cccccccc==#.",
+            ".#=#c#c#c#c#=#.",
+            ".#==cccccccc==#.",
+            ".#=#c#c#c#c#=#.",
+            ".#==cccccccc==#.",
+            ".##############.",
+            "................",
+            "................",
+            "................",
+            "................"
+        }, palette);
+
+        pixelGrillTier2Sprite = BuildPixelSprite("pixel_grill_t2", new[]
+        {
+            "................",
+            ".##############.",
+            ".#==gggggggg==#.",
+            ".#=#g#g#g#g#=#.",
+            ".#==gggggggg==#.",
+            ".#=#g#g#g#g#=#.",
+            ".#==gggggggg==#.",
+            ".#=#g#g#g#g#=#.",
+            ".#==gggggggg==#.",
+            ".#=#g#g#g#g#=#.",
+            ".#==gggggggg==#.",
+            ".##############.",
+            "................",
+            "................",
+            "................",
+            "................"
+        }, palette);
+
+        pixelGrillTier3Sprite = BuildPixelSprite("pixel_grill_t3", new[]
+        {
+            "................",
+            ".##############.",
+            ".#==yyyyyyyy==#.",
+            ".#=#y#y#y#y#=#.",
+            ".#==ywwwyywy==#.",
+            ".#=#y#y#y#y#=#.",
+            ".#==yyyyyyyy==#.",
+            ".#=#y#y#y#y#=#.",
+            ".#==yyyyyyyy==#.",
+            ".#=#y#y#y#y#=#.",
+            ".#==yyyyyyyy==#.",
             ".##############.",
             "................",
             "................",
