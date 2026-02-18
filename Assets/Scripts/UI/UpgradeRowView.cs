@@ -39,6 +39,13 @@ public class UpgradeRowView : MonoBehaviour
             label = GetComponentInChildren<Text>();
         }
 
+        if (label != null)
+        {
+            label.resizeTextForBestFit = true;
+            label.resizeTextMinSize = 11;
+            label.resizeTextMaxSize = 20;
+        }
+
         CacheColors();
         if (label != null)
         {
@@ -70,10 +77,10 @@ public class UpgradeRowView : MonoBehaviour
         if (label != null)
         {
             var costText = FormatUtil.FormatCurrency(entry.cost);
-            var status = entry.affordable ? "Ready" : "Locked";
-            var bestTag = entry.isBest ? " BEST" : "";
+            var status = entry.affordable ? "BUY NOW" : "SAVE UP";
+            var bestTag = entry.isBest ? " [BEST]" : "";
             label.text = entry.displayName + " Lv." + entry.level + bestTag +
-                         "\n" + costText + " [" + status + "] Score " + entry.score.ToString("0.0000");
+                         "\n" + costText + " · " + status;
             label.color = entry.isBest ? bestTextColor : normalTextColor;
             label.fontStyle = entry.isBest ? FontStyle.Bold : FontStyle.Normal;
         }

@@ -33,11 +33,47 @@ public class UIController : MonoBehaviour
     [SerializeField] private LeaderboardView leaderboardView;
     [SerializeField] private MonetizationView monetizationView;
 
+    [Header("Responsive Layout")]
+    [SerializeField] private CanvasScaler canvasScaler;
+    [SerializeField] private RectTransform topBar;
+    [SerializeField] private RectTransform queuePanel;
+    [SerializeField] private RectTransform upgradesPanel;
+    [SerializeField] private RectTransform grillPanel;
+    [SerializeField] private RectTransform bottomBar;
+    [SerializeField] private RectTransform debugPanelRect;
+    [SerializeField] private RectTransform perfOverlayRect;
+    [SerializeField] private RectTransform tutorialOverlayRect;
+    [SerializeField] private RectTransform leaderboardPanelRect;
+    [SerializeField] private RectTransform monetizationPanelRect;
+    [SerializeField] private float panelMargin = 20f;
+
     private GameManager gameManager;
+    private Vector2Int lastScreenSize = new Vector2Int(-1, -1);
+
+    private void Awake()
+    {
+        ResolveLayoutReferences();
+        ApplyVisualPolish();
+        ApplyResponsiveLayout(force: true);
+    }
+
+    private void OnEnable()
+    {
+        ApplyResponsiveLayout(force: true);
+    }
+
+    private void LateUpdate()
+    {
+        if (Screen.width != lastScreenSize.x || Screen.height != lastScreenSize.y)
+        {
+            ApplyResponsiveLayout(force: true);
+        }
+    }
 
     public void Bind(GameManager manager)
     {
         gameManager = manager;
+        ResolveLayoutReferences();
         dailyMissionView?.Bind(manager);
         prestigeView?.Bind(manager);
         queueControlView?.Bind(manager);
@@ -51,6 +87,7 @@ public class UIController : MonoBehaviour
         {
             debugToggleButton.gameObject.SetActive(false);
         }
+        ApplyResponsiveLayout(force: true);
         UpdateDebugIndicator();
     }
 
@@ -104,7 +141,8 @@ public class UIController : MonoBehaviour
             return;
         }
 
-        var lines = new List<string>();
+        var completed = 0;
+        var total = 0;
         foreach (var mission in missions)
         {
             if (mission == null)
@@ -112,11 +150,21 @@ public class UIController : MonoBehaviour
                 continue;
             }
 
-            var status = mission.claimed ? "Claimed" : mission.completed ? "Complete" : "In Progress";
-            lines.Add(mission.type + ": " + mission.progress.ToString("0") + "/" + mission.target.ToString("0") + " [" + status + "]");
+            total++;
+            if (mission.claimed || mission.completed)
+            {
+                completed++;
+            }
         }
 
-        dailyMissionsText.text = string.Join("\n", lines);
+        if (total <= 0)
+        {
+            dailyMissionsText.text = "Missions: None";
+        }
+        else
+        {
+            dailyMissionsText.text = "Missions " + completed + "/" + total + " complete";
+        }
         dailyMissionView?.Render(missions);
     }
 
@@ -144,7 +192,7 @@ public class UIController : MonoBehaviour
             }
 
             var remaining = Mathf.Max(0f, entry.patience - entry.waitTime);
-            lines.Add(entry.customerName + " - " + entry.menuName + " (" + remaining.ToString("0") + "s)");
+            lines.Add(entry.customerName + " · " + remaining.ToString("0") + "s");
         }
 
         queueText.text = string.Join("\n", lines);
@@ -307,6 +355,415 @@ public class UIController : MonoBehaviour
         }
 
         upgradesText.text = string.Join("\n", lines);
+    }
+
+    private void ResolveLayoutReferences()
+    {
+        if (canvasScaler == null)
+        {
+            canvasScaler = GetComponent<CanvasScaler>();
+        }
+
+        if (topBar == null) topBar = FindRectTransformByName("TopBar");
+        if (queuePanel == null) queuePanel = FindRectTransformByName("QueuePanel");
+        if (upgradesPanel == null) upgradesPanel = FindRectTransformByName("UpgradesPanel");
+        if (grillPanel == null) grillPanel = FindRectTransformByName("GrillPanel");
+        if (bottomBar == null) bottomBar = FindRectTransformByName("BottomBar");
+
+        if (debugPanelRect == null && debugPanelView != null)
+        {
+            debugPanelRect = debugPanelView.transform as RectTransform;
+        }
+        if (perfOverlayRect == null && perfOverlayView != null)
+        {
+            perfOverlayRect = perfOverlayView.transform as RectTransform;
+        }
+        if (tutorialOverlayRect == null && tutorialView != null)
+        {
+            tutorialOverlayRect = tutorialView.transform as RectTransform;
+        }
+        if (leaderboardPanelRect == null && leaderboardView != null)
+        {
+            leaderboardPanelRect = leaderboardView.transform as RectTransform;
+        }
+        if (monetizationPanelRect == null && monetizationView != null)
+        {
+            monetizationPanelRect = monetizationView.transform as RectTransform;
+        }
+    }
+
+    private RectTransform FindRectTransformByName(string targetName)
+    {
+        if (string.IsNullOrEmpty(targetName))
+        {
+            return null;
+        }
+
+        var stack = new Stack<Transform>();
+        stack.Push(transform);
+        while (stack.Count > 0)
+        {
+            var current = stack.Pop();
+            if (current.name == targetName)
+            {
+                return current as RectTransform;
+            }
+
+            for (int i = 0; i < current.childCount; i++)
+            {
+                stack.Push(current.GetChild(i));
+            }
+        }
+
+        return null;
+    }
+
+    private void ApplyVisualPolish()
+    {
+        TintPanel(topBar, new Color(0.12f, 0.09f, 0.08f, 0.88f));
+        TintPanel(bottomBar, new Color(0.10f, 0.07f, 0.06f, 0.90f));
+        TintPanel(queuePanel, new Color(0.95f, 0.88f, 0.76f, 0.97f));
+        TintPanel(upgradesPanel, new Color(0.95f, 0.88f, 0.76f, 0.97f));
+        TintPanel(grillPanel, new Color(0.33f, 0.18f, 0.13f, 0.97f));
+
+        SetTextStyle(currencyText, 12, 28);
+        SetTextStyle(incomeText, 12, 28);
+        SetTextStyle(storeTierText, 11, 24);
+        SetTextStyle(prestigeText, 11, 24);
+        SetTextStyle(loginRewardText, 10, 22);
+        SetTextStyle(dailyMissionsText, 10, 22);
+        SetTextStyle(queueText, 11, 20);
+        SetTextStyle(queueMetricsText, 10, 20);
+        SetTextStyle(comboText, 10, 24);
+    }
+
+    private void SetTextStyle(Text text, int minSize, int maxSize)
+    {
+        if (text == null)
+        {
+            return;
+        }
+
+        text.resizeTextForBestFit = true;
+        text.resizeTextMinSize = minSize;
+        text.resizeTextMaxSize = maxSize;
+
+        var outline = text.GetComponent<Outline>();
+        if (outline == null)
+        {
+            outline = text.gameObject.AddComponent<Outline>();
+        }
+        outline.effectColor = new Color(0f, 0f, 0f, 0.25f);
+        outline.effectDistance = new Vector2(1.2f, -1.2f);
+    }
+
+    private void TintPanel(RectTransform panel, Color color)
+    {
+        if (panel == null)
+        {
+            return;
+        }
+
+        var image = panel.GetComponent<Image>();
+        if (image != null)
+        {
+            image.color = color;
+        }
+    }
+
+    private void ApplyResponsiveLayout(bool force)
+    {
+        if (!force && Screen.width == lastScreenSize.x && Screen.height == lastScreenSize.y)
+        {
+            return;
+        }
+
+        ResolveLayoutReferences();
+
+        lastScreenSize = new Vector2Int(Mathf.Max(1, Screen.width), Mathf.Max(1, Screen.height));
+
+        var rootRect = transform as RectTransform;
+        var uiWidth = rootRect != null && rootRect.rect.width > 1f ? rootRect.rect.width : 1080f;
+        var uiHeight = rootRect != null && rootRect.rect.height > 1f ? rootRect.rect.height : 1920f;
+        var landscape = uiWidth >= uiHeight;
+        var compact = Mathf.Min(uiWidth, uiHeight) < 700f;
+
+        if (canvasScaler != null)
+        {
+            canvasScaler.uiScaleMode = CanvasScaler.ScaleMode.ScaleWithScreenSize;
+            canvasScaler.screenMatchMode = CanvasScaler.ScreenMatchMode.MatchWidthOrHeight;
+            canvasScaler.referenceResolution = landscape ? new Vector2(1920f, 1080f) : new Vector2(1080f, 1920f);
+            canvasScaler.matchWidthOrHeight = landscape ? 0.55f : 0.70f;
+        }
+
+        var canvas = GetComponent<Canvas>();
+        var scaleFactor = canvas != null ? Mathf.Max(0.01f, canvas.scaleFactor) : 1f;
+        var safeArea = Screen.safeArea;
+        var safeLeft = safeArea.xMin / scaleFactor;
+        var safeRight = Mathf.Max(0f, Screen.width - safeArea.xMax) / scaleFactor;
+        var safeBottom = safeArea.yMin / scaleFactor;
+        var safeTop = Mathf.Max(0f, Screen.height - safeArea.yMax) / scaleFactor;
+
+        var margin = panelMargin + (compact ? -4f : 2f);
+        var topHeight = landscape ? 138f : 212f;
+        var bottomHeight = landscape ? 130f : 186f;
+
+        var availableWidth = Mathf.Max(640f, uiWidth - safeLeft - safeRight - margin * 4f);
+        var leftWidth = landscape
+            ? Mathf.Clamp(availableWidth * 0.22f, 280f, 390f)
+            : Mathf.Clamp(availableWidth * 0.25f, 220f, 320f);
+        var rightWidth = landscape
+            ? Mathf.Clamp(availableWidth * 0.26f, 320f, 500f)
+            : Mathf.Clamp(availableWidth * 0.25f, 220f, 320f);
+
+        var maxSideTotal = availableWidth - (compact ? 220f : 280f);
+        if (maxSideTotal > 0f && leftWidth + rightWidth > maxSideTotal)
+        {
+            var scale = maxSideTotal / Mathf.Max(1f, leftWidth + rightWidth);
+            leftWidth *= scale;
+            rightWidth *= scale;
+        }
+
+        SetTopStrip(topBar, margin + safeLeft, margin + safeRight, safeTop, topHeight);
+        SetBottomStrip(bottomBar, margin + safeLeft, margin + safeRight, safeBottom, bottomHeight);
+        SetLeftColumn(queuePanel, margin + safeLeft, safeBottom + bottomHeight + margin, leftWidth, safeTop + topHeight + margin);
+        SetRightColumn(upgradesPanel, margin + safeRight, safeBottom + bottomHeight + margin, rightWidth, safeTop + topHeight + margin);
+        SetCenterPanel(grillPanel, margin + safeLeft + leftWidth + margin, safeBottom + bottomHeight + margin, margin + safeRight + rightWidth + margin, safeTop + topHeight + margin);
+
+        SetCenteredPanel(leaderboardPanelRect, landscape ? 920f : 760f, landscape ? 700f : 1020f);
+        SetCenteredPanel(monetizationPanelRect, landscape ? 900f : 760f, landscape ? 620f : 980f);
+
+        if (debugPanelRect != null)
+        {
+            debugPanelRect.anchorMin = landscape ? new Vector2(1f, 0f) : new Vector2(0.5f, 0f);
+            debugPanelRect.anchorMax = debugPanelRect.anchorMin;
+            debugPanelRect.pivot = debugPanelRect.anchorMin;
+            debugPanelRect.anchoredPosition = landscape ? new Vector2(-(safeRight + margin), safeBottom + bottomHeight + margin) : new Vector2(0f, safeBottom + bottomHeight + margin);
+        }
+
+        if (perfOverlayRect != null)
+        {
+            perfOverlayRect.anchorMin = new Vector2(1f, 1f);
+            perfOverlayRect.anchorMax = new Vector2(1f, 1f);
+            perfOverlayRect.pivot = new Vector2(1f, 1f);
+            perfOverlayRect.anchoredPosition = new Vector2(-(safeRight + margin), -(safeTop + topHeight + margin));
+        }
+
+        if (tutorialOverlayRect != null)
+        {
+            SetFullStretch(tutorialOverlayRect, safeLeft + margin, safeBottom + margin, safeRight + margin, safeTop + margin);
+        }
+
+        LayoutTopBarFields(landscape);
+        LayoutQueuePanelChildren();
+        LayoutUpgradesPanelChildren();
+    }
+
+    private void LayoutTopBarFields(bool landscape)
+    {
+        var row1 = landscape ? 42f : 56f;
+        var row2 = landscape ? 92f : 136f;
+        var slotWidth = landscape ? 320f : 260f;
+        var slotHeight = landscape ? 38f : 54f;
+
+        PlaceTopText(currencyText, 0.16f, row1, slotWidth, slotHeight, TextAnchor.MiddleLeft);
+        PlaceTopText(incomeText, 0.16f, row2, slotWidth, slotHeight, TextAnchor.MiddleLeft);
+        PlaceTopText(storeTierText, 0.50f, row1, 280f, slotHeight, TextAnchor.MiddleCenter);
+        PlaceTopText(prestigeText, 0.50f, row2, 280f, slotHeight, TextAnchor.MiddleCenter);
+        PlaceTopText(dailyMissionsText, 0.84f, row1, slotWidth, slotHeight, TextAnchor.MiddleRight);
+        PlaceTopText(loginRewardText, 0.84f, row2, slotWidth, slotHeight, TextAnchor.MiddleRight);
+    }
+
+    private void PlaceTopText(Text text, float anchorX, float topOffset, float width, float height, TextAnchor alignment)
+    {
+        if (text == null || topBar == null)
+        {
+            return;
+        }
+
+        var rect = text.rectTransform;
+        rect.SetParent(topBar, worldPositionStays: false);
+        rect.anchorMin = new Vector2(anchorX, 1f);
+        rect.anchorMax = new Vector2(anchorX, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.anchoredPosition = new Vector2(0f, -topOffset);
+        rect.sizeDelta = new Vector2(width, height);
+        text.alignment = alignment;
+    }
+
+    private void LayoutQueuePanelChildren()
+    {
+        var queueTitle = FindRectTransformByName("QueueTitle");
+        var queueList = FindRectTransformByName("QueueList");
+        var queueMetrics = FindRectTransformByName("QueueMetrics");
+        var serveButtonRect = FindRectTransformByName("ServeButton");
+        var rushButtonRect = FindRectTransformByName("RushButton");
+
+        SetLocalTop(queueTitle, 14f, 14f, 12f, 36f);
+        SetLocalStretch(queueList, 14f, 132f, 14f, 58f);
+        SetLocalBottom(queueMetrics, 14f, 72f, 14f, 50f);
+
+        if (serveButtonRect != null)
+        {
+            serveButtonRect.anchorMin = new Vector2(0f, 0f);
+            serveButtonRect.anchorMax = new Vector2(0.5f, 0f);
+            serveButtonRect.pivot = new Vector2(0.5f, 0f);
+            serveButtonRect.offsetMin = new Vector2(14f, 14f);
+            serveButtonRect.offsetMax = new Vector2(-7f, 62f);
+        }
+
+        if (rushButtonRect != null)
+        {
+            rushButtonRect.anchorMin = new Vector2(0.5f, 0f);
+            rushButtonRect.anchorMax = new Vector2(1f, 0f);
+            rushButtonRect.pivot = new Vector2(0.5f, 0f);
+            rushButtonRect.offsetMin = new Vector2(7f, 14f);
+            rushButtonRect.offsetMax = new Vector2(-14f, 62f);
+        }
+    }
+
+    private void LayoutUpgradesPanelChildren()
+    {
+        var upgradesTitle = FindRectTransformByName("UpgradesTitle");
+        var upgradesScroll = FindRectTransformByName("UpgradesScroll");
+        SetLocalTop(upgradesTitle, 14f, 14f, 12f, 36f);
+        SetLocalStretch(upgradesScroll, 12f, 12f, 12f, 58f);
+    }
+
+    private void SetTopStrip(RectTransform rect, float left, float right, float top, float height)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 1f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.offsetMin = new Vector2(left, -(top + height));
+        rect.offsetMax = new Vector2(-right, -top);
+    }
+
+    private void SetBottomStrip(RectTransform rect, float left, float right, float bottom, float height)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 0f);
+        rect.anchorMax = new Vector2(1f, 0f);
+        rect.pivot = new Vector2(0.5f, 0f);
+        rect.offsetMin = new Vector2(left, bottom);
+        rect.offsetMax = new Vector2(-right, bottom + height);
+    }
+
+    private void SetLeftColumn(RectTransform rect, float left, float bottom, float width, float top)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 0f);
+        rect.anchorMax = new Vector2(0f, 1f);
+        rect.pivot = new Vector2(0f, 0.5f);
+        rect.offsetMin = new Vector2(left, bottom);
+        rect.offsetMax = new Vector2(left + width, -top);
+    }
+
+    private void SetRightColumn(RectTransform rect, float right, float bottom, float width, float top)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(1f, 0f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(1f, 0.5f);
+        rect.offsetMin = new Vector2(-(right + width), bottom);
+        rect.offsetMax = new Vector2(-right, -top);
+    }
+
+    private void SetCenterPanel(RectTransform rect, float left, float bottom, float right, float top)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        SetFullStretch(rect, left, bottom, right, top);
+    }
+
+    private void SetCenteredPanel(RectTransform rect, float width, float height)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0.5f, 0.5f);
+        rect.anchorMax = new Vector2(0.5f, 0.5f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.sizeDelta = new Vector2(width, height);
+        rect.anchoredPosition = Vector2.zero;
+    }
+
+    private void SetFullStretch(RectTransform rect, float left, float bottom, float right, float top)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 0f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.offsetMin = new Vector2(left, bottom);
+        rect.offsetMax = new Vector2(-right, -top);
+    }
+
+    private void SetLocalTop(RectTransform rect, float left, float right, float top, float height)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 1f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(0.5f, 1f);
+        rect.offsetMin = new Vector2(left, -(top + height));
+        rect.offsetMax = new Vector2(-right, -top);
+    }
+
+    private void SetLocalBottom(RectTransform rect, float left, float bottom, float right, float height)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 0f);
+        rect.anchorMax = new Vector2(1f, 0f);
+        rect.pivot = new Vector2(0.5f, 0f);
+        rect.offsetMin = new Vector2(left, bottom);
+        rect.offsetMax = new Vector2(-right, bottom + height);
+    }
+
+    private void SetLocalStretch(RectTransform rect, float left, float bottom, float right, float top)
+    {
+        if (rect == null)
+        {
+            return;
+        }
+
+        rect.anchorMin = new Vector2(0f, 0f);
+        rect.anchorMax = new Vector2(1f, 1f);
+        rect.pivot = new Vector2(0.5f, 0.5f);
+        rect.offsetMin = new Vector2(left, bottom);
+        rect.offsetMax = new Vector2(-right, -top);
     }
 
     public void ShowLoginReward(DailyLoginReward reward)
