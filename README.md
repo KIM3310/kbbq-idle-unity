@@ -106,9 +106,13 @@ After building, commit the generated `docs/` folder and push to `main`. The `pag
 Cloudflare Pages deployment is also supported:
 - Build command: `(none)`
 - Output directory: `docs`
-- WebGL entry page: `docs/index.html` (loader UI with build name input)
+- WebGL entry page: `docs/index.html` (loader UI with build name input + `Check Build Files`)
 - Policy/ad crawl files: `docs/privacy.html`, `docs/terms.html`, `docs/contact.html`, `docs/compliance.html`, `docs/ads.txt`, `docs/robots.txt`, `docs/sitemap.xml`
 - Cloudflare security headers template: `docs/_headers`
+
+WebGL loader behavior:
+- Uses `Build/<name>.json` first when available
+- Falls back to auto-detecting `.unityweb`, `.br`, `.gz`, and plain build file variants
 
 ## Glossary (first-time readers)
 - HMAC: Hash-based Message Authentication Code (request signing)

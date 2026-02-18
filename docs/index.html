@@ -24,6 +24,7 @@
       #unityContainer { width:100%; min-height:520px; border:1px solid var(--line); border-radius:10px; background:#101010; display:flex; align-items:center; justify-content:center; overflow:hidden; }
       #unityCanvas { width:100%; height:100%; display:none; }
       #status { font-size:14px; color:var(--muted); }
+      #preflight { font-size:13px; color:var(--muted); line-height:1.5; }
       .ad { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#fff; }
       footer { max-width:1080px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:14px; }
     </style>
@@ -47,9 +48,11 @@
         </p>
         <div class="toolbar">
           <input id="buildName" placeholder="Unity build base name" value="KBBQIdleWebGL" />
+          <button id="checkBtn">Check Build Files</button>
           <button id="startBtn">Start Game</button>
         </div>
         <div id="status">Ready. Click Start Game after uploading WebGL build artifacts.</div>
+        <div id="preflight">Tip: if your build uses `.unityweb`/`.br`/`.gz`, this page auto-detects those formats.</div>
         <div id="unityContainer">
           <canvas id="unityCanvas" width="960" height="600"></canvas>
         </div>
@@ -78,20 +81,167 @@
       const canvas = document.getElementById('unityCanvas');
       const container = document.getElementById('unityContainer');
       const statusNode = document.getElementById('status');
+      const preflightNode = document.getElementById('preflight');
       const buildInput = document.getElementById('buildName');
+      const checkBtn = document.getElementById('checkBtn');
       const startBtn = document.getElementById('startBtn');
+      let unityInstance = null;
 
       function setStatus(text) {
         statusNode.textContent = text;
       }
 
-      function loadUnity(buildBase) {
+      function setPreflight(text) {
+        preflightNode.textContent = text;
+      }
+
+      async function urlExists(url) {
+        try {
+          const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+          if (head.ok) return true;
+        } catch (_err) {
+          // fallback below
+        }
+        try {
+          const get = await fetch(url, { method: 'GET', cache: 'no-store' });
+          return get.ok;
+        } catch (_err) {
+          return false;
+        }
+      }
+
+      function normalizeBuildPath(path, base) {
+        const raw = String(path || '').trim();
+        if (!raw) return '';
+        if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('Build/')) return raw;
+        if (raw.startsWith('/')) return raw.slice(1);
+        return `Build/${base}.${raw}`;
+      }
+
+      async function resolveConfig(base) {
+        const jsonUrl = `Build/${base}.json`;
+        try {
+          const resp = await fetch(jsonUrl, { cache: 'no-store' });
+          if (resp.ok) {
+            const parsed = await resp.json();
+            if (parsed && parsed.dataUrl && parsed.frameworkUrl && parsed.codeUrl) {
+              return {
+                dataUrl: normalizeBuildPath(parsed.dataUrl, base),
+                frameworkUrl: normalizeBuildPath(parsed.frameworkUrl, base),
+                codeUrl: normalizeBuildPath(parsed.codeUrl, base),
+                symbolsUrl: parsed.symbolsUrl ? normalizeBuildPath(parsed.symbolsUrl, base) : undefined,
+                companyName: parsed.companyName || 'KBBQ',
+                productName: parsed.productName || 'KBBQ Idle',
+                productVersion: parsed.productVersion || '1.0',
+                streamingAssetsUrl: parsed.streamingAssetsUrl || 'StreamingAssets',
+              };
+            }
+          }
+        } catch (_err) {
+          // fall through to candidate scan
+        }
+
+        const candidates = {
+          dataUrl: [
+            `Build/${base}.data.unityweb`,
+            `Build/${base}.data.br`,
+            `Build/${base}.data.gz`,
+            `Build/${base}.data`,
+          ],
+          frameworkUrl: [
+            `Build/${base}.framework.js.unityweb`,
+            `Build/${base}.framework.js.br`,
+            `Build/${base}.framework.js.gz`,
+            `Build/${base}.framework.js`,
+          ],
+          codeUrl: [
+            `Build/${base}.wasm.unityweb`,
+            `Build/${base}.wasm.br`,
+            `Build/${base}.wasm.gz`,
+            `Build/${base}.wasm`,
+          ],
+          symbolsUrl: [
+            `Build/${base}.symbols.json.unityweb`,
+            `Build/${base}.symbols.json.br`,
+            `Build/${base}.symbols.json.gz`,
+            `Build/${base}.symbols.json`,
+          ],
+        };
+
+        const resolved = {};
+        for (const key of ['dataUrl', 'frameworkUrl', 'codeUrl', 'symbolsUrl']) {
+          const list = candidates[key];
+          for (const candidate of list) {
+            if (await urlExists(candidate)) {
+              resolved[key] = candidate;
+              break;
+            }
+          }
+        }
+
+        if (!resolved.dataUrl || !resolved.frameworkUrl || !resolved.codeUrl) {
+          throw new Error('Missing core build files (.data/.framework.js/.wasm).');
+        }
+
+        return {
+          dataUrl: resolved.dataUrl,
+          frameworkUrl: resolved.frameworkUrl,
+          codeUrl: resolved.codeUrl,
+          symbolsUrl: resolved.symbolsUrl,
+          streamingAssetsUrl: 'StreamingAssets',
+          companyName: 'KBBQ',
+          productName: 'KBBQ Idle',
+          productVersion: '1.0',
+        };
+      }
+
+      async function preflightCheck(buildBase) {
+        const base = String(buildBase || '').trim();
+        if (!base) {
+          setPreflight('Build name is required.');
+          return null;
+        }
+        setPreflight('Scanning Build/ assets...');
+        try {
+          const config = await resolveConfig(base);
+          const symbols = config.symbolsUrl ? `, symbols: ${config.symbolsUrl}` : '';
+          setPreflight(`OK - data: ${config.dataUrl}, framework: ${config.frameworkUrl}, wasm: ${config.codeUrl}${symbols}`);
+          return config;
+        } catch (err) {
+          setPreflight(`Build check failed: ${err?.message || String(err)}`);
+          return null;
+        }
+      }
+
+      async function disposeUnityInstance() {
+        if (!unityInstance || typeof unityInstance.Quit !== 'function') return;
+        try {
+          await unityInstance.Quit();
+        } catch (_err) {
+          // no-op
+        }
+        unityInstance = null;
+      }
+
+      async function loadUnity(buildBase) {
         const base = String(buildBase || '').trim();
         if (!base) {
           setStatus('Build name is required.');
           return;
         }
 
+        if (typeof WebAssembly !== 'object') {
+          setStatus('This browser does not support WebAssembly.');
+          return;
+        }
+
+        const config = await preflightCheck(base);
+        if (!config) {
+          setStatus('Cannot start. Build check failed.');
+          return;
+        }
+
+        await disposeUnityInstance();
         setStatus('Loading Unity loader...');
         const loaderUrl = `Build/${base}.loader.js`;
         const existing = document.getElementById('unity-loader-script');
@@ -101,25 +251,20 @@
         script.id = 'unity-loader-script';
         script.src = loaderUrl;
         script.onload = () => {
-          if (typeof createUnityInstance !== 'function') {
+          const createFn = window.createUnityInstance || (typeof createUnityInstance === 'function' ? createUnityInstance : null);
+          if (typeof createFn !== 'function') {
             setStatus('Unity loader loaded but createUnityInstance is missing. Check build output.');
             return;
           }
-          const config = {
-            dataUrl: `Build/${base}.data`,
-            frameworkUrl: `Build/${base}.framework.js`,
-            codeUrl: `Build/${base}.wasm`,
-            streamingAssetsUrl: 'StreamingAssets',
-            companyName: 'KBBQ',
-            productName: 'KBBQ Idle',
-            productVersion: '1.0'
-          };
           setStatus('Initializing game...');
           canvas.style.display = 'block';
-          createUnityInstance(canvas, config, (progress) => {
+          createFn(canvas, config, (progress) => {
             setStatus(`Loading ${(progress * 100).toFixed(0)}%`);
           })
-            .then(() => setStatus('Game loaded.'))
+            .then((instance) => {
+              unityInstance = instance;
+              setStatus('Game loaded.');
+            })
             .catch((err) => setStatus(`Failed to launch: ${err}`));
         };
         script.onerror = () => {
@@ -128,6 +273,9 @@
         document.body.appendChild(script);
       }
 
+      checkBtn.addEventListener('click', () => {
+        void preflightCheck(buildInput.value);
+      });
       startBtn.addEventListener('click', () => loadUnity(buildInput.value));
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
     </script>
