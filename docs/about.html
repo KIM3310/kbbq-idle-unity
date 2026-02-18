@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Compliance & Quality | KBBQ Idle</title>
-    <meta name="description" content="Quality, ad-separation, and policy compliance principles for KBBQ Idle." />
+    <title>About | KBBQ Idle</title>
+    <meta name="description" content="About KBBQ Idle, gameplay goals, and quality-first ad policy." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
@@ -48,9 +48,8 @@
       h2 { font-size: 16px; }
       p,li { color: var(--muted); font-size: 12px; line-height: 1.65; }
       a { color: var(--accent); }
-      footer { max-width: 980px; margin: 0 auto; padding: 0 14px 24px; color: var(--muted); font-size: 11px; }
     </style>
-  
+
 <meta name="ga-measurement-id" content="G-XXXXXXXXXX" />
 <meta name="clarity-project-id" content="CLARITY_PROJECT_ID" />
 <meta name="analytics-require-consent" content="false" />
@@ -80,51 +79,27 @@
 
     <main class="wrap">
       <section class="card">
-        <h1>Compliance & Quality</h1>
-        <p>
-          This page documents content-quality and ad-separation standards used by the KBBQ Idle WebGL service.
-        </p>
+        <h1>About KBBQ Idle</h1>
+        <p>KBBQ Idle is a browser-playable WebGL idle game focused on repeatable grill loops, progression balance, and release-safe deployment.</p>
       </section>
-
       <section class="card">
-        <h2>Playable-First Layout</h2>
+        <h2>What Makes It Useful</h2>
         <ul>
-          <li>The main gameplay canvas remains the primary content above policy and sponsored sections.</li>
-          <li>Operational controls (build check/start/fullscreen) are clearly separated from ads.</li>
-          <li>Error states are displayed to users with actionable status messaging.</li>
+          <li>Playable session loop with clear buy, grill, flip, and collect flow.</li>
+          <li>Operational status visibility for build loading and deployment checks.</li>
+          <li>Trust pages and support routes that stay visible to players and reviewers.</li>
         </ul>
       </section>
-
       <section class="card">
-        <h2>Ad Separation Policy</h2>
+        <h2>Ad Placement Policy</h2>
         <ul>
-          <li>Sponsored blocks are labeled and visually separated from gameplay controls.</li>
-          <li>Ads are disabled unless valid publisher and slot IDs are configured.</li>
-          <li>No hidden, auto-overlay, or deceptive ad placement is used.</li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <h2>Transparency Requirements</h2>
-        <ul>
-          <li>Privacy, Terms, Contact, and Compliance links are always available in top navigation.</li>
-          <li>Deployment output mapping and build status are visible on the Play page.</li>
-          <li>Known service changes are tracked in repository history.</li>
-        </ul>
-      </section>
-
-      <section class="card">
-        <h2>Quality Controls</h2>
-        <ul>
-          <li>WebGL preflight validation checks required build artifacts before game start.</li>
-          <li>Unity data validator and CI smoke checks run before release.</li>
-          <li>Runtime build-manifest metadata is generated during docs build for deterministic loading.</li>
+          <li>Gameplay area stays primary and unobstructed.</li>
+          <li>Sponsored slot is labeled and physically separated from controls.</li>
+          <li>No incentivized clicks or deceptive overlays are used.</li>
         </ul>
       </section>
     </main>
 
-    <footer>Last reviewed: February 18, 2026.</footer>
-  
 <script defer src="./analytics.js"></script>
 </body>
 </html>
