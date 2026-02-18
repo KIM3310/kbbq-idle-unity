@@ -1,69 +1,86 @@
-# KBBQ Idle (Unity 2022)
+# KBBQ Idle WebGL (Unity 2022.3 LTS)
 
-## Overview
-This is a Unity `2022.3.62f3` LTS project for an idle/tycoon K‑BBQ restaurant game. The project is built around a single scene at `Assets/Scenes/Main.unity` and focuses on passive income, upgrades, and long‑term progression.
+KBBQ Idle is an idle/tycoon game project focused on a grill-management gameplay loop. The current version is tuned for Unity WebGL deployment on Cloudflare Pages.
 
-License: MIT (see `LICENSE`). Third-party notices: `THIRD_PARTY_NOTICES.md`.
+Updated: **February 18, 2026**
 
-## Latest Update (February 17, 2026)
-- Added backend ops endpoints: `/readiness`, `/metrics`, `/ops/alerts`
-- Expanded IAP verification modes: `mock`, `structured`, `store`
-- Refreshed docs/specs for portfolio and production handoff
+## What Changed In This Build
+- 4 grill slots for active cooking flow
+- Pixel customer queue cards with speech bubbles and requested-cut icons
+- Manual serving with customer eating reaction animation
+- Upgrade modal UX and grill visual tier progression
+- Stronger layered sizzling audio (loop + crackle)
+- Clearer UI metrics (`$ currency`, served/customers/queue)
+- Responsive layout pass for desktop + mobile WebGL
+- Policy-ready static pages under `docs/` for ad/review workflows
 
-## Gameplay Highlights
-- Economy system combines menu income, upgrade multipliers, store tiers, boosts, tips, combos, and prestige.
-- Customer queue with satisfaction + patience, plus optional manual “Serve” for tips and combos.
-- Progression by total income unlocks menu items and store tiers.
-- Prestige resets grant long‑term multipliers.
-- Offline earnings, daily login rewards, and daily missions.
-- Short tutorial flow (boost → upgrade → serve).
+## Gameplay Loop
+1. Buy raw meat.
+2. Place meat on a grill slot.
+3. Flip at the right time.
+4. Collect cooked meat.
+5. Serve waiting customers.
+6. Upgrade and scale throughput.
 
-## Project Structure
-- `GameManager` orchestrates systems and the main tick loop.
-- `GameStateMachine` handles Boot/Tutorial/MainLoop/Pause/OfflineCalc.
-- `SaveSystem` persists `SaveData` in PlayerPrefs (`KBBQ_IDLE_SAVE`).
-- `UIController` binds missions, prestige, queue, upgrades, leaderboard, and monetization views.
-- ScriptableObject data lives in `Assets/Data` (`GameDataCatalog`, `EconomyTuning`, `MonetizationConfig`, `ApiConfig`).
+## Quick Start (Unity)
+1. Open project with **Unity 2022.3.62f3**.
+2. Load `Assets/Scenes/Main.unity`.
+3. Press Play.
 
-## Monetization & Networking
-- Monetization rewards and IAP packs are configured with a local-safe default flow.
-- Optional network clients use HMAC-signed headers. The base URL is a placeholder by default, so leaderboards use mock data unless networking is explicitly enabled.
-  - When enabled + backend running, `LeaderboardView` submits the current score (best-effort) and fetches the live top list (fallbacks to mock data on failure).
-  - IAP purchase path can verify through backend endpoint `POST /iap/verify` before currency is granted.
-- Real store receipt verification (App Store / Play Store) is intentionally left as a production integration step.
+Optional editor commands:
+- `KBBQ/Run Auto Setup`
+- `KBBQ/Validate Data (Portfolio)`
 
-## Quick Start
-- Open with Unity `2022.3.62f3`.
-- Load `Assets/Scenes/Main.unity` and press Play.
-- Optional: run **KBBQ/Run Auto Setup** to regenerate data assets and UI prefabs.
+## WebGL Build
+Generate WebGL output to `docs/`:
 
-## Portfolio Add-ons
-- Optional backend (`server/`): guest auth + HMAC-signed leaderboard/friends + lightweight analytics ingestion + IAP verification endpoint (FastAPI + SQLite).
-- Data validation + tests: `KBBQ/Validate Data (Portfolio)` and Unity EditMode tests for math invariants and save integrity.
-- Deterministic simulator (`sim/`): .NET unit tests for economy/progression math.
-- WebGL build to `docs/` for GitHub Pages (`KBBQ/Build WebGL (docs)`).
+```bash
+./tools/build_webgl_docs.sh
+```
 
-Simulator test baseline: .NET SDK `10.x`.
+Main entry:
+- `docs/index.html`
 
-Service spec/execution docs:
-- `docs/SPECKIT_SERVICE_100.ko.md`
-- `docs/COT_EXECUTION_LOG.ko.md`
+## Cloudflare Pages Deployment
+Use these settings:
+- Framework preset: `None`
+- Root directory: `.`
+- Build command: `(none)`
+- Build output directory: `docs`
 
-Ops/deploy helpers:
-- `server/.env.production.example`, `server/.env.staging.example`
-- `tools/deploy_backend.sh`
-- `tools/check_backend_ops.sh`
-- `tools/backup_kbbq_db.sh`
+Run deployment review checks:
 
-## Portfolio Quality Gate
-Run a single local gate before demo/review:
+```bash
+./tools/release_ops.sh check
+```
+
+Apply real AdSense values (production):
+
+```bash
+./tools/release_ops.sh apply-adsense <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
+```
+
+## Quality Gate
+Run full local validation:
 
 ```bash
 tools/portfolio_quality_gate.sh
 ```
 
-This executes simulator tests, backend tests, and Unity local CI checks.
+It executes Unity checks, backend tests, and deterministic simulator tests.
 
-Notes:
-- If `.NET SDK` is missing, sim tests are skipped by default.
-- Use `STRICT_PORTFOLIO_GATE=1 tools/portfolio_quality_gate.sh` for strict failure on missing gates.
+## Repo Map
+- Gameplay/UI code: `Assets/Scripts/`
+- WebGL publish site: `docs/`
+- Optional backend: `server/`
+- Deterministic sim tests: `sim/`
+- Ops/build scripts: `tools/`
+
+## Related Docs
+- Korean README: `README.ko.md`
+- Main README: `README.md`
+- Cloudflare deployment note: `CLOUDFLARE_PAGES.md`
+- Technical summaries: `PROJECT_SUMMARY.en.md`, `PROJECT_SUMMARY.ko.md`
+
+## License
+MIT (`LICENSE`)
