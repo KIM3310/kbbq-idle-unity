@@ -1,0 +1,18 @@
+{
+    "generatedAtUtc": "2026-02-18T07:14:53.5846170Z",
+    "buildName": "KBBQIdleWebGL",
+    "dataUrl": "Build/KBBQIdleWebGL.data",
+    "frameworkUrl": "Build/KBBQIdleWebGL.framework.js",
+    "codeUrl": "Build/KBBQIdleWebGL.wasm",
+    "symbolsUrl": "",
+    "loaderUrl": "Build/KBBQIdleWebGL.loader.js",
+    "companyName": "KBBQ Studio",
+    "productName": "K-BBQ Idle Tycoon",
+    "productVersion": "1.0.0",
+    "files": [
+        "Build/KBBQIdleWebGL.data",
+        "Build/KBBQIdleWebGL.framework.js",
+        "Build/KBBQIdleWebGL.loader.js",
+        "Build/KBBQIdleWebGL.wasm"
+    ]
+}
