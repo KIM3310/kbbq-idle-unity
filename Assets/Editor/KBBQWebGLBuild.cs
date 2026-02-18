@@ -39,9 +39,9 @@ public static class KBBQWebGLBuild
         Directory.CreateDirectory(tempOutDir);
         Directory.CreateDirectory(docsDir);
 
-        // Keep build settings simple and deterministic.
-        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Gzip;
-        PlayerSettings.WebGL.decompressionFallback = true;
+        // Cloudflare Pages compatibility: prefer uncompressed output for broader browser/server behavior.
+        PlayerSettings.WebGL.compressionFormat = WebGLCompressionFormat.Disabled;
+        PlayerSettings.WebGL.decompressionFallback = false;
 
         var options = new BuildPlayerOptions
         {
