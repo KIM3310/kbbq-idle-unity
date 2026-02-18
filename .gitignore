@@ -6,6 +6,10 @@
 [Bb]uilds/
 [Ll]ogs/
 [Uu]ser[Ss]ettings/
+!/docs/Build/
+!/docs/Build/**
+!/docs/TemplateData/
+!/docs/TemplateData/**
 
 # MemoryCaptures can get excessive in size
 [Mm]emoryCaptures/

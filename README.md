@@ -104,6 +104,8 @@ Build output:
 After building, commit the generated `docs/` folder and push to `main`. The `pages` workflow will deploy it.
 
 Cloudflare Pages deployment is also supported:
+- Framework preset: `None`
+- Root directory: `.`
 - Build command: `(none)`
 - Output directory: `docs`
 - WebGL entry page: `docs/index.html` (loader UI with build name input + `Check Build Files`)

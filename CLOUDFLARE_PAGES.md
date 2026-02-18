@@ -1,5 +1,6 @@
 # Cloudflare Pages Deploy
 
+- Framework preset: `None`
 - Root directory: `.`
 - Build command: `(none)`
 - Output directory: `docs`
