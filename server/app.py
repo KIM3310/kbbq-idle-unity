@@ -35,6 +35,7 @@ def _is_truthy(value: str) -> bool:
 
 EXPOSE_DOCS = _is_truthy(os.getenv("KBBQ_EXPOSE_DOCS", "0"))
 APP_STARTED_AT = int(time.time())
+RATE_BUCKETS: dict[str, list[float]] = {}
 
 app = FastAPI(
     title="KBBQ Idle Backend",
@@ -74,6 +75,25 @@ def _ops_token() -> str:
 
 def _feedback_endpoint() -> str:
     return (os.getenv("KBBQ_FORMSPREE_ENDPOINT") or "").strip()
+
+
+def _is_rate_limited(key: str, limit: int, window_seconds: int) -> bool:
+    now = time.time()
+    cutoff = now - float(window_seconds)
+    history = [ts for ts in RATE_BUCKETS.get(key, []) if ts >= cutoff]
+    if len(history) >= limit:
+        RATE_BUCKETS[key] = history
+        return True
+    history.append(now)
+    RATE_BUCKETS[key] = history
+    return False
+
+
+def _rate_scope(request: Request, player_id: str, action: str) -> str:
+    client_ip = "unknown"
+    if request.client and request.client.host:
+        client_ip = request.client.host
+    return f"{action}:{player_id}:{client_ip}"
 
 
 def _require_ops_token(request: Request) -> None:
@@ -350,6 +370,8 @@ async def analytics_event(request: Request):
         if payload.playerId != player_id:
             raise HTTPException(status_code=401, detail="player mismatch")
         verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+        if _is_rate_limited(_rate_scope(request, player_id, "analytics"), limit=120, window_seconds=60):
+            raise HTTPException(status_code=429, detail="too many analytics events")
 
         event_name = (payload.eventName or "").strip()
         if not event_name:
@@ -385,6 +407,8 @@ async def community_feedback(request: Request):
         if payload.playerId != player_id:
             raise HTTPException(status_code=401, detail="player mismatch")
         verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+        if _is_rate_limited(_rate_scope(request, player_id, "feedback"), limit=6, window_seconds=600):
+            raise HTTPException(status_code=429, detail="too many feedback requests")
 
     message = " ".join(str(payload.message or "").split())
     if not message:
@@ -445,6 +469,8 @@ async def friends_invite(request: Request):
         if payload.playerId != player_id:
             raise HTTPException(status_code=401, detail="player mismatch")
         verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+        if _is_rate_limited(_rate_scope(request, player_id, "invite"), limit=30, window_seconds=60):
+            raise HTTPException(status_code=429, detail="too many invite attempts")
 
         secret = os.getenv("KBBQ_HMAC_SECRET", "CHANGE_ME")
         body_sig_payload = f"{player_id}|{payload.code}|{payload.timestamp}"
