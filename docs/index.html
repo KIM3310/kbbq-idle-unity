@@ -6,27 +6,106 @@
     <meta name="google-adsense-account" content="ca-pub-0000000000000000" />
     <title>KBBQ Idle | Playable WebGL</title>
     <meta name="description" content="Play KBBQ Idle on Cloudflare Pages with optional backend integrations and policy-ready site sections." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
     <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000" crossorigin="anonymous"></script>
     <style>
-      :root { --bg:#f7efe2; --card:#fffdf8; --line:#e4d7bf; --ink:#32281f; --muted:#6d594a; --accent:#b24d29; }
+      :root {
+        --bg:#1a120f;
+        --bg2:#281714;
+        --card:#221814;
+        --line:#5c3a29;
+        --ink:#f7e5c7;
+        --muted:#caaf88;
+        --accent:#e86a2f;
+        --accent-soft:#ffb25a;
+      }
       * { box-sizing:border-box; }
-      body { margin:0; font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
-      header { padding:16px 20px; background:#fff; border-bottom:1px solid var(--line); display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
-      header a { color:var(--accent); text-decoration:none; font-size:14px; }
-      .wrap { max-width:1080px; margin:0 auto; padding:24px 16px 36px; display:grid; gap:16px; }
-      .card { border:1px solid var(--line); background:var(--card); border-radius:14px; padding:14px; }
+      body {
+        margin:0;
+        font-family: "Silkscreen", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color:var(--ink);
+        background:
+          radial-gradient(circle at 1px 1px, rgba(255, 182, 99, 0.12) 1px, transparent 0) 0 0/16px 16px,
+          linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+      }
+      header {
+        padding:14px 20px;
+        background:rgba(20, 13, 11, 0.86);
+        border-bottom:1px solid var(--line);
+        display:flex;
+        gap:14px;
+        flex-wrap:wrap;
+        align-items:center;
+        position:sticky;
+        top:0;
+        z-index:5;
+        backdrop-filter: blur(6px);
+      }
+      header a { color:var(--accent-soft); text-decoration:none; font-size:12px; letter-spacing:.4px; }
+      .wrap { max-width:1320px; margin:0 auto; padding:22px 14px 30px; display:grid; gap:14px; }
+      .card {
+        border:1px solid var(--line);
+        background:linear-gradient(180deg, #2a1a15 0%, #221713 100%);
+        border-radius:12px;
+        padding:14px;
+        box-shadow: 0 12px 26px rgba(0,0,0,.30);
+      }
       h1,h2 { margin:0 0 10px; }
-      p,li { color:var(--muted); line-height:1.56; }
+      h1 { font-size:24px; color:var(--accent-soft); letter-spacing:.8px; }
+      h2 { font-size:18px; color:var(--accent-soft); }
+      p,li { color:var(--muted); line-height:1.6; font-size:12px; }
       .playbox { display:grid; gap:12px; }
       .toolbar { display:flex; gap:8px; flex-wrap:wrap; }
-      input,button { border-radius:8px; border:1px solid var(--line); padding:8px 10px; font-size:14px; }
-      button { background:#fff; cursor:pointer; }
-      #unityContainer { width:100%; min-height:520px; border:1px solid var(--line); border-radius:10px; background:#101010; display:flex; align-items:center; justify-content:center; overflow:hidden; }
-      #unityCanvas { width:100%; height:100%; display:none; }
-      #status { font-size:14px; color:var(--muted); }
-      #preflight { font-size:13px; color:var(--muted); line-height:1.5; }
-      .ad { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#fff; }
-      footer { max-width:1080px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:14px; }
+      input,button {
+        border-radius:8px;
+        border:1px solid var(--line);
+        padding:10px 12px;
+        font-size:12px;
+        font-family: inherit;
+        color:var(--ink);
+        background:#2c1d18;
+      }
+      input { min-width:220px; }
+      button {
+        background:linear-gradient(180deg, #6d2f18 0%, #542416 100%);
+        cursor:pointer;
+        transition: transform .08s ease, filter .15s ease;
+      }
+      button:hover { filter:brightness(1.1); }
+      button:active { transform:translateY(1px); }
+      #unityContainer {
+        width:100%;
+        min-height:680px;
+        border:1px solid var(--line);
+        border-radius:10px;
+        background:#100b09;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:hidden;
+        position:relative;
+      }
+      #unityContainer::before {
+        content:"";
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        border:2px solid rgba(255, 178, 90, .25);
+        border-radius:10px;
+        box-shadow: inset 0 0 40px rgba(0,0,0,.35);
+      }
+      #unityCanvas { width:100%; height:100%; display:none; image-rendering:pixelated; }
+      #status { font-size:12px; color:var(--accent-soft); }
+      #preflight { font-size:11px; color:var(--muted); line-height:1.5; }
+      .ad { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#1f1512; }
+      footer { max-width:1320px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:11px; }
+      @media (max-width: 900px) {
+        #unityContainer { min-height:460px; }
+        input { min-width: 160px; width: 100%; }
+        .toolbar { flex-direction: column; }
+      }
     </style>
   </head>
   <body>
@@ -50,6 +129,7 @@
           <input id="buildName" placeholder="Unity build base name" value="KBBQIdleWebGL" />
           <button id="checkBtn">Check Build Files</button>
           <button id="startBtn">Start Game</button>
+          <button id="fullscreenBtn">Fullscreen</button>
         </div>
         <div id="status">Ready. Click Start Game after uploading WebGL build artifacts.</div>
         <div id="preflight">Tip: if your build uses `.unityweb`/`.br`/`.gz`, this page auto-detects those formats.</div>
@@ -85,6 +165,7 @@
       const buildInput = document.getElementById('buildName');
       const checkBtn = document.getElementById('checkBtn');
       const startBtn = document.getElementById('startBtn');
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
       let unityInstance = null;
       const buildRevision = (() => {
         const fromLastModified = Date.parse(document.lastModified || '');
@@ -352,6 +433,19 @@
         void preflightCheck(buildInput.value);
       });
       startBtn.addEventListener('click', () => loadUnity(buildInput.value));
+      fullscreenBtn.addEventListener('click', async () => {
+        const target = container || canvas;
+        if (!target) return;
+        try {
+          if (document.fullscreenElement) {
+            await document.exitFullscreen();
+          } else {
+            await target.requestFullscreen();
+          }
+        } catch (_err) {
+          setStatus('Fullscreen is not available in this browser.');
+        }
+      });
       try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
     </script>
   </body>

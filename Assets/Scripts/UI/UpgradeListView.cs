@@ -8,9 +8,9 @@ public class UpgradeListView : MonoBehaviour
     [SerializeField] private RectTransform content;
     [SerializeField] private UpgradeRowView rowTemplate;
     [SerializeField] private int initialPoolSize = 8;
-    [SerializeField] private float rowHeight = 76f;
-    [SerializeField] private float rowSpacing = 10f;
-    [SerializeField] private float rowHorizontalPadding = 8f;
+    [SerializeField] private float rowHeight = 84f;
+    [SerializeField] private float rowSpacing = 8f;
+    [SerializeField] private float rowHorizontalPadding = 6f;
 
     private readonly List<UpgradeRowView> pool = new List<UpgradeRowView>();
     private GameManager gameManager;
