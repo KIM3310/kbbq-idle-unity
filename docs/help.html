@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Privacy Policy | KBBQ Idle</title>
-    <meta name="description" content="Privacy policy for KBBQ Idle WebGL service and gameplay telemetry." />
+    <title>Help & Troubleshooting | KBBQ Idle</title>
+    <meta name="description" content="Quick start and troubleshooting guide for KBBQ Idle WebGL." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
     <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
@@ -48,6 +48,7 @@
       h2 { font-size: 16px; }
       p,li { color: var(--muted); font-size: 12px; line-height: 1.65; }
       a { color: var(--accent); }
+      code { color: #ffe2b6; }
       footer { max-width: 980px; margin: 0 auto; padding: 0 14px 24px; color: var(--muted); font-size: 11px; }
     </style>
   </head>
@@ -64,51 +65,51 @@
 
     <main class="wrap">
       <section class="card">
-        <h1>Privacy Policy</h1>
-        <p>Effective date: February 18, 2026.</p>
+        <h1>Help & Troubleshooting</h1>
         <p>
-          This policy explains how KBBQ Idle handles gameplay data for the WebGL service. The default deployment is designed
-          to keep data collection minimal and service-focused.
+          Use this guide when the game does not start, saves look wrong, or deployment setup is unclear.
         </p>
       </section>
 
       <section class="card">
-        <h2>Data We Process</h2>
+        <h2>Quick Start</h2>
         <ul>
-          <li>Gameplay state: save progress, inventory, upgrades, and settings needed to continue your session.</li>
-          <li>Operational telemetry: basic runtime events used for debugging service stability and balancing.</li>
-          <li>Support artifacts: issue reports you submit through GitHub Issues.</li>
+          <li>Open Play page and confirm build name (default: <code>KBBQIdleWebGL</code>).</li>
+          <li>Click <code>Check Build Files</code> and verify data/framework/wasm are all detected.</li>
+          <li>Click <code>Start Game</code>.</li>
+          <li>Press <code>F</code> or click <code>Fullscreen</code> for immersive mode.</li>
         </ul>
       </section>
 
       <section class="card">
-        <h2>Storage and Retention</h2>
+        <h2>Cloudflare Pages Deployment</h2>
         <ul>
-          <li>Primary save data is stored in browser local storage / persistent data path.</li>
-          <li>When backend integrations are enabled, only required fields for account/session operations are transmitted.</li>
-          <li>Local gameplay data remains until you clear browser storage or reset in-game data.</li>
+          <li>Framework preset: <code>None</code>.</li>
+          <li>Build command: leave empty if committing prebuilt <code>docs/Build</code> assets.</li>
+          <li>Build output directory: <code>docs</code>.</li>
+          <li>If build artifacts are missing, run <code>./tools/build_webgl_docs.sh</code> then push.</li>
         </ul>
       </section>
 
       <section class="card">
-        <h2>Third-Party Services</h2>
+        <h2>Common Problems</h2>
         <ul>
-          <li>Cloudflare Pages: static hosting and delivery.</li>
-          <li>GitHub: source hosting and support issue tracking.</li>
-          <li>AdSense (optional): ad delivery only when valid publisher configuration is enabled.</li>
+          <li><strong>"Build check failed"</strong>: verify that <code>docs/Build</code> contains <code>.data</code>, <code>.framework.js</code>, <code>.wasm</code>, and loader files.</li>
+          <li><strong>Black screen after load</strong>: hard refresh to clear stale cached build files.</li>
+          <li><strong>No ad shown</strong>: ad slot stays disabled until real AdSense client/slot values are configured.</li>
+          <li><strong>Save issue</strong>: clear browser site data and restart session if local save is corrupted.</li>
         </ul>
       </section>
 
       <section class="card">
-        <h2>Your Controls</h2>
-        <ul>
-          <li>You can stop gameplay data updates by closing the page.</li>
-          <li>You can clear local save data through browser storage controls.</li>
-          <li>You can request operational support using <a href="https://github.com/KIM3310/kbbq-idle-unity/issues">GitHub Issues</a>.</li>
-        </ul>
+        <h2>Need Support?</h2>
+        <p>
+          Open an issue at <a href="https://github.com/KIM3310/kbbq-idle-unity/issues">GitHub Issues</a> with browser/device,
+          screenshot, and reproduction steps.
+        </p>
       </section>
     </main>
 
-    <footer>For updates to this policy, check repository history on GitHub.</footer>
+    <footer>Guide updated: February 18, 2026.</footer>
   </body>
 </html>

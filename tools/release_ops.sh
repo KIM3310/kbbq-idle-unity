@@ -3,6 +3,7 @@ set -euo pipefail
 
 ROOT="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
 CONFIG_FILE="$ROOT/tools/cloudflare_pages.env"
+STRICT_ADSENSE_VALUES="${STRICT_ADSENSE_VALUES:-0}"
 
 if [[ -f "$CONFIG_FILE" ]]; then
   # shellcheck disable=SC1090
@@ -38,6 +39,9 @@ Usage:
   tools/release_ops.sh apply-adsense <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
   tools/release_ops.sh check
   tools/release_ops.sh report <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
+
+Environment:
+  STRICT_ADSENSE_VALUES=1  # make placeholder AdSense values fail the check gate
 USAGE
 }
 
@@ -172,8 +176,12 @@ check_review() {
 
   if rg -n "ca-pub-0000000000000000|ca-pub-xxxxxxxxxxxxxxxx|pub-0000000000000000|data-ad-slot=\"1234567890\"|VITE_ADSENSE_SLOT=1234567890|NEXT_PUBLIC_ADSENSE_SLOT=1234567890" \
     "$ROOT" "${IGNORE_GLOBS[@]}" --glob '!*.md' --glob '!README*' >/dev/null; then
-    log "FAIL placeholder AdSense values remain"
-    fail=1
+    if [[ "$STRICT_ADSENSE_VALUES" == "1" ]]; then
+      log "FAIL placeholder AdSense values remain (STRICT_ADSENSE_VALUES=1)"
+      fail=1
+    else
+      log "WARN placeholder AdSense values remain (expected before production AdSense onboarding)"
+    fi
   else
     log "OK   no placeholder AdSense values"
   fi

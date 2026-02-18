@@ -113,6 +113,7 @@
   <body>
     <header>
       <a href="./index.html">Play</a>
+      <a href="./help.html">Help</a>
       <a href="./privacy.html">Privacy</a>
       <a href="./terms.html">Terms</a>
       <a href="./contact.html">Contact</a>
@@ -141,9 +142,18 @@
       </section>
 
       <section class="card">
+        <h2>How to Play</h2>
+        <ul>
+          <li>Buy raw meat, place it on a grill slot, then flip and collect when it is ready.</li>
+          <li>Serve customers with cooked inventory to keep queue flow and income stable.</li>
+          <li>Use upgrades and boosts to speed up sizzle throughput and unlock better cuts.</li>
+        </ul>
+      </section>
+
+      <section class="card">
         <h2>Trust & Policy</h2>
         <ul>
-          <li>Contact: kbbq-idle@ops.local</li>
+          <li>Support: use <a href="https://github.com/KIM3310/kbbq-idle-unity/issues">GitHub Issues</a> for bug reports and account-service requests.</li>
           <li>Privacy: gameplay/account telemetry is limited to service operation scope.</li>
           <li>Terms: in-game economy values may change during balancing updates.</li>
         </ul>
@@ -158,7 +168,11 @@
       </section>
     </main>
 
-    <footer>Cloudflare Pages output directory: <code>docs</code> · Last updated: 2026-02-18</footer>
+    <footer>
+      Cloudflare Pages output directory: <code>docs</code> · Last updated: 2026-02-18
+      <br />
+      <span id="buildInfo">Build info: awaiting preflight.</span>
+    </footer>
 
     <script>
       const canvas = document.getElementById('unityCanvas');
@@ -171,6 +185,7 @@
       const fullscreenBtn = document.getElementById('fullscreenBtn');
       const adNode = document.querySelector('.adsbygoogle');
       const adStatusNode = document.getElementById('adStatus');
+      const buildInfoNode = document.getElementById('buildInfo');
       let unityInstance = null;
       let currentLoadId = 0;
       let buildManifestCache = null;
@@ -189,6 +204,12 @@
 
       function setPreflight(text) {
         preflightNode.textContent = text;
+      }
+
+      function setBuildInfo(text) {
+        if (buildInfoNode) {
+          buildInfoNode.textContent = text;
+        }
       }
 
       function setControlsEnabled(enabled) {
@@ -313,9 +334,15 @@
             return null;
           }
           buildManifestCache = parsed;
+          const fileCount = Array.isArray(parsed.files) ? parsed.files.length : 0;
+          const product = parsed.productName || 'KBBQ Idle';
+          const version = parsed.productVersion || '1.0';
+          const stamp = parsed.generatedAtUtc || 'unknown';
+          setBuildInfo(`Build info: ${product} v${version} · files ${fileCount} · generated ${stamp}`);
           return buildManifestCache;
         } catch (_err) {
           buildManifestCache = null;
+          setBuildInfo('Build info: manifest not found. Using runtime detection.');
           return null;
         }
       }
@@ -563,6 +590,12 @@
         void preflightCheck(buildInput.value);
       });
       startBtn.addEventListener('click', () => loadUnity(buildInput.value));
+      buildInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          void loadUnity(buildInput.value);
+        }
+      });
       fullscreenBtn.addEventListener('click', async () => {
         const target = container || canvas;
         if (!target) return;
@@ -574,6 +607,13 @@
           }
         } catch (_err) {
           setStatus('Fullscreen is not available in this browser.');
+        }
+      });
+      document.addEventListener('keydown', (event) => {
+        if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;
+        if (event.key === 'f' || event.key === 'F') {
+          event.preventDefault();
+          fullscreenBtn.click();
         }
       });
       initializeAdsense();
