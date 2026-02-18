@@ -95,19 +95,66 @@
         preflightNode.textContent = text;
       }
 
+      function isHtmlContentType(contentType) {
+        return typeof contentType === 'string' && contentType.toLowerCase().includes('text/html');
+      }
+
+      async function fetchProbe(url) {
+        const options = {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { Range: 'bytes=0-255' },
+        };
+
+        const response = await fetch(url, options);
+        const contentType = response.headers.get('content-type') || '';
+        if (!response.ok || isHtmlContentType(contentType)) {
+          return { ok: false, contentType, text: '' };
+        }
+
+        const text = await response.text();
+        const lowered = text.trimStart().toLowerCase();
+        if (lowered.startsWith('<!doctype html') || lowered.startsWith('<html')) {
+          return { ok: false, contentType, text };
+        }
+
+        return { ok: true, contentType, text };
+      }
+
       async function urlExists(url) {
         try {
           const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
-          if (head.ok) return true;
+          const contentType = head.headers.get('content-type') || '';
+          if (head.ok && !isHtmlContentType(contentType)) {
+            return true;
+          }
         } catch (_err) {
           // fallback below
         }
+
         try {
-          const get = await fetch(url, { method: 'GET', cache: 'no-store' });
-          return get.ok;
+          const probe = await fetchProbe(url);
+          return probe.ok;
         } catch (_err) {
           return false;
         }
+      }
+
+      async function pickCandidate(candidates, validator) {
+        for (const candidate of candidates) {
+          try {
+            const probe = await fetchProbe(candidate);
+            if (!probe.ok) {
+              continue;
+            }
+            if (!validator || validator(probe.text, probe.contentType)) {
+              return candidate;
+            }
+          } catch (_err) {
+            // try next
+          }
+        }
+        return '';
       }
 
       function normalizeBuildPath(path, base) {
@@ -143,41 +190,36 @@
 
         const candidates = {
           dataUrl: [
+            `Build/${base}.data`,
             `Build/${base}.data.unityweb`,
             `Build/${base}.data.br`,
             `Build/${base}.data.gz`,
-            `Build/${base}.data`,
           ],
           frameworkUrl: [
+            `Build/${base}.framework.js`,
             `Build/${base}.framework.js.unityweb`,
             `Build/${base}.framework.js.br`,
             `Build/${base}.framework.js.gz`,
-            `Build/${base}.framework.js`,
           ],
           codeUrl: [
+            `Build/${base}.wasm`,
             `Build/${base}.wasm.unityweb`,
             `Build/${base}.wasm.br`,
             `Build/${base}.wasm.gz`,
-            `Build/${base}.wasm`,
           ],
           symbolsUrl: [
+            `Build/${base}.symbols.json`,
             `Build/${base}.symbols.json.unityweb`,
             `Build/${base}.symbols.json.br`,
             `Build/${base}.symbols.json.gz`,
-            `Build/${base}.symbols.json`,
           ],
         };
 
         const resolved = {};
-        for (const key of ['dataUrl', 'frameworkUrl', 'codeUrl', 'symbolsUrl']) {
-          const list = candidates[key];
-          for (const candidate of list) {
-            if (await urlExists(candidate)) {
-              resolved[key] = candidate;
-              break;
-            }
-          }
-        }
+        resolved.dataUrl = await pickCandidate(candidates.dataUrl);
+        resolved.frameworkUrl = await pickCandidate(candidates.frameworkUrl, (text) => text.includes('createUnityInstance') || text.includes('unityFramework'));
+        resolved.codeUrl = await pickCandidate(candidates.codeUrl);
+        resolved.symbolsUrl = await pickCandidate(candidates.symbolsUrl);
 
         if (!resolved.dataUrl || !resolved.frameworkUrl || !resolved.codeUrl) {
           throw new Error('Missing core build files (.data/.framework.js/.wasm).');
