@@ -5,6 +5,7 @@ This is an optional backend to demonstrate:
 - HMAC-signed request headers (replay-resistant),
 - leaderboard submit/fetch,
 - lightweight analytics event ingestion,
+- community feedback relay (`/community/feedback`) to Formspree,
 - simple friends list/invite flow,
 - IAP verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
 - service readiness diagnostics (`/readiness`),
@@ -64,6 +65,7 @@ Networking is **disabled by default** in the Unity project. To enable it locally
 - `KBBQ_GOOGLE_PACKAGE_NAME=com.yourgame.app`
 - `KBBQ_GOOGLE_SERVICE_ACCOUNT_JSON='{"type":"service_account",...}'`
 - `KBBQ_OPS_ADMIN_TOKEN=...`
+- `KBBQ_FORMSPREE_ENDPOINT=https://formspree.io/f/...`
 
 Production/staging templates:
 - `server/.env.production.example`

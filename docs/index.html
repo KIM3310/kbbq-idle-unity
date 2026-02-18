@@ -3,31 +3,132 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>KBBQ Idle (WebGL)</title>
+    <meta name="google-adsense-account" content="ca-pub-0000000000000000" />
+    <title>KBBQ Idle | Playable WebGL</title>
+    <meta name="description" content="Play KBBQ Idle on Cloudflare Pages with optional backend integrations and policy-ready site sections." />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-0000000000000000" crossorigin="anonymous"></script>
     <style>
-      body { font-family: system-ui, -apple-system, Segoe UI, Roboto, sans-serif; padding: 32px; line-height: 1.5; }
-      code { background: #f4f4f4; padding: 2px 6px; border-radius: 4px; }
-      .box { max-width: 860px; }
-      a { color: #0b5fff; }
+      :root { --bg:#f7efe2; --card:#fffdf8; --line:#e4d7bf; --ink:#32281f; --muted:#6d594a; --accent:#b24d29; }
+      * { box-sizing:border-box; }
+      body { margin:0; font-family: ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,sans-serif; background:var(--bg); color:var(--ink); }
+      header { padding:16px 20px; background:#fff; border-bottom:1px solid var(--line); display:flex; gap:14px; flex-wrap:wrap; align-items:center; }
+      header a { color:var(--accent); text-decoration:none; font-size:14px; }
+      .wrap { max-width:1080px; margin:0 auto; padding:24px 16px 36px; display:grid; gap:16px; }
+      .card { border:1px solid var(--line); background:var(--card); border-radius:14px; padding:14px; }
+      h1,h2 { margin:0 0 10px; }
+      p,li { color:var(--muted); line-height:1.56; }
+      .playbox { display:grid; gap:12px; }
+      .toolbar { display:flex; gap:8px; flex-wrap:wrap; }
+      input,button { border-radius:8px; border:1px solid var(--line); padding:8px 10px; font-size:14px; }
+      button { background:#fff; cursor:pointer; }
+      #unityContainer { width:100%; min-height:520px; border:1px solid var(--line); border-radius:10px; background:#101010; display:flex; align-items:center; justify-content:center; overflow:hidden; }
+      #unityCanvas { width:100%; height:100%; display:none; }
+      #status { font-size:14px; color:var(--muted); }
+      .ad { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#fff; }
+      footer { max-width:1080px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:14px; }
     </style>
   </head>
   <body>
-    <div class="box">
-      <h1>KBBQ Idle (WebGL)</h1>
-      <p>
-        This GitHub Pages site is reserved for the WebGL build output.
-        The build artifacts are generated locally from Unity to keep this repo lightweight.
-      </p>
-      <p>To generate the playable build:</p>
-      <ol>
-        <li>Open the Unity project (2022.3.62f3)</li>
-        <li>Run <code>KBBQ/Build WebGL (docs)</code> in the Editor</li>
-        <li>Commit the generated <code>docs/</code> output and push to <code>main</code></li>
-      </ol>
-      <p>
-        See the repo README for details.
-      </p>
-    </div>
+    <header>
+      <a href="./index.html">Play</a>
+      <a href="./privacy.html">Privacy</a>
+      <a href="./terms.html">Terms</a>
+      <a href="./contact.html">Contact</a>
+      <a href="https://github.com/KIM3310/kbbq-idle-unity">GitHub</a>
+    </header>
+
+    <main class="wrap">
+      <section class="card playbox">
+        <h1>KBBQ Idle WebGL</h1>
+        <p>
+          Unity WebGL build files must exist under <code>docs/Build/</code>. Set the build name below
+          (for example <code>KBBQIdleWebGL</code>) and start.
+        </p>
+        <div class="toolbar">
+          <input id="buildName" placeholder="Unity build base name" value="KBBQIdleWebGL" />
+          <button id="startBtn">Start Game</button>
+        </div>
+        <div id="status">Ready. Click Start Game after uploading WebGL build artifacts.</div>
+        <div id="unityContainer">
+          <canvas id="unityCanvas" width="960" height="600"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Trust & Policy</h2>
+        <ul>
+          <li>Contact: kbbq-idle@ops.local</li>
+          <li>Privacy: gameplay/account telemetry is limited to service operation scope.</li>
+          <li>Terms: in-game economy values may change during balancing updates.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Sponsored Slot</h2>
+        <div class="ad">
+          <ins class="adsbygoogle" style="display:block" data-ad-client="ca-pub-0000000000000000" data-ad-slot="1234567890" data-ad-format="auto" data-full-width-responsive="true"></ins>
+        </div>
+      </section>
+    </main>
+
+    <footer>Cloudflare Pages output directory: <code>docs</code> · Last updated: 2026-02-18</footer>
+
+    <script>
+      const canvas = document.getElementById('unityCanvas');
+      const container = document.getElementById('unityContainer');
+      const statusNode = document.getElementById('status');
+      const buildInput = document.getElementById('buildName');
+      const startBtn = document.getElementById('startBtn');
+
+      function setStatus(text) {
+        statusNode.textContent = text;
+      }
+
+      function loadUnity(buildBase) {
+        const base = String(buildBase || '').trim();
+        if (!base) {
+          setStatus('Build name is required.');
+          return;
+        }
+
+        setStatus('Loading Unity loader...');
+        const loaderUrl = `Build/${base}.loader.js`;
+        const existing = document.getElementById('unity-loader-script');
+        if (existing) existing.remove();
+
+        const script = document.createElement('script');
+        script.id = 'unity-loader-script';
+        script.src = loaderUrl;
+        script.onload = () => {
+          if (typeof createUnityInstance !== 'function') {
+            setStatus('Unity loader loaded but createUnityInstance is missing. Check build output.');
+            return;
+          }
+          const config = {
+            dataUrl: `Build/${base}.data`,
+            frameworkUrl: `Build/${base}.framework.js`,
+            codeUrl: `Build/${base}.wasm`,
+            streamingAssetsUrl: 'StreamingAssets',
+            companyName: 'KBBQ',
+            productName: 'KBBQ Idle',
+            productVersion: '1.0'
+          };
+          setStatus('Initializing game...');
+          canvas.style.display = 'block';
+          createUnityInstance(canvas, config, (progress) => {
+            setStatus(`Loading ${(progress * 100).toFixed(0)}%`);
+          })
+            .then(() => setStatus('Game loaded.'))
+            .catch((err) => setStatus(`Failed to launch: ${err}`));
+        };
+        script.onerror = () => {
+          setStatus('Loader file not found. Build Unity WebGL and copy files into docs/Build/.');
+        };
+        document.body.appendChild(script);
+      }
+
+      startBtn.addEventListener('click', () => loadUnity(buildInput.value));
+      try { (window.adsbygoogle = window.adsbygoogle || []).push({}); } catch (e) {}
+    </script>
   </body>
 </html>
-

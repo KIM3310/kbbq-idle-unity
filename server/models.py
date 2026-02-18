@@ -51,3 +51,12 @@ class AnalyticsEventRequest(BaseModel):
     timestamp: int
     nonce: str
 
+
+class CommunityFeedbackRequest(BaseModel):
+    playerId: str
+    message: str
+    email: str = ""
+    channel: str = "in-game"
+    signature: str
+    timestamp: int
+    nonce: str

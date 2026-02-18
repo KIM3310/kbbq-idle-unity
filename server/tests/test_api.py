@@ -3,6 +3,7 @@ import os
 import tempfile
 import time
 import unittest
+from unittest.mock import patch
 
 from server.security import hmac_b64
 
@@ -160,6 +161,102 @@ class TestApi(unittest.TestCase):
                 os.environ.pop("KBBQ_MAX_CLOCK_SKEW_SECONDS", None)
             else:
                 os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = prev_skew
+
+    def test_feedback_relay_requires_endpoint(self):
+        r = self.client.post("/auth/guest", json={"deviceId": "device-feedback-001"})
+        self.assertEqual(r.status_code, 200)
+        auth = r.json()
+        player_id = auth["playerId"]
+        token = auth["token"]
+
+        body = {
+            "playerId": player_id,
+            "message": "Need more daily mission variety.",
+            "email": "player@example.com",
+            "channel": "in-game",
+            "timestamp": int(time.time()),
+            "nonce": "feedback-body-nonce-1",
+            "signature": "",
+        }
+        secret = os.environ["KBBQ_HMAC_SECRET"]
+        normalized_message = " ".join(body["message"].split())
+        body["signature"] = hmac_b64(secret, f"{player_id}|{body['timestamp']}|{normalized_message}")
+
+        raw_body = json.dumps(body, separators=(",", ":"))
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            **_sign_headers(
+                secret=secret,
+                player_id=player_id,
+                nonce="feedback-header-nonce-1",
+                ts=int(time.time()),
+                raw_body=raw_body,
+            ),
+        }
+
+        prev_endpoint = os.environ.pop("KBBQ_FORMSPREE_ENDPOINT", None)
+        try:
+            res = self.client.post("/community/feedback", headers=headers, content=raw_body)
+            self.assertEqual(res.status_code, 503)
+            self.assertIn("not configured", res.text.lower())
+        finally:
+            if prev_endpoint is not None:
+                os.environ["KBBQ_FORMSPREE_ENDPOINT"] = prev_endpoint
+
+    def test_feedback_relay_success(self):
+        r = self.client.post("/auth/guest", json={"deviceId": "device-feedback-002"})
+        self.assertEqual(r.status_code, 200)
+        auth = r.json()
+        player_id = auth["playerId"]
+        token = auth["token"]
+
+        body = {
+            "playerId": player_id,
+            "message": "Please add event recap in inbox.",
+            "email": "qa@example.com",
+            "channel": "in-game",
+            "timestamp": int(time.time()),
+            "nonce": "feedback-body-nonce-2",
+            "signature": "",
+        }
+        secret = os.environ["KBBQ_HMAC_SECRET"]
+        normalized_message = " ".join(body["message"].split())
+        body["signature"] = hmac_b64(secret, f"{player_id}|{body['timestamp']}|{normalized_message}")
+
+        raw_body = json.dumps(body, separators=(",", ":"))
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            **_sign_headers(
+                secret=secret,
+                player_id=player_id,
+                nonce="feedback-header-nonce-2",
+                ts=int(time.time()),
+                raw_body=raw_body,
+            ),
+        }
+
+        class _Resp:
+            status_code = 200
+
+            @staticmethod
+            def json():
+                return {"ok": True}
+
+        prev_endpoint = os.environ.get("KBBQ_FORMSPREE_ENDPOINT")
+        os.environ["KBBQ_FORMSPREE_ENDPOINT"] = "https://formspree.io/f/mock"
+        try:
+            with patch("server.app.httpx.post", return_value=_Resp()) as mocked_post:
+                res = self.client.post("/community/feedback", headers=headers, content=raw_body)
+            self.assertEqual(res.status_code, 200)
+            self.assertTrue(res.json().get("ok"))
+            self.assertEqual(mocked_post.call_count, 1)
+        finally:
+            if prev_endpoint is None:
+                os.environ.pop("KBBQ_FORMSPREE_ENDPOINT", None)
+            else:
+                os.environ["KBBQ_FORMSPREE_ENDPOINT"] = prev_endpoint
 
 
 if __name__ == "__main__":
