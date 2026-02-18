@@ -2,8 +2,11 @@ import json
 import os
 import tempfile
 import time
+import asyncio
 import unittest
 from unittest.mock import patch
+
+import httpx
 
 from server.security import hmac_b64
 
@@ -29,10 +32,9 @@ class TestApi(unittest.TestCase):
         os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = "9999"
         os.environ["KBBQ_OPS_TOKEN"] = "unit-ops-token"
 
-        from fastapi.testclient import TestClient
         from server.app import app
 
-        cls.client = TestClient(app)
+        cls.app = app
 
     @classmethod
     def tearDownClass(cls):
@@ -42,17 +44,17 @@ class TestApi(unittest.TestCase):
             pass
 
     def test_root_and_health(self):
-        r = self.client.get("/")
+        r = self._request("GET", "/")
         self.assertEqual(r.status_code, 200)
         self.assertTrue(r.json().get("ok"))
 
-        r = self.client.get("/health")
+        r = self._request("GET", "/health")
         self.assertEqual(r.status_code, 200)
         self.assertTrue(r.json().get("ok"))
 
     def test_auth_then_signed_leaderboard_and_replay_protection(self):
         # 1) Guest auth
-        r = self.client.post("/auth/guest", json={"deviceId": "device-test-001"})
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-test-001"})
         self.assertEqual(r.status_code, 200)
         data = r.json()
         player_id = data["playerId"]
@@ -66,40 +68,40 @@ class TestApi(unittest.TestCase):
             "Authorization": f"Bearer {token}",
             **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=""),
         }
-        r = self.client.get("/leaderboard/top?region=KR&limit=5", headers=headers)
+        r = self._request("GET", "/leaderboard/top?region=KR&limit=5", headers=headers)
         self.assertEqual(r.status_code, 200)
         self.assertIn("entries", r.json())
 
         # 3) Reusing the same nonce should fail (replay protection)
-        r2 = self.client.get("/leaderboard/top?region=KR&limit=5", headers=headers)
+        r2 = self._request("GET", "/leaderboard/top?region=KR&limit=5", headers=headers)
         self.assertEqual(r2.status_code, 401)
         self.assertIn("replay", r2.text.lower())
 
     def test_readiness_and_metrics_endpoints(self):
-        r = self.client.get("/readiness")
+        r = self._request("GET", "/readiness")
         self.assertEqual(r.status_code, 200)
         payload = r.json()
         self.assertIn("ready", payload)
         self.assertIn("checks", payload)
         self.assertTrue(any(c.get("name") == "db" for c in payload.get("checks", [])))
 
-        m = self.client.get("/metrics")
+        m = self._request("GET", "/metrics")
         self.assertEqual(m.status_code, 200)
         self.assertIn("kbbq_players_total", m.text)
         self.assertIn("kbbq_uptime_seconds", m.text)
 
     def test_ops_alerts_requires_token(self):
-        denied = self.client.get("/ops/alerts")
+        denied = self._request("GET", "/ops/alerts")
         self.assertEqual(denied.status_code, 401)
 
-        allowed = self.client.get("/ops/alerts", headers={"X-Ops-Token": os.environ["KBBQ_OPS_TOKEN"]})
+        allowed = self._request("GET", "/ops/alerts", headers={"X-Ops-Token": os.environ["KBBQ_OPS_TOKEN"]})
         self.assertEqual(allowed.status_code, 200)
         payload = allowed.json()
         self.assertIn("alerts", payload)
         self.assertGreaterEqual(len(payload["alerts"]), 1)
 
     def test_submit_score_requires_signed_headers(self):
-        r = self.client.post("/auth/guest", json={"deviceId": "device-test-002"})
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-test-002"})
         self.assertEqual(r.status_code, 200)
         data = r.json()
         player_id = data["playerId"]
@@ -127,17 +129,17 @@ class TestApi(unittest.TestCase):
             **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=raw_body),
         }
 
-        r = self.client.post("/leaderboard/submit", headers=headers, content=raw_body)
+        r = self._request("POST", "/leaderboard/submit", headers=headers, content=raw_body)
         self.assertEqual(r.status_code, 200)
         self.assertTrue(r.json().get("ok"))
 
         # Using the same header nonce again should fail.
-        r2 = self.client.post("/leaderboard/submit", headers=headers, content=raw_body)
+        r2 = self._request("POST", "/leaderboard/submit", headers=headers, content=raw_body)
         self.assertEqual(r2.status_code, 401)
         self.assertIn("replay", r2.text.lower())
 
     def test_invalid_clock_skew_env_uses_fallback(self):
-        r = self.client.post("/auth/guest", json={"deviceId": "device-test-003"})
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-test-003"})
         self.assertEqual(r.status_code, 200)
         data = r.json()
         player_id = data["playerId"]
@@ -153,7 +155,7 @@ class TestApi(unittest.TestCase):
                 "Authorization": f"Bearer {token}",
                 **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=""),
             }
-            res = self.client.get("/leaderboard/top?region=KR&limit=5", headers=headers)
+            res = self._request("GET", "/leaderboard/top?region=KR&limit=5", headers=headers)
             self.assertEqual(res.status_code, 200)
             self.assertIn("entries", res.json())
         finally:
@@ -163,7 +165,7 @@ class TestApi(unittest.TestCase):
                 os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = prev_skew
 
     def test_feedback_relay_requires_endpoint(self):
-        r = self.client.post("/auth/guest", json={"deviceId": "device-feedback-001"})
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-feedback-001"})
         self.assertEqual(r.status_code, 200)
         auth = r.json()
         player_id = auth["playerId"]
@@ -197,7 +199,7 @@ class TestApi(unittest.TestCase):
 
         prev_endpoint = os.environ.pop("KBBQ_FORMSPREE_ENDPOINT", None)
         try:
-            res = self.client.post("/community/feedback", headers=headers, content=raw_body)
+            res = self._request("POST", "/community/feedback", headers=headers, content=raw_body)
             self.assertEqual(res.status_code, 503)
             self.assertIn("not configured", res.text.lower())
         finally:
@@ -205,7 +207,7 @@ class TestApi(unittest.TestCase):
                 os.environ["KBBQ_FORMSPREE_ENDPOINT"] = prev_endpoint
 
     def test_feedback_relay_success(self):
-        r = self.client.post("/auth/guest", json={"deviceId": "device-feedback-002"})
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-feedback-002"})
         self.assertEqual(r.status_code, 200)
         auth = r.json()
         player_id = auth["playerId"]
@@ -248,7 +250,7 @@ class TestApi(unittest.TestCase):
         os.environ["KBBQ_FORMSPREE_ENDPOINT"] = "https://formspree.io/f/mock"
         try:
             with patch("server.app.httpx.post", return_value=_Resp()) as mocked_post:
-                res = self.client.post("/community/feedback", headers=headers, content=raw_body)
+                res = self._request("POST", "/community/feedback", headers=headers, content=raw_body)
             self.assertEqual(res.status_code, 200)
             self.assertTrue(res.json().get("ok"))
             self.assertEqual(mocked_post.call_count, 1)
@@ -257,6 +259,14 @@ class TestApi(unittest.TestCase):
                 os.environ.pop("KBBQ_FORMSPREE_ENDPOINT", None)
             else:
                 os.environ["KBBQ_FORMSPREE_ENDPOINT"] = prev_endpoint
+
+    async def _request_async(self, method: str, url: str, **kwargs) -> httpx.Response:
+        transport = httpx.ASGITransport(app=self.app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            return await client.request(method, url, **kwargs)
+
+    def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
+        return asyncio.run(self._request_async(method, url, **kwargs))
 
 
 if __name__ == "__main__":
