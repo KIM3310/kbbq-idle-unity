@@ -107,7 +107,8 @@ Cloudflare Pages deployment is also supported:
 - Build command: `(none)`
 - Output directory: `docs`
 - WebGL entry page: `docs/index.html` (loader UI with build name input)
-- Policy/ad crawl files: `docs/privacy.html`, `docs/terms.html`, `docs/contact.html`, `docs/ads.txt`, `docs/robots.txt`, `docs/sitemap.xml`
+- Policy/ad crawl files: `docs/privacy.html`, `docs/terms.html`, `docs/contact.html`, `docs/compliance.html`, `docs/ads.txt`, `docs/robots.txt`, `docs/sitemap.xml`
+- Cloudflare security headers template: `docs/_headers`
 
 ## Glossary (first-time readers)
 - HMAC: Hash-based Message Authentication Code (request signing)
