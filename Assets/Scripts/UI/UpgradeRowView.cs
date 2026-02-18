@@ -1,5 +1,6 @@
 using UnityEngine;
 using UnityEngine.UI;
+using System;
 
 public class UpgradeRowView : MonoBehaviour
 {
@@ -19,6 +20,8 @@ public class UpgradeRowView : MonoBehaviour
     private bool hasCachedColors;
     private bool isBestActive;
     private Shadow labelShadow;
+    private UpgradeUiEntry currentEntry;
+    private Action<UpgradeUiEntry> requestUpgradeAction;
 
     private void Awake()
     {
@@ -67,8 +70,14 @@ public class UpgradeRowView : MonoBehaviour
         gameManager = manager;
     }
 
+    public void SetRequestUpgradeAction(Action<UpgradeUiEntry> callback)
+    {
+        requestUpgradeAction = callback;
+    }
+
     public void SetData(UpgradeUiEntry entry)
     {
+        currentEntry = entry;
         upgradeId = entry.id;
         if (label != null)
         {
@@ -105,6 +114,7 @@ public class UpgradeRowView : MonoBehaviour
 
     public void Clear()
     {
+        currentEntry = default;
         upgradeId = null;
         if (label != null)
         {
@@ -130,6 +140,12 @@ public class UpgradeRowView : MonoBehaviour
 
     private void HandleClick()
     {
+        if (requestUpgradeAction != null)
+        {
+            requestUpgradeAction(currentEntry);
+            return;
+        }
+
         if (gameManager == null || string.IsNullOrEmpty(upgradeId))
         {
             return;

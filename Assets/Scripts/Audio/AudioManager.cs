@@ -33,6 +33,9 @@ public class AudioManager : MonoBehaviour
     private AudioClip runtimeSizzleClipA;
     private AudioClip runtimeSizzleClipB;
     private AudioClip runtimeSizzleClipC;
+    private AudioClip runtimeSizzleCrackleClip;
+    private float sizzleIntensity;
+    private float crackleTimer;
 
     private void Awake()
     {
@@ -133,9 +136,10 @@ public class AudioManager : MonoBehaviour
     public void SetSizzleIntensity(float normalized)
     {
         var n = Mathf.Clamp01(normalized);
-        SetLayerVolume(sizzleLayerA, Mathf.Lerp(0.03f, 0.20f, n));
-        SetLayerVolume(sizzleLayerB, Mathf.Lerp(0.02f, 0.15f, n * 0.9f));
-        SetLayerVolume(sizzleLayerC, Mathf.Lerp(0.01f, 0.12f, n * 0.8f));
+        sizzleIntensity = n;
+        SetLayerVolume(sizzleLayerA, Mathf.Lerp(0.06f, 0.42f, n));
+        SetLayerVolume(sizzleLayerB, Mathf.Lerp(0.04f, 0.34f, n * 0.95f));
+        SetLayerVolume(sizzleLayerC, Mathf.Lerp(0.03f, 0.28f, n * 0.9f));
     }
 
     private void PlaySizzleLayers()
@@ -157,6 +161,29 @@ public class AudioManager : MonoBehaviour
             sizzleLayerC.loop = true;
             sizzleLayerC.Play();
         }
+    }
+
+    private void Update()
+    {
+        if (uiSource == null || sizzleIntensity <= 0.08f)
+        {
+            return;
+        }
+
+        crackleTimer -= Time.unscaledDeltaTime;
+        if (crackleTimer > 0f)
+        {
+            return;
+        }
+
+        if (runtimeSizzleCrackleClip != null)
+        {
+            uiSource.pitch = Random.Range(0.88f, 1.16f);
+            uiSource.PlayOneShot(runtimeSizzleCrackleClip, Mathf.Lerp(0.06f, 0.24f, sizzleIntensity));
+            uiSource.pitch = 1f;
+        }
+
+        crackleTimer = Mathf.Lerp(0.48f, 0.12f, sizzleIntensity) + Random.Range(0.02f, 0.15f);
     }
 
     private void PlayClipWithFallback(AudioClip configured, AudioClip fallback, float volume)
@@ -196,6 +223,7 @@ public class AudioManager : MonoBehaviour
         runtimeSizzleClipA = CreateSizzleLoop("rt_sizzle_a", 0.32f, 250f, 1200f, 0.18f);
         runtimeSizzleClipB = CreateSizzleLoop("rt_sizzle_b", 0.32f, 210f, 980f, 0.15f);
         runtimeSizzleClipC = CreateSizzleLoop("rt_sizzle_c", 0.32f, 175f, 860f, 0.12f);
+        runtimeSizzleCrackleClip = CreateNoiseBurst("rt_sizzle_crackle", 0.05f, 0.22f);
     }
 
     private AudioClip CreateToneSweep(string name, float startHz, float endHz, float duration, float amplitude, float noiseMix)
