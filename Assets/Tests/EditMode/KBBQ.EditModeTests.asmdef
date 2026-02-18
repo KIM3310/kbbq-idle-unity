@@ -1,0 +1,21 @@
+{
+  "name": "KBBQ.EditModeTests",
+  "rootNamespace": "",
+  "references": [],
+  "optionalUnityReferences": [
+    "TestAssemblies"
+  ],
+  "includePlatforms": [
+    "Editor"
+  ],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": true,
+  "defineConstraints": [
+    "KBBQ_ENABLE_EDITMODE_TESTS"
+  ],
+  "versionDefines": [],
+  "noEngineReferences": false
+}

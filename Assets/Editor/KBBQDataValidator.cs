@@ -15,7 +15,7 @@ public static class KBBQDataValidator
         public bool HasErrors => errors > 0;
     }
 
-    [MenuItem("KBBQ/Validate Data (Portfolio)")]
+    [UnityEditor.MenuItem("KBBQ/Validate Data (Portfolio)")]
     public static void ValidateMenu()
     {
         var report = Validate();
@@ -168,4 +168,3 @@ public static class KBBQDataValidator
     }
 }
 #endif
-
