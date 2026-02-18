@@ -86,6 +86,13 @@
       const checkBtn = document.getElementById('checkBtn');
       const startBtn = document.getElementById('startBtn');
       let unityInstance = null;
+      const buildRevision = (() => {
+        const fromLastModified = Date.parse(document.lastModified || '');
+        if (Number.isFinite(fromLastModified) && fromLastModified > 0) {
+          return String(fromLastModified);
+        }
+        return String(Math.floor(Date.now() / (60 * 1000)));
+      })();
 
       function setStatus(text) {
         statusNode.textContent = text;
@@ -99,17 +106,28 @@
         return typeof contentType === 'string' && contentType.toLowerCase().includes('text/html');
       }
 
-      async function fetchProbe(url) {
+      function withRevision(url) {
+        const value = String(url || '');
+        if (!value) return value;
+        const joiner = value.includes('?') ? '&' : '?';
+        return `${value}${joiner}v=${encodeURIComponent(buildRevision)}`;
+      }
+
+      async function fetchProbe(url, needsText = false) {
         const options = {
           method: 'GET',
           cache: 'no-store',
-          headers: { Range: 'bytes=0-255' },
+          headers: { Range: 'bytes=0-2047' },
         };
 
         const response = await fetch(url, options);
         const contentType = response.headers.get('content-type') || '';
         if (!response.ok || isHtmlContentType(contentType)) {
           return { ok: false, contentType, text: '' };
+        }
+
+        if (!needsText) {
+          return { ok: true, contentType, text: '' };
         }
 
         const text = await response.text();
@@ -143,12 +161,27 @@
       async function pickCandidate(candidates, validator) {
         for (const candidate of candidates) {
           try {
-            const probe = await fetchProbe(candidate);
-            if (!probe.ok) {
+            const candidateUrl = withRevision(candidate);
+            const head = await fetch(candidateUrl, { method: 'HEAD', cache: 'no-store' });
+            const headType = head.headers.get('content-type') || '';
+            if (!head.ok || isHtmlContentType(headType)) {
+              const fallback = await fetchProbe(candidateUrl, Boolean(validator));
+              if (!fallback.ok) {
+                continue;
+              }
+              if (!validator || validator(fallback.text, fallback.contentType)) {
+                return candidateUrl;
+              }
               continue;
             }
-            if (!validator || validator(probe.text, probe.contentType)) {
-              return candidate;
+
+            if (!validator) {
+              return candidateUrl;
+            }
+
+            const probe = await fetchProbe(candidateUrl, true);
+            if (probe.ok && validator(probe.text, probe.contentType)) {
+              return candidateUrl;
             }
           } catch (_err) {
             // try next
@@ -168,15 +201,15 @@
       async function resolveConfig(base) {
         const jsonUrl = `Build/${base}.json`;
         try {
-          const resp = await fetch(jsonUrl, { cache: 'no-store' });
+          const resp = await fetch(withRevision(jsonUrl), { cache: 'no-store' });
           if (resp.ok) {
             const parsed = await resp.json();
             if (parsed && parsed.dataUrl && parsed.frameworkUrl && parsed.codeUrl) {
               return {
-                dataUrl: normalizeBuildPath(parsed.dataUrl, base),
-                frameworkUrl: normalizeBuildPath(parsed.frameworkUrl, base),
-                codeUrl: normalizeBuildPath(parsed.codeUrl, base),
-                symbolsUrl: parsed.symbolsUrl ? normalizeBuildPath(parsed.symbolsUrl, base) : undefined,
+                dataUrl: withRevision(normalizeBuildPath(parsed.dataUrl, base)),
+                frameworkUrl: withRevision(normalizeBuildPath(parsed.frameworkUrl, base)),
+                codeUrl: withRevision(normalizeBuildPath(parsed.codeUrl, base)),
+                symbolsUrl: parsed.symbolsUrl ? withRevision(normalizeBuildPath(parsed.symbolsUrl, base)) : undefined,
                 companyName: parsed.companyName || 'KBBQ',
                 productName: parsed.productName || 'KBBQ Idle',
                 productVersion: parsed.productVersion || '1.0',
@@ -285,7 +318,7 @@
 
         await disposeUnityInstance();
         setStatus('Loading Unity loader...');
-        const loaderUrl = `Build/${base}.loader.js`;
+        const loaderUrl = withRevision(`Build/${base}.loader.js`);
         const existing = document.getElementById('unity-loader-script');
         if (existing) existing.remove();
 
