@@ -4,6 +4,7 @@ import time
 import uuid
 from contextlib import contextmanager
 
+import httpx
 from fastapi import FastAPI, HTTPException, Request, Response
 from fastapi.middleware.cors import CORSMiddleware
 
@@ -11,6 +12,7 @@ from server.db import get_db
 from server.models import (
     AnalyticsEventRequest,
     AuthResponse,
+    CommunityFeedbackRequest,
     FriendInviteRequest,
     FriendListResponse,
     LeaderboardEntry,
@@ -68,6 +70,10 @@ def health():
 
 def _ops_token() -> str:
     return (os.getenv("KBBQ_OPS_TOKEN") or os.getenv("KBBQ_OPS_ADMIN_TOKEN") or "").strip()
+
+
+def _feedback_endpoint() -> str:
+    return (os.getenv("KBBQ_FORMSPREE_ENDPOINT") or "").strip()
 
 
 def _require_ops_token(request: Request) -> None:
@@ -360,6 +366,70 @@ async def analytics_event(request: Request):
         )
         db.commit()
         return {"ok": True}
+
+
+@app.post("/community/feedback")
+async def community_feedback(request: Request):
+    raw = (await request.body()).decode("utf-8")
+    try:
+        payload = CommunityFeedbackRequest.model_validate_json(raw)
+    except Exception:
+        raise HTTPException(status_code=400, detail="invalid json body")
+
+    endpoint = _feedback_endpoint()
+    if not endpoint:
+        raise HTTPException(status_code=503, detail="feedback relay is not configured")
+
+    with _db_session() as db:
+        player_id = require_bearer_player_id(request, db)
+        if payload.playerId != player_id:
+            raise HTTPException(status_code=401, detail="player mismatch")
+        verify_signed_headers(request, db=db, player_id=player_id, raw_body=raw)
+
+    message = " ".join(str(payload.message or "").split())
+    if not message:
+        raise HTTPException(status_code=400, detail="missing feedback message")
+    if len(message) > 1000:
+        message = message[:1000]
+
+    secret = os.getenv("KBBQ_HMAC_SECRET", "CHANGE_ME")
+    body_sig_payload = f"{player_id}|{payload.timestamp}|{message}"
+    expected_body_sig = hmac_b64(secret, body_sig_payload)
+    if expected_body_sig != payload.signature:
+        raise HTTPException(status_code=401, detail="bad body signature")
+
+    relay_payload = {
+        "player_id": player_id,
+        "email": str(payload.email or "").strip(),
+        "message": message,
+        "channel": str(payload.channel or "in-game").strip() or "in-game",
+        "source": "kbbq-idle-backend",
+    }
+    try:
+        resp = httpx.post(
+            endpoint,
+            json=relay_payload,
+            headers={"Accept": "application/json"},
+            timeout=8.0,
+        )
+    except httpx.HTTPError:
+        raise HTTPException(status_code=502, detail="feedback relay request failed")
+
+    if resp.status_code >= 400:
+        detail = "feedback relay rejected request"
+        try:
+            body = resp.json()
+            if isinstance(body, dict):
+                errors = body.get("errors")
+                if isinstance(errors, list) and errors and isinstance(errors[0], dict) and errors[0].get("message"):
+                    detail = str(errors[0].get("message"))
+                elif body.get("error"):
+                    detail = str(body.get("error"))
+        except Exception:
+            pass
+        raise HTTPException(status_code=502, detail=detail)
+
+    return {"ok": True, "forwarded": True}
 
 
 @app.post("/friends/invite")

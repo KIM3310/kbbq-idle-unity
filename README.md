@@ -46,6 +46,7 @@ This repo includes a small FastAPI + SQLite backend in `server/` that matches th
 - `POST /auth/guest` (guest auth)
 - `POST /leaderboard/submit`, `GET /leaderboard/top`
 - `POST /analytics/event` (lightweight event ingestion)
+- `POST /community/feedback` (Formspree relay for in-game feedback)
 - `POST /friends/invite`, `GET /friends/list`
 - `POST /iap/verify` (server-authoritative IAP grant + idempotency)
 - `GET /readiness` (service readiness checks)
@@ -57,6 +58,9 @@ export KBBQ_HMAC_SECRET="CHANGE_ME"
 docker compose up --build
 ```
 Details: `server/README.md`.
+
+Optional community relay:
+- `KBBQ_FORMSPREE_ENDPOINT=https://formspree.io/f/...`
 
 ## Portfolio Quality Gate
 Run the full local portfolio gate:
@@ -98,6 +102,12 @@ Build output:
 - CLI: `tools/build_webgl_docs.sh` (requires Unity installed)
 
 After building, commit the generated `docs/` folder and push to `main`. The `pages` workflow will deploy it.
+
+Cloudflare Pages deployment is also supported:
+- Build command: `(none)`
+- Output directory: `docs`
+- WebGL entry page: `docs/index.html` (loader UI with build name input)
+- Policy/ad crawl files: `docs/privacy.html`, `docs/terms.html`, `docs/contact.html`, `docs/ads.txt`, `docs/robots.txt`, `docs/sitemap.xml`
 
 ## Glossary (first-time readers)
 - HMAC: Hash-based Message Authentication Code (request signing)
