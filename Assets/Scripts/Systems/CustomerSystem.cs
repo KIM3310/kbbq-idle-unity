@@ -47,6 +47,7 @@ public class CustomerSystem
     private float comboDuration = 6f;
     private int comboMax = 8;
     private float comboStepBonus = 0.05f;
+    private bool autoServeEnabled = true;
 
     public float Satisfaction => satisfaction;
     public IReadOnlyList<CustomerQueueEntry> Queue => queue;
@@ -157,6 +158,16 @@ public class CustomerSystem
         serviceRateMultiplier = Mathf.Clamp(value, 0.25f, 3f);
     }
 
+    public void SetAutoServeEnabled(bool enabled)
+    {
+        autoServeEnabled = enabled;
+    }
+
+    public CustomerQueueEntry PeekNext()
+    {
+        return queue.Count > 0 ? queue[0] : null;
+    }
+
     public QueueMetrics GetMetrics()
     {
         var count = serveSamples.Count;
@@ -215,7 +226,7 @@ public class CustomerSystem
         }
 
         serviceTimer -= dt * Mathf.Max(1f, serviceQualityMultiplier) * rushMultiplier * serviceRateMultiplier;
-        if (serviceTimer <= 0f && queue.Count > 0)
+        if (autoServeEnabled && serviceTimer <= 0f && queue.Count > 0)
         {
             var served = queue[0];
             queue.RemoveAt(0);

@@ -32,6 +32,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private TutorialView tutorialView;
     [SerializeField] private LeaderboardView leaderboardView;
     [SerializeField] private MonetizationView monetizationView;
+    [SerializeField] private GrillStationView grillStationView;
 
     [Header("Responsive Layout")]
     [SerializeField] private CanvasScaler canvasScaler;
@@ -85,6 +86,7 @@ public class UIController : MonoBehaviour
         tutorialView?.Bind(manager);
         leaderboardView?.Bind(manager);
         monetizationView?.Bind(manager);
+        grillStationView?.Bind(manager);
         if (debugToggleButton != null && !Application.isEditor)
         {
             debugToggleButton.gameObject.SetActive(false);
@@ -241,6 +243,19 @@ public class UIController : MonoBehaviour
         }
     }
 
+    public void RefreshGrill()
+    {
+        grillStationView?.Refresh();
+    }
+
+    public void ShowGrillStatus(string message)
+    {
+        if (grillStationView != null)
+        {
+            grillStationView.ShowMessage(message);
+        }
+    }
+
     public void SetDebugPanelVisible(bool visible)
     {
         if (debugPanelView != null)
@@ -391,6 +406,14 @@ public class UIController : MonoBehaviour
         if (monetizationPanelRect == null && monetizationView != null)
         {
             monetizationPanelRect = monetizationView.transform as RectTransform;
+        }
+        if (grillStationView == null && grillPanel != null)
+        {
+            grillStationView = grillPanel.GetComponent<GrillStationView>();
+            if (grillStationView == null)
+            {
+                grillStationView = grillPanel.gameObject.AddComponent<GrillStationView>();
+            }
         }
         if (dailyMissionPanelRect == null && dailyMissionView != null)
         {
