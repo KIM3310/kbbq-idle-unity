@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
-    public int version = 1;
+    public int version = 2;
     public int playerLevel = 1;
     public int prestigeLevel = 0;
     public int prestigePoints = 0;
@@ -26,6 +26,8 @@ public class SaveData
     public List<string> unlockedMenuIds = new List<string>();
     public List<UpgradeLevelEntry> upgradeLevels = new List<UpgradeLevelEntry>();
     public List<DailyMissionState> dailyMissions = new List<DailyMissionState>();
+    public List<MeatInventoryEntry> meatInventory = new List<MeatInventoryEntry>();
+    public List<GrillSlotSaveState> grillSlots = new List<GrillSlotSaveState>();
 
     public void Sanitize()
     {
@@ -59,6 +61,51 @@ public class SaveData
             dailyMissions = new List<DailyMissionState>();
         }
 
+        if (meatInventory == null)
+        {
+            meatInventory = new List<MeatInventoryEntry>();
+        }
+
+        if (grillSlots == null)
+        {
+            grillSlots = new List<GrillSlotSaveState>();
+        }
+
+        for (int i = meatInventory.Count - 1; i >= 0; i--)
+        {
+            var entry = meatInventory[i];
+            if (string.IsNullOrEmpty(entry.menuId))
+            {
+                meatInventory.RemoveAt(i);
+                continue;
+            }
+
+            if (entry.rawCount < 0) entry.rawCount = 0;
+            if (entry.cookedCount < 0) entry.cookedCount = 0;
+            meatInventory[i] = entry;
+        }
+
+        for (int i = grillSlots.Count - 1; i >= 0; i--)
+        {
+            var slot = grillSlots[i];
+            if (slot.slotIndex < 0 || slot.slotIndex > 3)
+            {
+                grillSlots.RemoveAt(i);
+                continue;
+            }
+
+            if (slot.cookTime < 0f)
+            {
+                slot.cookTime = 0f;
+            }
+            if (string.IsNullOrEmpty(slot.menuId))
+            {
+                slot.cookTime = 0f;
+                slot.flipped = false;
+            }
+            grillSlots[i] = slot;
+        }
+
         if (spawnRateMultiplier <= 0f)
         {
             spawnRateMultiplier = 1f;
@@ -83,6 +130,8 @@ public class SaveData
         storeTierIndex = 0;
         unlockedMenuIds.Clear();
         upgradeLevels.Clear();
+        meatInventory.Clear();
+        grillSlots.Clear();
     }
 }
 
@@ -110,4 +159,21 @@ public enum DailyMissionType
     EarnCurrency,
     UseBoost,
     PurchaseUpgrade
+}
+
+[Serializable]
+public struct MeatInventoryEntry
+{
+    public string menuId;
+    public int rawCount;
+    public int cookedCount;
+}
+
+[Serializable]
+public struct GrillSlotSaveState
+{
+    public int slotIndex;
+    public string menuId;
+    public float cookTime;
+    public bool flipped;
 }
