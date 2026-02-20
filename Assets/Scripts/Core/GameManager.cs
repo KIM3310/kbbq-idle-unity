@@ -98,6 +98,12 @@ public class GameManager : MonoBehaviour
 
         EnsureDefaultData();
         InitializeSystems();
+
+        // Attach FloatingTextSystem to GameManager root so it persists
+        if (FloatingTextSystem.I == null)
+        {
+            gameObject.AddComponent<FloatingTextSystem>();
+        }
     }
 
     private async void Start()
@@ -625,6 +631,7 @@ public class GameManager : MonoBehaviour
         stock.raw += amount;
         SetMeatStock(menuId, stock);
         audioManager?.PlayPurchase();
+        HapticUtil.Medium();
         uiController?.ShowGrillStatus(item.displayName + " purchased +" + amount + ".");
         RefreshSecondaryUI();
         Save();
@@ -753,10 +760,17 @@ public class GameManager : MonoBehaviour
         if (saleReward > 0)
         {
             economy.AddCurrency(saleReward);
+            if (FloatingTextSystem.I != null && uiController != null)
+            {
+                // Spawn floating text near center
+                var pos = new Vector2(Screen.width * 0.5f, Screen.height * 0.4f);
+                FloatingTextSystem.I.Spawn("+$" + FormatUtil.FormatCurrency(saleReward), pos, new Color(0.98f, 0.82f, 0.42f, 1f));
+            }
         }
 
         ClearGrillSlot(slotIndex);
         audioManager?.PlayGrillCollect();
+        HapticUtil.Heavy();
         uiController?.ShowGrillStatus(item.displayName + " plated. +" + FormatUtil.FormatCurrency(saleReward));
         RefreshSecondaryUI();
         Save();

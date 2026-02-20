@@ -42,6 +42,25 @@ public class UpgradeModalView : MonoBehaviour
         onPurchased = purchasedCallback;
         ApplyEntry();
         gameObject.SetActive(true);
+
+        if (card != null)
+        {
+            card.localScale = Vector3.one * 0.8f;
+            StartCoroutine(AnimatePopIn(card));
+        }
+    }
+
+    private System.Collections.IEnumerator AnimatePopIn(Transform target)
+    {
+        float t = 0;
+        while (t < 1f && target != null)
+        {
+            t += Time.unscaledDeltaTime * 6f;
+            float val = 1f - Mathf.Exp(-5f * t) * Mathf.Cos(30f * t);
+            target.localScale = Vector3.one * val;
+            yield return null;
+        }
+        if (target != null) target.localScale = Vector3.one;
     }
 
     public void Hide()

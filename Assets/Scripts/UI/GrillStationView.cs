@@ -649,6 +649,24 @@ public class GrillStationView : MonoBehaviour
         fx.rectTransform.localScale = new Vector3(0.65f, 0.65f, 1f);
         fx.gameObject.SetActive(true);
         slotFxTimers[slotIndex] = SlotFxDuration;
+
+        if (slotButtons[slotIndex] != null)
+        {
+            StartCoroutine(AnimateButtonPop(slotButtons[slotIndex].transform));
+        }
+    }
+
+    private System.Collections.IEnumerator AnimateButtonPop(Transform target)
+    {
+        float t = 0;
+        while (t < 1f && target != null)
+        {
+            t += Time.unscaledDeltaTime * 8f;
+            float val = 1f + Mathf.Sin(t * Mathf.PI) * 0.15f; 
+            target.localScale = Vector3.one * val;
+            yield return null;
+        }
+        if (target != null) target.localScale = Vector3.one;
     }
 
     private void UpdateSlotFx(float dt)

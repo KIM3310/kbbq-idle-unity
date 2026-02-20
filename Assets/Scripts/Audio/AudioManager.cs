@@ -235,9 +235,16 @@ public class AudioManager : MonoBehaviour
         for (int i = 0; i < sampleCount; i++)
         {
             var t = i / (float)(sampleCount - 1);
-            var phase = 2f * Mathf.PI * ((startHz * t * span) + ((endHz - startHz) * 0.5f * t * t * span));
-            var env = Mathf.Sin(t * Mathf.PI);
+            var curHz = Mathf.Lerp(startHz, endHz, t * t);
+            var phase = 2f * Mathf.PI * curHz * t * span;
+            
+            var env = (t < 0.1f) ? (t / 0.1f) : Mathf.Exp(-t * 5f);
+            
             var tone = Mathf.Sin(phase);
+            tone += 0.5f * Mathf.Sin(phase * 2f);
+            tone += 0.25f * Mathf.Sin(phase * 3f);
+            tone /= 1.75f;
+
             var noise = (Random.value * 2f - 1f) * noiseMix;
             data[i] = (tone * amplitude + noise * amplitude) * env;
         }
@@ -255,7 +262,7 @@ public class AudioManager : MonoBehaviour
         for (int i = 0; i < sampleCount; i++)
         {
             var t = i / (float)(sampleCount - 1);
-            var env = (1f - t) * Mathf.Sin(t * Mathf.PI);
+            var env = (t < 0.05f) ? (t / 0.05f) : Mathf.Exp(-t * 6f);
             var noise = (Random.value * 2f - 1f);
             data[i] = noise * amplitude * env;
         }
