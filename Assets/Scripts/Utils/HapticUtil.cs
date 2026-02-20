@@ -8,4 +8,18 @@ public static class HapticUtil
         Handheld.Vibrate();
 #endif
     }
+
+    public static void Medium()
+    {
+#if UNITY_IOS || UNITY_ANDROID
+        Handheld.Vibrate();
+#endif
+    }
+
+    public static void Heavy()
+    {
+#if UNITY_IOS || UNITY_ANDROID
+        Handheld.Vibrate();
+#endif
+    }
 }

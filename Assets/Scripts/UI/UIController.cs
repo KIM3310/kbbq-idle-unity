@@ -97,12 +97,17 @@ public class UIController : MonoBehaviour
         UpdateDebugIndicator();
     }
 
+    private double displayCurrency;
+    private Coroutine currencyCoroutine;
+
     public void UpdateEconomy(double currency, double incomePerSec)
     {
         latestCurrency = currency;
+        
         if (currencyText != null)
         {
-            currencyText.text = "$ " + FormatUtil.FormatCurrency(currency);
+            if (currencyCoroutine != null) StopCoroutine(currencyCoroutine);
+            currencyCoroutine = StartCoroutine(AnimateCurrencyText(currency));
         }
 
         if (incomeText != null)
@@ -111,6 +116,28 @@ public class UIController : MonoBehaviour
         }
 
         queueControlView?.RenderMetrics(latestQueueMetrics, latestCurrency);
+    }
+
+    private System.Collections.IEnumerator AnimateCurrencyText(double targetCurrency)
+    {
+        double startValue = displayCurrency;
+        float duration = 0.5f;
+        float elapsed = 0f;
+
+        while (elapsed < duration)
+        {
+            elapsed += Time.unscaledDeltaTime;
+            float t = elapsed / duration;
+            // Ease out quad
+            t = t * (2 - t);
+            
+            displayCurrency = startValue + (targetCurrency - startValue) * t;
+            currencyText.text = "$ " + FormatUtil.FormatCurrency(displayCurrency);
+            yield return null;
+        }
+
+        displayCurrency = targetCurrency;
+        currencyText.text = "$ " + FormatUtil.FormatCurrency(displayCurrency);
     }
 
     public void UpdateStoreTier(StoreTier tier)
