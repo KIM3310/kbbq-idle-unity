@@ -13,12 +13,13 @@ public static class OfflineEarningsMath
         if (incomePerSec <= 0) return 0;
         if (lastUnixSeconds <= 0) return 0;
         if (lastUnixSeconds > nowUnixSeconds) return 0;
+        if (maxOfflineHours <= 0) return 0;
 
         var offlineSeconds = nowUnixSeconds - lastUnixSeconds;
         if (offlineSeconds <= 0) return 0;
 
-        var capSeconds = Math.Max(0, maxOfflineHours) * 3600L;
-        if (capSeconds > 0 && offlineSeconds > capSeconds)
+        var capSeconds = maxOfflineHours * 3600L;
+        if (offlineSeconds > capSeconds)
         {
             offlineSeconds = capSeconds;
         }

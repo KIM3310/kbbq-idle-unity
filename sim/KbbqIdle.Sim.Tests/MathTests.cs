@@ -41,6 +41,22 @@ public class MathTests
     }
 
     [Fact]
+    public void OfflineEarningsMath_ZeroMaxHours_ReturnsZero()
+    {
+        var now = 1_700_000_000L;
+        var last = now - (12 * 3600);
+        var income = OfflineEarningsMath.Calculate(
+            nowUnixSeconds: now,
+            lastUnixSeconds: last,
+            incomePerSec: 10,
+            maxOfflineHours: 0,
+            offlineRate: 0.6
+        );
+
+        Assert.Equal(0, income, 10);
+    }
+
+    [Fact]
     public void PrestigeMath_NotReady_UnderThreshold()
     {
         Assert.False(PrestigeMath.CalculateReward(totalIncome: 49_999, playerLevel: 10).CanPrestige);

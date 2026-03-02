@@ -11,6 +11,10 @@ public class OfflineEarnings
         {
             return 0;
         }
+        if (maxHours <= 0)
+        {
+            return 0;
+        }
 
         var now = TimeUtil.UtcNowUnix();
         if (lastTimestamp > now)
@@ -19,8 +23,8 @@ public class OfflineEarnings
         }
 
         var offlineSeconds = Math.Max(0, now - lastTimestamp);
-        var capSeconds = Math.Max(0, maxHours) * 3600;
-        if (capSeconds > 0 && offlineSeconds > capSeconds)
+        var capSeconds = maxHours * 3600;
+        if (offlineSeconds > capSeconds)
         {
             offlineSeconds = capSeconds;
         }

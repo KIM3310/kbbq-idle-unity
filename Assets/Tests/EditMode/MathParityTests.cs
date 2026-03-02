@@ -14,6 +14,16 @@ public class MathParityTests
     }
 
     [Test]
+    public void OfflineEarnings_ZeroMaxHours_ReturnsZero()
+    {
+        var offline = new OfflineEarnings();
+        var now = TimeUtil.UtcNowUnix();
+        var last = now - (12 * 3600);
+        var income = offline.Calculate(last, incomePerSec: 10.0, maxHours: 0);
+        Assert.AreEqual(0.0, income, 0.0001);
+    }
+
+    [Test]
     public void Prestige_NotReady_UnderThreshold()
     {
         var prestige = new PrestigeSystem();
@@ -64,4 +74,3 @@ public class MathParityTests
         save.Clear();
     }
 }
-
