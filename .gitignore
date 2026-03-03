@@ -66,3 +66,6 @@ __pycache__/
 *.py[cod]
 server/.env
 build_webgl.log
+
+# Debug artifacts
+.venv_*/
