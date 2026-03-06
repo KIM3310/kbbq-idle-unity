@@ -42,18 +42,48 @@ jobs:
   deploy-remote:
     runs-on: ubuntu-latest
     needs: [build-image]
-    if: ${{ github.ref == 'refs/heads/main' && secrets.KBBQ_DEPLOY_HOST != '' && secrets.KBBQ_DEPLOY_USER != '' && secrets.KBBQ_DEPLOY_SSH_KEY != '' && secrets.KBBQ_GHCR_USERNAME != '' && secrets.KBBQ_GHCR_PAT != '' }}
+    env:
+      KBBQ_DEPLOY_HOST: ${{ secrets.KBBQ_DEPLOY_HOST }}
+      KBBQ_DEPLOY_USER: ${{ secrets.KBBQ_DEPLOY_USER }}
+      KBBQ_DEPLOY_SSH_KEY: ${{ secrets.KBBQ_DEPLOY_SSH_KEY }}
+      KBBQ_GHCR_USERNAME: ${{ secrets.KBBQ_GHCR_USERNAME }}
+      KBBQ_GHCR_PAT: ${{ secrets.KBBQ_GHCR_PAT }}
     steps:
+      - name: Check deploy configuration
+        id: config
+        run: |
+          set -euo pipefail
+          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          missing=0
+          for key in KBBQ_DEPLOY_HOST KBBQ_DEPLOY_USER KBBQ_DEPLOY_SSH_KEY KBBQ_GHCR_USERNAME KBBQ_GHCR_PAT; do
+            if [[ -z "${!key}" ]]; then
+              echo "missing secret: $key"
+              missing=1
+            fi
+          done
+
+          if [[ "$missing" -eq 1 ]]; then
+            echo "enabled=false" >> "$GITHUB_OUTPUT"
+            exit 0
+          fi
+
+          echo "enabled=true" >> "$GITHUB_OUTPUT"
+
       - name: Deploy via SSH
+        if: steps.config.outputs.enabled == 'true'
         uses: appleboy/ssh-action@v1.2.0
         with:
-          host: ${{ secrets.KBBQ_DEPLOY_HOST }}
-          username: ${{ secrets.KBBQ_DEPLOY_USER }}
-          key: ${{ secrets.KBBQ_DEPLOY_SSH_KEY }}
+          host: ${{ env.KBBQ_DEPLOY_HOST }}
+          username: ${{ env.KBBQ_DEPLOY_USER }}
+          key: ${{ env.KBBQ_DEPLOY_SSH_KEY }}
           script: |
             set -euo pipefail
             IMAGE="ghcr.io/${{ github.repository_owner }}/kbbq-idle-api:latest"
-            docker login ghcr.io -u "${{ secrets.KBBQ_GHCR_USERNAME }}" -p "${{ secrets.KBBQ_GHCR_PAT }}"
+            docker login ghcr.io -u "${{ env.KBBQ_GHCR_USERNAME }}" -p "${{ env.KBBQ_GHCR_PAT }}"
             docker pull "$IMAGE"
             docker rm -f kbbq-api || true
             docker run -d \

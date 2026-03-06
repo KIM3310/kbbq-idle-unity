@@ -7,7 +7,6 @@ on:
 
 jobs:
   health-check:
-    if: ${{ secrets.KBBQ_BACKEND_BASE_URL != '' && secrets.KBBQ_OPS_TOKEN != '' }}
     runs-on: ubuntu-latest
     steps:
       - name: Probe health/readiness/alerts
@@ -16,6 +15,10 @@ jobs:
           OPS_TOKEN: ${{ secrets.KBBQ_OPS_TOKEN }}
         run: |
           set -euo pipefail
+          if [[ -z "${BASE_URL}" || -z "${OPS_TOKEN}" ]]; then
+            echo "Skipping ops monitor because required secrets are not configured."
+            exit 0
+          fi
           curl -fsS "${BASE_URL%/}/health" >/tmp/health.json
           curl -fsS "${BASE_URL%/}/readiness" >/tmp/readiness.json
           curl -fsS -H "X-Ops-Token: $OPS_TOKEN" "${BASE_URL%/}/ops/alerts" >/tmp/alerts.json
