@@ -2,7 +2,7 @@
 # The Unity project is intentionally excluded to speed up builds.
 *
 
+!server
 !server/**
 !docker-compose.yml
 !.dockerignore
-
