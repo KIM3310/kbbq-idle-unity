@@ -9,6 +9,7 @@ This is an optional backend to demonstrate:
 - simple friends list/invite flow,
 - IAP verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
 - service readiness diagnostics (`/readiness`),
+- runtime service profile (`/meta`),
 - ops/monitoring endpoints (`/metrics`, `/ops/alerts`),
 - SQLite persistence.
 
@@ -27,6 +28,11 @@ uvicorn server.app:app --reload --port 8000
 Health check:
 ```bash
 curl -s http://127.0.0.1:8000/health | jq .
+```
+
+Runtime profile:
+```bash
+curl -s http://127.0.0.1:8000/meta | jq .
 ```
 
 Optional (enable Swagger UI for local debugging):
@@ -78,3 +84,11 @@ Production/staging templates:
 - GitHub workflows:
   - `.github/workflows/backend-deploy.yml`
   - `.github/workflows/backend-ops-monitor.yml`
+
+## Ops Envelope
+- `/health` keeps the legacy `ok` field for compatibility and now adds:
+  - `status`
+  - `diagnostics.next_action`
+  - `links`
+  - `ops_contract`
+- `/meta` exposes runtime posture, enabled capabilities, and the same action-oriented diagnostics surface.
