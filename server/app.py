@@ -55,7 +55,15 @@ app.add_middleware(
 
 @app.get("/", include_in_schema=False)
 def root():
-    return {"ok": True, "service": "kbbq-idle-backend", "health": "/health", "docs": "/docs" if EXPOSE_DOCS else None}
+    return {
+        "ok": True,
+        "service": "kbbq-idle-backend",
+        "health": "/health",
+        "meta": "/meta",
+        "readiness": "/readiness",
+        "metrics": "/metrics",
+        "docs": "/docs" if EXPOSE_DOCS else None,
+    }
 
 
 @app.get("/favicon.ico", include_in_schema=False)
@@ -64,17 +72,148 @@ def favicon():
     return Response(status_code=204)
 
 
-@app.get("/health")
-def health():
-    return {"ok": True, "ts": int(time.time())}
-
-
 def _ops_token() -> str:
     return (os.getenv("KBBQ_OPS_TOKEN") or os.getenv("KBBQ_OPS_ADMIN_TOKEN") or "").strip()
 
 
 def _feedback_endpoint() -> str:
     return (os.getenv("KBBQ_FORMSPREE_ENDPOINT") or "").strip()
+
+
+def _runtime_env() -> str:
+    return ((os.getenv("KBBQ_ENV") or "dev").strip().lower()) or "dev"
+
+
+def _ops_contract() -> dict[str, object]:
+    return {"schema": "ops-envelope-v1", "version": 1}
+
+
+def _ops_links() -> dict[str, object]:
+    return {
+        "health": "/health",
+        "meta": "/meta",
+        "readiness": "/readiness",
+        "metrics": "/metrics",
+        "alerts": "/ops/alerts",
+        "docs": "/docs" if EXPOSE_DOCS else None,
+    }
+
+
+def _integration_state() -> dict[str, bool]:
+    return {
+        "ops_token_configured": bool(_ops_token()),
+        "feedback_relay_configured": bool(_feedback_endpoint()),
+        "docs_exposed": EXPOSE_DOCS,
+    }
+
+
+def _build_readiness_report() -> dict[str, object]:
+    checks = []
+    warnings = []
+    advisories = []
+    now = int(time.time())
+
+    try:
+        with _db_session() as db:
+            db.execute("SELECT 1").fetchone()
+        checks.append({"name": "db", "ok": True})
+    except Exception as exc:  # noqa: BLE001
+        checks.append({"name": "db", "ok": False, "error": str(exc)})
+
+    if not _ops_token():
+        warnings.append("KBBQ_OPS_TOKEN is not configured")
+
+    if not (os.getenv("KBBQ_HMAC_SECRET") or "").strip() or (os.getenv("KBBQ_HMAC_SECRET") == "CHANGE_ME"):
+        warnings.append("KBBQ_HMAC_SECRET is weak or default")
+
+    if not (os.getenv("KBBQ_TOKEN_SALT") or "").strip() or (os.getenv("KBBQ_TOKEN_SALT") == "dev-only-salt"):
+        warnings.append("KBBQ_TOKEN_SALT is weak or default")
+
+    if not _feedback_endpoint():
+        advisories.append("KBBQ_FORMSPREE_ENDPOINT is not configured")
+
+    ready = all(bool(c.get("ok")) for c in checks)
+    status = "ok" if ready else "degraded"
+    return {
+        "ready": ready,
+        "status": status,
+        "checks": checks,
+        "warnings": warnings,
+        "advisories": advisories,
+        "uptime_seconds": max(0, now - APP_STARTED_AT),
+        "ts": now,
+    }
+
+
+def _next_action(report: dict[str, object]) -> str:
+    failing_checks = [str(check.get("name")) for check in report["checks"] if not check.get("ok")]
+    if failing_checks:
+        checks = ", ".join(failing_checks)
+        return f"Restore failing dependencies ({checks}) before accepting live traffic."
+
+    warnings = [str(item) for item in report.get("warnings", [])]
+    if warnings:
+        return warnings[0]
+
+    advisories = [str(item) for item in report.get("advisories", [])]
+    if advisories:
+        return "Configure KBBQ_FORMSPREE_ENDPOINT to enable in-game feedback relay for live ops."
+
+    return "No action required."
+
+
+@app.get("/health")
+def health():
+    report = _build_readiness_report()
+    return {
+        "ok": True,
+        "status": report["status"],
+        "service": "kbbq-idle-backend",
+        "ts": report["ts"],
+        "uptime_seconds": report["uptime_seconds"],
+        "diagnostics": {
+            "ready": report["ready"],
+            "failing_checks": [check["name"] for check in report["checks"] if not check.get("ok")],
+            "warnings": report["warnings"],
+            "advisories": report["advisories"],
+            "active_rate_limit_buckets": len(RATE_BUCKETS),
+            "integrations": _integration_state(),
+            "next_action": _next_action(report),
+        },
+        "links": _ops_links(),
+        "ops_contract": _ops_contract(),
+    }
+
+
+@app.get("/meta")
+def meta():
+    report = _build_readiness_report()
+    return {
+        "service": "kbbq-idle-backend",
+        "status": report["status"],
+        "runtime": {
+            "env": _runtime_env(),
+            "uptime_seconds": report["uptime_seconds"],
+            "docs_exposed": EXPOSE_DOCS,
+        },
+        "capabilities": {
+            "guest_auth": True,
+            "signed_requests": True,
+            "leaderboard": True,
+            "analytics": True,
+            "friends": True,
+            "iap_verify": True,
+            "community_feedback": bool(_feedback_endpoint()),
+        },
+        "diagnostics": {
+            "ready": report["ready"],
+            "warnings": report["warnings"],
+            "advisories": report["advisories"],
+            "next_action": _next_action(report),
+        },
+        "links": _ops_links(),
+        "ops_contract": _ops_contract(),
+    }
 
 
 def _is_rate_limited(key: str, limit: int, window_seconds: int) -> bool:
@@ -116,34 +255,7 @@ def _db_session():
 
 @app.get("/readiness")
 def readiness():
-    checks = []
-    warnings = []
-    now = int(time.time())
-
-    try:
-        with _db_session() as db:
-            db.execute("SELECT 1").fetchone()
-        checks.append({"name": "db", "ok": True})
-    except Exception as exc:  # noqa: BLE001
-        checks.append({"name": "db", "ok": False, "error": str(exc)})
-
-    if not _ops_token():
-        warnings.append("KBBQ_OPS_TOKEN is not configured")
-
-    if not (os.getenv("KBBQ_HMAC_SECRET") or "").strip() or (os.getenv("KBBQ_HMAC_SECRET") == "CHANGE_ME"):
-        warnings.append("KBBQ_HMAC_SECRET is weak or default")
-
-    if not (os.getenv("KBBQ_TOKEN_SALT") or "").strip() or (os.getenv("KBBQ_TOKEN_SALT") == "dev-only-salt"):
-        warnings.append("KBBQ_TOKEN_SALT is weak or default")
-
-    ready = all(bool(c.get("ok")) for c in checks)
-    return {
-        "ready": ready,
-        "checks": checks,
-        "warnings": warnings,
-        "uptime_seconds": max(0, now - APP_STARTED_AT),
-        "ts": now,
-    }
+    return _build_readiness_report()
 
 
 @app.get("/metrics")

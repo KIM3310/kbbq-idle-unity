@@ -46,11 +46,29 @@ class TestApi(unittest.TestCase):
     def test_root_and_health(self):
         r = self._request("GET", "/")
         self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.json().get("ok"))
+        root_payload = r.json()
+        self.assertTrue(root_payload.get("ok"))
+        self.assertEqual(root_payload.get("meta"), "/meta")
+        self.assertEqual(root_payload.get("readiness"), "/readiness")
 
         r = self._request("GET", "/health")
         self.assertEqual(r.status_code, 200)
-        self.assertTrue(r.json().get("ok"))
+        payload = r.json()
+        self.assertTrue(payload.get("ok"))
+        self.assertEqual(payload.get("status"), "ok")
+        self.assertEqual(payload.get("service"), "kbbq-idle-backend")
+        self.assertEqual(payload.get("ops_contract", {}).get("schema"), "ops-envelope-v1")
+        self.assertEqual(payload.get("links", {}).get("meta"), "/meta")
+        self.assertTrue(payload.get("diagnostics", {}).get("ready"))
+        self.assertIn("next_action", payload.get("diagnostics", {}))
+
+        meta = self._request("GET", "/meta")
+        self.assertEqual(meta.status_code, 200)
+        meta_payload = meta.json()
+        self.assertEqual(meta_payload.get("service"), "kbbq-idle-backend")
+        self.assertEqual(meta_payload.get("ops_contract", {}).get("schema"), "ops-envelope-v1")
+        self.assertTrue(meta_payload.get("capabilities", {}).get("guest_auth"))
+        self.assertIn("next_action", meta_payload.get("diagnostics", {}))
 
     def test_auth_then_signed_leaderboard_and_replay_protection(self):
         # 1) Guest auth
@@ -83,6 +101,7 @@ class TestApi(unittest.TestCase):
         payload = r.json()
         self.assertIn("ready", payload)
         self.assertIn("checks", payload)
+        self.assertIn("advisories", payload)
         self.assertTrue(any(c.get("name") == "db" for c in payload.get("checks", [])))
 
         m = self._request("GET", "/metrics")

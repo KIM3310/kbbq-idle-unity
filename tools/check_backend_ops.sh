@@ -8,6 +8,9 @@ echo "[OPS] base_url=$BASE_URL"
 echo "[OPS] health:"
 curl -sS --max-time 5 "$BASE_URL/health" | python3 -m json.tool
 
+echo "[OPS] meta:"
+curl -sS --max-time 5 "$BASE_URL/meta" | python3 -m json.tool
+
 echo "[OPS] readiness:"
 READINESS_JSON="$(curl -sS --max-time 5 "$BASE_URL/readiness")"
 echo "$READINESS_JSON" | python3 -m json.tool
