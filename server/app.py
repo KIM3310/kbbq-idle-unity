@@ -198,6 +198,34 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
             "Open /review-pack to inspect gameplay loop, economy contract, and delivery posture.",
             "Run the Unity WebGL build or Editor scene to validate the grill -> serve -> upgrade loop.",
         ],
+        "two_minute_review": [
+            "Open /health and /meta to confirm runtime posture, enabled surfaces, and next action.",
+            "Open /review-pack to pin gameplay loop, economy contract, and monetization posture.",
+            "Run the Unity WebGL build or Editor scene and validate the grill -> serve -> upgrade loop.",
+            "Read the live perf overlay before claiming delivery or monetization readiness.",
+        ],
+        "proof_assets": [
+            {
+                "label": "Health Envelope",
+                "path": "/health",
+                "why": "Confirms dependency readiness, warning posture, and next operator action.",
+            },
+            {
+                "label": "Runtime Profile",
+                "path": "/meta",
+                "why": "Pins enabled capabilities and runtime delivery posture before a demo.",
+            },
+            {
+                "label": "Review Pack",
+                "path": "/review-pack",
+                "why": "Packages gameplay loop, economy contract, and trust boundary in one payload.",
+            },
+            {
+                "label": "Perf Overlay",
+                "path": "Assets/Scripts/UI/PerfOverlayView.cs",
+                "why": "Shows the live gameplay review pack directly inside the Unity surface.",
+            },
+        ],
         "watchouts": [
             "Set KBBQ_HMAC_SECRET and KBBQ_TOKEN_SALT before any shared demo or public deployment.",
             "Add KBBQ_FORMSPREE_ENDPOINT only when the feedback relay is required for a live review.",

@@ -42,6 +42,8 @@ public class PerfOverlayView : MonoBehaviour
         var incomePerSec = 0d;
         var monetizationMode = "Ads off / IAP off / Packs 0";
         var reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.";
+        var twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay";
+        var proofAssets = "Health, Meta, Review Pack, Perf Overlay";
         if (gameManager != null)
         {
             var metrics = gameManager.GetQueueMetrics();
@@ -55,6 +57,8 @@ public class PerfOverlayView : MonoBehaviour
             incomePerSec = reviewPack.incomePerSecond;
             monetizationMode = reviewPack.monetizationMode;
             reviewStep = reviewPack.reviewStep;
+            twoMinuteReview = reviewPack.twoMinuteReview;
+            proofAssets = reviewPack.proofAssets;
         }
 
         overlayText.text = "FPS " + fps.ToString("0") +
@@ -66,7 +70,9 @@ public class PerfOverlayView : MonoBehaviour
                            "\nIncome/s " + FormatUtil.FormatCurrency(incomePerSec) +
                            "\nMonetize " + monetizationMode +
                            "\nPreset " + presetLabel +
-                           "\nReview " + reviewStep;
+                           "\nReview " + reviewStep +
+                           "\n2m " + twoMinuteReview +
+                           "\nProof " + proofAssets;
     }
 
     private string GetPresetLabel(int index)

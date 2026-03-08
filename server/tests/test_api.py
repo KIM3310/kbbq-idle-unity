@@ -79,6 +79,8 @@ class TestApi(unittest.TestCase):
         self.assertEqual(review_payload.get("readiness_contract"), "kbbq-idle-review-pack-v1")
         self.assertIn("economy_contract", review_payload)
         self.assertTrue(review_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
+        self.assertEqual(len(review_payload.get("two_minute_review", [])), 4)
+        self.assertEqual(review_payload.get("proof_assets", [])[0]["path"], "/health")
         self.assertEqual(review_payload.get("links", {}).get("review_pack"), "/review-pack")
 
     def test_auth_then_signed_leaderboard_and_replay_protection(self):
