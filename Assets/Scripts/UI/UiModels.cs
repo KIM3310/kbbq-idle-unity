@@ -46,6 +46,8 @@ public struct GameplayReviewPack
     public float averageWaitSeconds;
     public string monetizationMode;
     public string reviewStep;
+    public string focusedRoute;
     public string twoMinuteReview;
+    public string reviewRoutes;
     public string proofAssets;
 }

@@ -42,7 +42,9 @@ public class PerfOverlayView : MonoBehaviour
         var incomePerSec = 0d;
         var monetizationMode = "Ads off / IAP off / Packs 0";
         var reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.";
+        var focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay";
         var twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay";
+        var reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay";
         var proofAssets = "Health, Meta, Review Pack, Perf Overlay";
         if (gameManager != null)
         {
@@ -57,7 +59,9 @@ public class PerfOverlayView : MonoBehaviour
             incomePerSec = reviewPack.incomePerSecond;
             monetizationMode = reviewPack.monetizationMode;
             reviewStep = reviewPack.reviewStep;
+            focusedRoute = reviewPack.focusedRoute;
             twoMinuteReview = reviewPack.twoMinuteReview;
+            reviewRoutes = reviewPack.reviewRoutes;
             proofAssets = reviewPack.proofAssets;
         }
 
@@ -71,7 +75,9 @@ public class PerfOverlayView : MonoBehaviour
                            "\nMonetize " + monetizationMode +
                            "\nPreset " + presetLabel +
                            "\nReview " + reviewStep +
+                           "\nRoute " + focusedRoute +
                            "\n2m " + twoMinuteReview +
+                           "\nPaths " + reviewRoutes +
                            "\nProof " + proofAssets;
     }
 
