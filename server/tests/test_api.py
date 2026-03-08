@@ -50,6 +50,7 @@ class TestApi(unittest.TestCase):
         self.assertTrue(root_payload.get("ok"))
         self.assertEqual(root_payload.get("meta"), "/meta")
         self.assertEqual(root_payload.get("readiness"), "/readiness")
+        self.assertEqual(root_payload.get("review_pack"), "/review-pack")
 
         r = self._request("GET", "/health")
         self.assertEqual(r.status_code, 200)
@@ -69,6 +70,16 @@ class TestApi(unittest.TestCase):
         self.assertEqual(meta_payload.get("ops_contract", {}).get("schema"), "ops-envelope-v1")
         self.assertTrue(meta_payload.get("capabilities", {}).get("guest_auth"))
         self.assertIn("next_action", meta_payload.get("diagnostics", {}))
+        self.assertEqual(meta_payload.get("review_pack_contract"), "kbbq-idle-review-pack-v1")
+        self.assertEqual(meta_payload.get("links", {}).get("review_pack"), "/review-pack")
+
+        review_pack = self._request("GET", "/review-pack")
+        self.assertEqual(review_pack.status_code, 200)
+        review_payload = review_pack.json()
+        self.assertEqual(review_payload.get("readiness_contract"), "kbbq-idle-review-pack-v1")
+        self.assertIn("economy_contract", review_payload)
+        self.assertTrue(review_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
+        self.assertEqual(review_payload.get("links", {}).get("review_pack"), "/review-pack")
 
     def test_auth_then_signed_leaderboard_and_replay_protection(self):
         # 1) Guest auth

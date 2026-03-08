@@ -32,3 +32,18 @@ public struct GrillSlotUiState
     public bool readyToCollect;
     public bool burned;
 }
+
+public struct GameplayReviewPack
+{
+    public string contract;
+    public string headline;
+    public string storeTier;
+    public int playerLevel;
+    public double incomePerSecond;
+    public double totalEarned;
+    public int queueCount;
+    public float servedPerMinute;
+    public float averageWaitSeconds;
+    public string monetizationMode;
+    public string reviewStep;
+}

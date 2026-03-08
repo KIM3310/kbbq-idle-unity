@@ -37,20 +37,36 @@ public class PerfOverlayView : MonoBehaviour
         var avgWait = 0f;
         var servedPerMin = 0f;
         var presetLabel = "1.0x";
+        var reviewContract = "kbbq-idle-review-pack-v1";
+        var storeTier = "Alley";
+        var incomePerSec = 0d;
+        var monetizationMode = "Ads off / IAP off / Packs 0";
+        var reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.";
         if (gameManager != null)
         {
             var metrics = gameManager.GetQueueMetrics();
+            var reviewPack = gameManager.GetGameplayReviewPack();
             queueCount = metrics.queueCount;
             avgWait = metrics.avgWaitSeconds;
             servedPerMin = metrics.servedPerMinute;
             presetLabel = GetPresetLabel(gameManager.GetDebugPresetIndex());
+            reviewContract = reviewPack.contract;
+            storeTier = reviewPack.storeTier;
+            incomePerSec = reviewPack.incomePerSecond;
+            monetizationMode = reviewPack.monetizationMode;
+            reviewStep = reviewPack.reviewStep;
         }
 
         overlayText.text = "FPS " + fps.ToString("0") +
+                           "\nContract " + reviewContract +
+                           "\nTier " + storeTier +
                            "\nQueue " + queueCount +
                            "\nServed/min " + servedPerMin.ToString("0") +
                            "\nAvg wait " + avgWait.ToString("0.0") + "s" +
-                           "\nPreset " + presetLabel;
+                           "\nIncome/s " + FormatUtil.FormatCurrency(incomePerSec) +
+                           "\nMonetize " + monetizationMode +
+                           "\nPreset " + presetLabel +
+                           "\nReview " + reviewStep;
     }
 
     private string GetPresetLabel(int index)

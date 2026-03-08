@@ -211,6 +211,30 @@ public class GameManager : MonoBehaviour
     public AudioManager GetAudioManager() => audioManager;
     public MonetizationService GetMonetizationService() => monetizationService;
     public NetworkService GetNetworkService() => networkService;
+    public GameplayReviewPack GetGameplayReviewPack()
+    {
+        var metrics = GetQueueMetrics();
+        var tier = GetCurrentStoreTier();
+        var config = monetizationService != null ? monetizationService.Config : monetizationConfig;
+        var adsEnabled = config != null && config.enableAds;
+        var iapEnabled = config != null && config.enableIap;
+        var packCount = config != null && config.packs != null ? config.packs.Count : 0;
+
+        return new GameplayReviewPack
+        {
+            contract = "kbbq-idle-review-pack-v1",
+            headline = "Gameplay loop and monetization posture are visible from the live overlay.",
+            storeTier = tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley",
+            playerLevel = GetPlayerLevel(),
+            incomePerSecond = GetIncomePerSec(),
+            totalEarned = GetTotalEarned(),
+            queueCount = metrics.queueCount,
+            servedPerMinute = metrics.servedPerMinute,
+            averageWaitSeconds = metrics.avgWaitSeconds,
+            monetizationMode = BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount),
+            reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.",
+        };
+    }
     public int GetGrillSlotCount() => grillSlots != null && grillSlots.Length > 0 ? grillSlots.Length : Mathf.Max(1, grillSlotCount);
     public int GetUpgradeVisualTier()
     {
@@ -254,6 +278,13 @@ public class GameManager : MonoBehaviour
         storeTierSystem.TryAdvanceTier(saveData.playerLevel);
         EnsureKitchenStockForUnlockedMenus();
         RefreshUI();
+    }
+
+    private string BuildMonetizationModeLabel(bool adsEnabled, bool iapEnabled, int packCount)
+    {
+        var adsLabel = adsEnabled ? "Ads on" : "Ads off";
+        var iapLabel = iapEnabled ? "IAP on" : "IAP off";
+        return adsLabel + " / " + iapLabel + " / Packs " + packCount;
     }
 
     public void Save()

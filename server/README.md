@@ -10,6 +10,7 @@ This is an optional backend to demonstrate:
 - IAP verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
 - service readiness diagnostics (`/readiness`),
 - runtime service profile (`/meta`),
+- reviewer-facing gameplay/economy posture (`/review-pack`),
 - ops/monitoring endpoints (`/metrics`, `/ops/alerts`),
 - SQLite persistence.
 
@@ -33,6 +34,11 @@ curl -s http://127.0.0.1:8000/health | jq .
 Runtime profile:
 ```bash
 curl -s http://127.0.0.1:8000/meta | jq .
+```
+
+Review pack:
+```bash
+curl -s http://127.0.0.1:8000/review-pack | jq .
 ```
 
 Optional (enable Swagger UI for local debugging):
@@ -92,3 +98,4 @@ Production/staging templates:
   - `links`
   - `ops_contract`
 - `/meta` exposes runtime posture, enabled capabilities, and the same action-oriented diagnostics surface.
+- `/review-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one reviewer-friendly payload.
