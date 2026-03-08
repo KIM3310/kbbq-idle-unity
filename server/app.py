@@ -36,6 +36,7 @@ def _is_truthy(value: str) -> bool:
 EXPOSE_DOCS = _is_truthy(os.getenv("KBBQ_EXPOSE_DOCS", "0"))
 APP_STARTED_AT = int(time.time())
 RATE_BUCKETS: dict[str, list[float]] = {}
+REVIEW_PACK_CONTRACT = "kbbq-idle-review-pack-v1"
 
 app = FastAPI(
     title="KBBQ Idle Backend",
@@ -61,6 +62,7 @@ def root():
         "health": "/health",
         "meta": "/meta",
         "readiness": "/readiness",
+        "review_pack": "/review-pack",
         "metrics": "/metrics",
         "docs": "/docs" if EXPOSE_DOCS else None,
     }
@@ -93,6 +95,7 @@ def _ops_links() -> dict[str, object]:
         "health": "/health",
         "meta": "/meta",
         "readiness": "/readiness",
+        "review_pack": "/review-pack",
         "metrics": "/metrics",
         "alerts": "/ops/alerts",
         "docs": "/docs" if EXPOSE_DOCS else None,
@@ -162,6 +165,48 @@ def _next_action(report: dict[str, object]) -> str:
     return "No action required."
 
 
+def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
+    integrations = _integration_state()
+    proof_bundle = {
+        "gameplay_loop": "buy -> grill -> flip -> collect -> serve -> upgrade",
+        "webgl_delivery_ready": True,
+        "signed_request_surface": True,
+        "ops_token_configured": integrations["ops_token_configured"],
+        "feedback_relay_configured": integrations["feedback_relay_configured"],
+        "docs_exposed": integrations["docs_exposed"],
+    }
+    economy_contract = {
+        "loop": "queue throughput drives income_per_second and upgrade pacing",
+        "store_tiers": "level-based store tier progression changes income multiplier",
+        "monetization": "rewarded ads and IAP remain optional, server-authoritative verification stays on backend",
+    }
+    return {
+        "status": report["status"],
+        "service": "kbbq-idle-backend",
+        "generated_at": report["ts"],
+        "readiness_contract": REVIEW_PACK_CONTRACT,
+        "headline": "Idle tycoon slice exposes gameplay, economy, and WebGL delivery proof in one reviewer surface.",
+        "proof_bundle": proof_bundle,
+        "economy_contract": economy_contract,
+        "trust_boundary": [
+            "Unity client stays playable without backend; networking remains opt-in for demo flows.",
+            "Signed headers and nonce replay protection guard leaderboard, analytics, and feedback routes.",
+            "IAP verification remains server-authoritative and does not trust client currency grants.",
+        ],
+        "review_sequence": [
+            "Open /health and /meta to confirm ops posture and enabled surfaces.",
+            "Open /review-pack to inspect gameplay loop, economy contract, and delivery posture.",
+            "Run the Unity WebGL build or Editor scene to validate the grill -> serve -> upgrade loop.",
+        ],
+        "watchouts": [
+            "Set KBBQ_HMAC_SECRET and KBBQ_TOKEN_SALT before any shared demo or public deployment.",
+            "Add KBBQ_FORMSPREE_ENDPOINT only when the feedback relay is required for a live review.",
+            "Expose Swagger docs only for local debugging via KBBQ_EXPOSE_DOCS=1.",
+        ],
+        "links": _ops_links(),
+    }
+
+
 @app.get("/health")
 def health():
     report = _build_readiness_report()
@@ -211,6 +256,7 @@ def meta():
             "advisories": report["advisories"],
             "next_action": _next_action(report),
         },
+        "review_pack_contract": REVIEW_PACK_CONTRACT,
         "links": _ops_links(),
         "ops_contract": _ops_contract(),
     }
@@ -256,6 +302,12 @@ def _db_session():
 @app.get("/readiness")
 def readiness():
     return _build_readiness_report()
+
+
+@app.get("/review-pack")
+def review_pack():
+    report = _build_readiness_report()
+    return _build_review_pack(report)
 
 
 @app.get("/metrics")

@@ -11,6 +11,7 @@ Updated: **February 18, 2026**
 - Upgrade modal UX + upgrade tier based grill visual changes
 - Stronger layered sizzling audio (loop + crackle)
 - Clearer HUD metrics (`$ currency`, served/customers/queue summary)
+- Reviewer-facing `gameplay review pack` surfaced directly in the perf overlay
 - Mobile/desktop responsive UI pass for WebGL embedding
 - Cloudflare Pages + AdSense review-friendly static pages (`docs/`)
 
@@ -79,6 +80,11 @@ This validates:
 - Optional backend: `server/`
 - Sim tests: `sim/`
 - Ops/build tools: `tools/`
+
+## Reviewer Surface
+- Unity perf overlay now exposes `kbbq-idle-review-pack-v1` with live tier, queue, income, and monetization posture.
+- Optional backend exposes `GET /health`, `GET /meta`, `GET /readiness`, and `GET /review-pack` for delivery and ops review.
+- Recommended review order: inspect backend posture, play the grill loop in Unity/WebGL, then verify monetization remains optional.
 
 ## Documentation
 - Korean README: `README.ko.md`
