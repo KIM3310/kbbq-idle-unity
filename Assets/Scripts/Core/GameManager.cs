@@ -233,7 +233,9 @@ public class GameManager : MonoBehaviour
             averageWaitSeconds = metrics.avgWaitSeconds,
             monetizationMode = BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount),
             reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.",
+            focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay",
             twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay",
+            reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay",
             proofAssets = "Health, Meta, Review Pack, Perf Overlay",
         };
     }
