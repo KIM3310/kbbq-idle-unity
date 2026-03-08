@@ -233,6 +233,8 @@ public class GameManager : MonoBehaviour
             averageWaitSeconds = metrics.avgWaitSeconds,
             monetizationMode = BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount),
             reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.",
+            twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay",
+            proofAssets = "Health, Meta, Review Pack, Perf Overlay",
         };
     }
     public int GetGrillSlotCount() => grillSlots != null && grillSlots.Length > 0 ? grillSlots.Length : Mathf.Max(1, grillSlotCount);

@@ -86,6 +86,18 @@ This validates:
 - Optional backend exposes `GET /health`, `GET /meta`, `GET /readiness`, and `GET /review-pack` for delivery and ops review.
 - Recommended review order: inspect backend posture, play the grill loop in Unity/WebGL, then verify monetization remains optional.
 
+## 2-Minute Review Path
+- Open `/health` and `/meta` to confirm runtime posture, enabled surfaces, and next action.
+- Open `/review-pack` to pin gameplay loop, economy contract, and monetization posture.
+- Run the Unity WebGL build or Editor scene and validate the grill -> serve -> upgrade loop.
+- Read the live perf overlay before claiming delivery or monetization readiness.
+
+## Proof Assets
+- `Health Envelope` -> `/health`
+- `Runtime Profile` -> `/meta`
+- `Review Pack` -> `/review-pack`
+- `Perf Overlay` -> `Assets/Scripts/UI/PerfOverlayView.cs`
+
 ## Documentation
 - Korean README: `README.ko.md`
 - English README: `README.en.md`
