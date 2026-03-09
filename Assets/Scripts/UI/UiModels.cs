@@ -48,6 +48,7 @@ public struct GameplayReviewPack
     public string reviewStep;
     public string focusedRoute;
     public string reviewerSnapshot;
+    public string focusedOpsSnapshot;
     public string twoMinuteReview;
     public string reviewRoutes;
     public string proofAssets;

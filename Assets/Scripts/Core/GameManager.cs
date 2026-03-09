@@ -219,6 +219,7 @@ public class GameManager : MonoBehaviour
         var adsEnabled = config != null && config.enableAds;
         var iapEnabled = config != null && config.enableIap;
         var packCount = config != null && config.packs != null ? config.packs.Count : 0;
+        var presetLabel = BuildPresetLabel(GetDebugPresetIndex());
 
         return new GameplayReviewPack
         {
@@ -235,10 +236,27 @@ public class GameManager : MonoBehaviour
             reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.",
             focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay",
             reviewerSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Monetize {BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount)}",
+            focusedOpsSnapshot = $"Preset {presetLabel} / Queue {metrics.queueCount} / Wait {metrics.avgWaitSeconds:0.0}s / Served {metrics.servedPerMinute:0}/min",
             twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay",
             reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay",
             proofAssets = "Health, Meta, Review Pack, Perf Overlay",
         };
+    }
+    private string BuildPresetLabel(int index)
+    {
+        switch (index)
+        {
+            case 0:
+                return "0.5x";
+            case 1:
+                return "1.0x";
+            case 2:
+                return "2.0x";
+            case 3:
+                return "Custom";
+            default:
+                return "1.0x";
+        }
     }
     public int GetGrillSlotCount() => grillSlots != null && grillSlots.Length > 0 ? grillSlots.Length : Mathf.Max(1, grillSlotCount);
     public int GetUpgradeVisualTier()
