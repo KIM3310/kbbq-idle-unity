@@ -25,7 +25,7 @@ if [ ! -x "$VENV_DIR/bin/python" ]; then
 fi
 
 echo "[PORTFOLIO] Installing backend test dependencies..."
-"$VENV_DIR/bin/pip" install -q -r "$ROOT_DIR/server/requirements.txt"
+"$VENV_DIR/bin/pip" install -q -e "$ROOT_DIR[dev]"
 
 echo "[PORTFOLIO] Running backend tests..."
 "$VENV_DIR/bin/python" -m pytest "$ROOT_DIR/server/tests" -q

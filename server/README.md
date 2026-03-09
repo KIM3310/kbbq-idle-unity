@@ -20,7 +20,8 @@ It is intentionally small and self-contained so reviewers can run it quickly.
 ```bash
 python3 -m venv .venv
 source .venv/bin/activate
-pip install -r server/requirements.txt
+python -m pip install -U pip
+python -m pip install -e ".[dev]"
 
 export KBBQ_HMAC_SECRET="CHANGE_ME"
 uvicorn server.app:app --reload --port 8000
