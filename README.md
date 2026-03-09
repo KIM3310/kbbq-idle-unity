@@ -111,8 +111,11 @@ MIT (`LICENSE`)
 <!-- codex:local-verification:start -->
 ## Local Verification
 ```bash
-# Open the project in Unity Hub
-# Run EditMode/PlayMode tests in Unity Test Runner
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install -U pip
+python -m pip install -e ".[dev]"
+tools/portfolio_quality_gate.sh
 ```
 
 ## Repository Hygiene

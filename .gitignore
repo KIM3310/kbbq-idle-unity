@@ -64,6 +64,7 @@ kbbq.db
 .venv/
 __pycache__/
 *.py[cod]
+*.egg-info/
 server/.env
 build_webgl.log
 .codex_runs/
