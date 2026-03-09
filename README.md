@@ -11,7 +11,7 @@ Updated: **February 18, 2026**
 - Upgrade modal UX + upgrade tier based grill visual changes
 - Stronger layered sizzling audio (loop + crackle)
 - Clearer HUD metrics (`$ currency`, served/customers/queue summary)
-- Reviewer-facing `gameplay review pack` surfaced directly in the perf overlay
+- Gameplay summary surfaced directly in the perf overlay
 - Mobile/desktop responsive UI pass for WebGL embedding
 - Cloudflare Pages + AdSense review-friendly static pages (`docs/`)
 
@@ -103,7 +103,6 @@ This validates:
 - English README: `README.en.md`
 - Cloudflare deploy note: `CLOUDFLARE_PAGES.md`
 - Technical summaries: `PROJECT_SUMMARY.ko.md`, `PROJECT_SUMMARY.en.md`
-- Service execution logs: `docs/SPECKIT_SERVICE_100.ko.md`, `docs/COT_EXECUTION_LOG.ko.md`
 
 ## License
 MIT (`LICENSE`)
