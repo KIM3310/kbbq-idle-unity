@@ -44,6 +44,7 @@ public class PerfOverlayView : MonoBehaviour
         var reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.";
         var focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay";
         var reviewerSnapshot = "Tier Alley / Queue 0 / Monetize Ads off / IAP off / Packs 0";
+        var focusedOpsSnapshot = "Preset 1.0x / Queue 0 / Wait 0.0s / Served 0/min";
         var twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay";
         var reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay";
         var proofAssets = "Health, Meta, Review Pack, Perf Overlay";
@@ -62,6 +63,7 @@ public class PerfOverlayView : MonoBehaviour
             reviewStep = reviewPack.reviewStep;
             focusedRoute = reviewPack.focusedRoute;
             reviewerSnapshot = reviewPack.reviewerSnapshot;
+            focusedOpsSnapshot = reviewPack.focusedOpsSnapshot;
             twoMinuteReview = reviewPack.twoMinuteReview;
             reviewRoutes = reviewPack.reviewRoutes;
             proofAssets = reviewPack.proofAssets;
@@ -79,6 +81,7 @@ public class PerfOverlayView : MonoBehaviour
                            "\nReview " + reviewStep +
                            "\nRoute " + focusedRoute +
                            "\nSnapshot " + reviewerSnapshot +
+                           "\nOps " + focusedOpsSnapshot +
                            "\n2m " + twoMinuteReview +
                            "\nPaths " + reviewRoutes +
                            "\nProof " + proofAssets;

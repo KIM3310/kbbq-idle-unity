@@ -174,6 +174,7 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         "ops_token_configured": integrations["ops_token_configured"],
         "feedback_relay_configured": integrations["feedback_relay_configured"],
         "docs_exposed": integrations["docs_exposed"],
+        "focused_ops_snapshot": "rush preset -> queue pressure -> perf overlay -> monetization posture",
     }
     economy_contract = {
         "loop": "queue throughput drives income_per_second and upgrade pacing",
