@@ -10,10 +10,6 @@ Updated: **February 18, 2026**
 - 핵심 증거는 실제 플레이 가능한 빌드, build preflight, reviewer surface, 그리고 배포 문서입니다.
 - 빠른 검토 경로: Reviewer Surface -> Review Flow -> docs/Build preflight 순서로 보면 됩니다.
 
-## 포트폴리오 포지션
-- 이 저장소는 실제 서비스 운영 계정/결제 게임이 아니라 플레이 가능한 WebGL 포트폴리오 빌드입니다.
-- 핵심 증거는 Unity 플레이 루프, WebGL 빌드 산출물, 그리고 배포/리뷰 표면이 자연스럽게 이어지는지에 있습니다.
-
 ## What Is In This Version
 - 4-slot grill gameplay loop (`load -> flip -> collect -> serve`)
 - Pixel customer queue cards with speech bubbles + requested-cut icon
