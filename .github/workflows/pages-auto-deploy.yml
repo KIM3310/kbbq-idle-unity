@@ -27,15 +27,12 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Verify deploy configuration
-        run: |
-          set -euo pipefail
-          if [[ -z "${CLOUDFLARE_API_TOKEN}" || -z "${CLOUDFLARE_ACCOUNT_ID}" ]]; then
-            echo "Cloudflare Pages secrets are required."
-            exit 1
-          fi
+      - name: Skip deploy when Cloudflare secrets are missing
+        if: ${{ env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' }}
+        run: echo "Cloudflare secrets are not configured; skipping Pages deploy."
 
       - name: Deploy to Cloudflare Pages (retry)
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
         run: |
           set -euo pipefail
           for attempt in 1 2 3; do
