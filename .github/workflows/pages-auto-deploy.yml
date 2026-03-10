@@ -31,8 +31,20 @@ jobs:
         if: ${{ env.CLOUDFLARE_API_TOKEN == '' || env.CLOUDFLARE_ACCOUNT_ID == '' }}
         run: echo "Cloudflare secrets are not configured; skipping Pages deploy."
 
-      - name: Deploy to Cloudflare Pages (retry)
+      - name: Validate Cloudflare credentials
+        id: cloudflare_auth
         if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' }}
+        continue-on-error: true
+        run: npx wrangler@4.66.0 whoami >/tmp/cf_auth.log 2>&1
+
+      - name: Skip deploy when Cloudflare credentials are invalid
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && steps.cloudflare_auth.outcome == 'failure' }}
+        run: |
+          cat /tmp/cf_auth.log
+          echo "Cloudflare credentials are invalid; skipping Pages deploy."
+
+      - name: Deploy to Cloudflare Pages (retry)
+        if: ${{ env.CLOUDFLARE_API_TOKEN != '' && env.CLOUDFLARE_ACCOUNT_ID != '' && steps.cloudflare_auth.outcome == 'success' }}
         run: |
           set -euo pipefail
           for attempt in 1 2 3; do
