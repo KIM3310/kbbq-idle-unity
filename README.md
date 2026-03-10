@@ -99,13 +99,13 @@ This validates:
 - Optional backend: `server/`
 - Sim tests: `sim/`
 - Ops/build tools: `tools/`
-- Supporting review docs: `README.ko.md`, `README.en.md`, `RUNBOOK.md`, `CLOUDFLARE_PAGES.md`
+- Supporting review docs: `README.ko.md`, `README.en.md`, `docs/ops/RUNBOOK.md`, `docs/deployment/CLOUDFLARE_PAGES.md`
 
 ## Docs Map
 - `README.md`: primary project overview and verification flow
 - `README.ko.md`, `README.en.md`: language-specific summaries
-- `RUNBOOK.md`: release/ops handoff notes
-- `CLOUDFLARE_PAGES.md`: WebGL publishing notes for Pages
+- `docs/ops/RUNBOOK.md`: release/ops handoff notes
+- `docs/deployment/CLOUDFLARE_PAGES.md`: WebGL publishing notes for Pages
 - `server/README.md`: backend-only setup and API notes
 
 ## Reviewer Surface
@@ -128,8 +128,8 @@ This validates:
 ## Documentation
 - Korean README: `README.ko.md`
 - English README: `README.en.md`
-- Cloudflare deploy note: `CLOUDFLARE_PAGES.md`
-- Technical summaries: `PROJECT_SUMMARY.ko.md`, `PROJECT_SUMMARY.en.md`
+- Cloudflare deploy note: `docs/deployment/CLOUDFLARE_PAGES.md`
+- Technical summaries: `docs/review/PROJECT_SUMMARY.ko.md`, `docs/review/PROJECT_SUMMARY.en.md`
 
 ## License
 MIT (`LICENSE`)

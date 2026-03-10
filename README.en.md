@@ -79,8 +79,8 @@ It executes Unity checks, backend tests, and deterministic simulator tests.
 ## Related Docs
 - Korean README: `README.ko.md`
 - Main README: `README.md`
-- Cloudflare deployment note: `CLOUDFLARE_PAGES.md`
-- Technical summaries: `PROJECT_SUMMARY.en.md`, `PROJECT_SUMMARY.ko.md`
+- Cloudflare deployment note: `docs/deployment/CLOUDFLARE_PAGES.md`
+- Technical summaries: `docs/review/PROJECT_SUMMARY.en.md`, `docs/review/PROJECT_SUMMARY.ko.md`
 
 ## License
 MIT (`LICENSE`)
