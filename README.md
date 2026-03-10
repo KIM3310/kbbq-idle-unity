@@ -10,6 +10,12 @@ Updated: **February 18, 2026**
 - 핵심 증거는 실제 플레이 가능한 빌드, build preflight, reviewer surface, 그리고 배포 문서입니다.
 - 빠른 검토 경로: Reviewer Surface -> Review Flow -> docs/Build preflight 순서로 보면 됩니다.
 
+
+## 커리어 시그널
+- **인터랙티브/런타임 엔지니어 관점:** 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 검토할 수 있습니다.
+- **플랫폼/클라우드 아키텍트 관점:** reviewer surface, 배포 문서, 정적 호스팅 경로가 명확하게 정리되어 있습니다.
+- **제품/필드 관점:** 바로 플레이 가능한 결과물이 있어서 슬라이드보다 설득력이 높습니다.
+
 ## What Is In This Version
 - 4-slot grill gameplay loop (`load -> flip -> collect -> serve`)
 - Pixel customer queue cards with speech bubbles + requested-cut icon
