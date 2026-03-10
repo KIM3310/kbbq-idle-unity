@@ -4,17 +4,24 @@ K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity
 
 Updated: **February 18, 2026**
 
-
 ## 포트폴리오 포지셔닝
 - 이 저장소는 게임 플레이 루프와 배포 준비도를 함께 보여주는 WebGL 포트폴리오입니다.
 - 핵심 증거는 실제 플레이 가능한 빌드, build preflight, reviewer surface, 그리고 배포 문서입니다.
 - 빠른 검토 경로: Reviewer Surface -> Review Flow -> docs/Build preflight 순서로 보면 됩니다.
 
-
 ## 커리어 시그널
 - **인터랙티브/런타임 엔지니어 관점:** 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 검토할 수 있습니다.
 - **플랫폼/클라우드 아키텍트 관점:** reviewer surface, 배포 문서, 정적 호스팅 경로가 명확하게 정리되어 있습니다.
 - **제품/필드 관점:** 바로 플레이 가능한 결과물이 있어서 슬라이드보다 설득력이 높습니다.
+
+## Start Here
+- Primary game surface: `Assets/`, `Packages/`, `ProjectSettings/`
+- WebGL publish surface: `docs/`
+- Optional backend surface: `server/`
+- Deterministic economy test harness: `sim/`
+- Build/release helpers: `tools/`
+
+루트에는 리뷰 문서와 운영 자산이 함께 있지만, 실제 게임 작업은 보통 `Assets/`에서 시작하고 배포 검증은 `docs/` 또는 `server/`로 이어집니다.
 
 ## What Is In This Version
 - 4-slot grill gameplay loop (`load -> flip -> collect -> serve`)
@@ -86,12 +93,20 @@ This validates:
 - backend tests (`server/tests`)
 - deterministic sim tests (`sim/`)
 
-## Repository Guide
+## Repository Map
 - Game code: `Assets/Scripts/`
 - WebGL publish site: `docs/`
 - Optional backend: `server/`
 - Sim tests: `sim/`
 - Ops/build tools: `tools/`
+- Supporting review docs: `README.ko.md`, `README.en.md`, `RUNBOOK.md`, `CLOUDFLARE_PAGES.md`
+
+## Docs Map
+- `README.md`: primary project overview and verification flow
+- `README.ko.md`, `README.en.md`: language-specific summaries
+- `RUNBOOK.md`: release/ops handoff notes
+- `CLOUDFLARE_PAGES.md`: WebGL publishing notes for Pages
+- `server/README.md`: backend-only setup and API notes
 
 ## Reviewer Surface
 - Unity perf overlay now exposes `kbbq-idle-review-pack-v1` with live tier, queue, income, and monetization posture.

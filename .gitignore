@@ -57,6 +57,7 @@ crashlytics-build.properties
 .DS_Store
 
 # Backend / local dev (portfolio demo)
+.pytest_cache/
 kbbq.db
 *.db
 *.sqlite
