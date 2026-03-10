@@ -156,9 +156,11 @@
           <button id="checkBtn">Check Build Files</button>
           <button id="startBtn">Start Game</button>
           <button id="fullscreenBtn">Fullscreen</button>
+          <button id="copyChecklistBtn">Copy Build Checklist</button>
+          <button id="copyBuildChecklistBtn">Copy Build Checklist</button>
         </div>
         <div id="status">Ready. Click Start Game after uploading WebGL build artifacts.</div>
-        <div id="preflight">Tip: if your build uses `.unityweb`/`.br`/`.gz`, this page auto-detects those formats.</div>
+        <div id="preflight">Tip: if your build uses `.unityweb`/`.br`/`.gz`, this page auto-detects those formats. Keyboard: C check · S start · F fullscreen · B copy checklist · ? help.</div>
         <div id="unityContainer">
           <canvas id="unityCanvas" width="960" height="600"></canvas>
         </div>
@@ -206,10 +208,14 @@
       const checkBtn = document.getElementById('checkBtn');
       const startBtn = document.getElementById('startBtn');
       const fullscreenBtn = document.getElementById('fullscreenBtn');
+      const copyChecklistBtn = document.getElementById('copyChecklistBtn');
+      const recentBuildsNode = document.getElementById('recentBuilds');
+      const copyBuildChecklistBtn = document.getElementById('copyBuildChecklistBtn');
       const adNode = document.querySelector('.adsbygoogle');
       const adStatusNode = document.getElementById('adStatus');
       const buildInfoNode = document.getElementById('buildInfo');
       let unityInstance = null;
+      const RECENT_BUILDS_KEY = 'kbbq_idle_recent_builds_v1';
       let currentLoadId = 0;
       let buildManifestCache = null;
       let buildManifestFetched = false;
@@ -234,6 +240,50 @@
           buildInfoNode.textContent = text;
         }
       }
+      function readRecentBuilds() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(RECENT_BUILDS_KEY) || '[]');
+          return Array.isArray(parsed) ? parsed.filter((item) => typeof item === 'string' && item.trim()) : [];
+        } catch (_err) {
+          return [];
+        }
+      }
+
+      function writeRecentBuilds(items) {
+        localStorage.setItem(RECENT_BUILDS_KEY, JSON.stringify(items.slice(0, 4)));
+      }
+
+      function rememberBuildName(value) {
+        const trimmed = String(value || '').trim();
+        if (!trimmed) return;
+        const next = [trimmed, ...readRecentBuilds().filter((item) => item !== trimmed)];
+        writeRecentBuilds(next);
+        renderRecentBuilds();
+      }
+
+      function renderRecentBuilds() {
+        if (!recentBuildsNode) return;
+        const items = readRecentBuilds();
+        recentBuildsNode.innerHTML = '';
+        if (items.length === 0) {
+          const hint = document.createElement('span');
+          hint.style.fontSize = '11px';
+          hint.style.color = 'var(--muted)';
+          hint.textContent = 'Recent builds appear here after a successful check or launch.';
+          recentBuildsNode.appendChild(hint);
+          return;
+        }
+        items.forEach((item, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = index === 0 ? `${item} · recent` : item;
+          button.addEventListener('click', () => {
+            buildInput.value = item;
+            setStatus(`Loaded recent build name: ${item}`);
+          });
+          recentBuildsNode.appendChild(button);
+        });
+      }
 
       function setControlsEnabled(enabled) {
         const isEnabled = Boolean(enabled);
@@ -251,6 +301,47 @@
         if (!value) return value;
         const joiner = value.includes('?') ? '&' : '?';
         return `${value}${joiner}v=${encodeURIComponent(buildRevision)}`;
+      }
+
+      async function copyTextValue(text) {
+        if (!text) return false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+          }
+        } catch (_err) {
+          // Fallback below.
+        }
+        try {
+          const helper = document.createElement('textarea');
+          helper.value = text;
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.focus();
+          helper.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(helper);
+          return Boolean(ok);
+        } catch (_err) {
+          return false;
+        }
+      }
+
+      async function copyBuildChecklist() {
+        const buildName = String(buildInput.value || 'KBBQIdleWebGL').trim() || 'KBBQIdleWebGL';
+        const payload = [
+          'KBBQ Idle build checklist',
+          `- Build base name: ${buildName}`,
+          `- Loader: docs/Build/${buildName}.loader.js`,
+          `- Framework: docs/Build/${buildName}.framework.js(.unityweb/.br/.gz)`,
+          `- Data: docs/Build/${buildName}.data(.unityweb/.br/.gz)`,
+          `- Wasm: docs/Build/${buildName}.wasm(.unityweb/.br/.gz)`,
+          '- Run Check Build Files before claiming the WebGL surface is live.',
+        ].join('\\n');
+        const ok = await copyTextValue(payload);
+        setStatus(ok ? 'Build checklist copied.' : 'Failed to copy build checklist.');
       }
 
       async function fetchProbe(url, needsText = false) {
@@ -610,15 +701,24 @@
       }
 
       checkBtn.addEventListener('click', () => {
+        rememberBuildName(buildInput.value);
         void preflightCheck(buildInput.value);
       });
-      startBtn.addEventListener('click', () => loadUnity(buildInput.value));
+      startBtn.addEventListener('click', () => {
+        rememberBuildName(buildInput.value);
+        void loadUnity(buildInput.value);
+      });
       buildInput.addEventListener('keydown', (event) => {
         if (event.key === 'Enter') {
           event.preventDefault();
           void loadUnity(buildInput.value);
         }
       });
+      if (copyChecklistBtn) {
+        copyChecklistBtn.addEventListener('click', () => {
+          void copyBuildChecklist();
+        });
+      }
       fullscreenBtn.addEventListener('click', async () => {
         const target = container || canvas;
         if (!target) return;
@@ -632,11 +732,31 @@
           setStatus('Fullscreen is not available in this browser.');
         }
       });
-      document.addEventListener('keydown', (event) => {
+      copyBuildChecklistBtn.addEventListener('click', () => {
+        void copyBuildChecklist();
+      });
+      document.addEventListener('keydown', async (event) => {
         if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;
-        if (event.key === 'f' || event.key === 'F') {
+        const key = event.key.toLowerCase();
+        if (key === '?') {
+          setPreflight('Keyboard: C check build · S start game · F fullscreen · B copy build checklist.');
+          return;
+        }
+        if (key === 'c') {
+          event.preventDefault();
+          checkBtn.click();
+        }
+        if (key === 's') {
+          event.preventDefault();
+          startBtn.click();
+        }
+        if (key === 'f') {
           event.preventDefault();
           fullscreenBtn.click();
+        }
+        if (key === 'b') {
+          event.preventDefault();
+          await copyBuildChecklist();
         }
       });
       initializeAdsense();
