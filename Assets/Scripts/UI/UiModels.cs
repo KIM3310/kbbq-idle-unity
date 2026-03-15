@@ -125,3 +125,13 @@ public struct DistrictSideQuestUiState
     public float accent01;
     public bool visible;
 }
+
+public struct BadgeBoardUiState
+{
+    public string title;
+    public string progressLine;
+    public string detailLine;
+    public string badgeLine;
+    public float accent01;
+    public bool visible;
+}

@@ -185,9 +185,12 @@ public class QueueControlView : MonoBehaviour
             {
                 if (entry.isStoryGuest)
                 {
-                    card.spotlightText.text = string.IsNullOrEmpty(entry.storyGuestLabel)
+                    var label = string.IsNullOrEmpty(entry.storyGuestLabel)
                         ? (entry.isBossGuest ? "RIVAL BOSS" : "STORY GUEST")
                         : entry.storyGuestLabel;
+                    card.spotlightText.text = entry.isBossGuest
+                        ? label + "  P" + Mathf.Max(1, entry.bossPhase) + "/" + Mathf.Max(1, entry.bossPhaseCount)
+                        : label;
                     card.spotlightText.color = entry.isBossGuest
                         ? new Color(1f, 0.94f, 0.68f, 1f)
                         : entry.isFinaleGuest
@@ -230,7 +233,10 @@ public class QueueControlView : MonoBehaviour
                 var orderLabel = portionTag + strictTag + (highlightedOrder ? "HOT " + ClipText(entry.menuName, 8) : ClipText(entry.menuName, 11));
                 if (entry.isStoryGuest)
                 {
-                    card.bubbleText.text = "STORY · " + orderLabel;
+                    card.bubbleText.text = entry.isBossGuest
+                        ? (string.IsNullOrEmpty(entry.storyBadgeName) ? "BADGE TRIAL" : entry.storyBadgeName.ToUpperInvariant()) +
+                          " · P" + Mathf.Max(1, entry.bossPhase) + " · " + orderLabel
+                        : "STORY · " + orderLabel;
                 }
                 else
                 {
@@ -261,7 +267,9 @@ public class QueueControlView : MonoBehaviour
                 var rewardLine = "TIP x" + entry.tipMultiplier.ToString("0.00");
                 if (entry.isStoryGuest)
                 {
-                    rewardLine += entry.isBossGuest ? "  ·  BOSS" : entry.isFinaleGuest ? "  ·  FINALE" : "  ·  STORY";
+                    rewardLine += entry.isBossGuest
+                        ? "  ·  BOSS P" + Mathf.Max(1, entry.bossPhase) + "/" + Mathf.Max(1, entry.bossPhaseCount)
+                        : entry.isFinaleGuest ? "  ·  FINALE" : "  ·  STORY";
                     card.rewardText.color = entry.isBossGuest
                         ? new Color(1f, 0.94f, 0.66f, 1f)
                         : entry.isFinaleGuest
@@ -315,7 +323,9 @@ public class QueueControlView : MonoBehaviour
             if (front != null && front.isStoryGuest)
             {
                 helperText.text = front.isBossGuest
-                    ? "Rival boss table seated. Exact timing and no panic."
+                    ? (string.IsNullOrEmpty(front.storyRuleText)
+                        ? "Rival boss table seated. Perfect service required."
+                        : front.storyRuleText + "  ·  Phase " + Mathf.Max(1, front.bossPhase) + "/" + Mathf.Max(1, front.bossPhaseCount))
                     : front.isFinaleGuest
                     ? "The finale table is seated. Precision first, panic never."
                     : "A story guest has arrived. Treat this table like a scene, not a chore.";

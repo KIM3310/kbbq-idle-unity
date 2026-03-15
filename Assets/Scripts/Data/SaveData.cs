@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
-    public int version = 6;
+    public int version = 7;
     public int playerLevel = 1;
     public int prestigeLevel = 0;
     public int prestigePoints = 0;
@@ -30,6 +30,7 @@ public class SaveData
     public List<DistrictSideQuestState> sideQuests = new List<DistrictSideQuestState>();
     public List<StoryLogEntry> storyLog = new List<StoryLogEntry>();
     public List<string> resolvedStoryGuestIds = new List<string>();
+    public List<StoryGuestRetryState> storyGuestRetries = new List<StoryGuestRetryState>();
     public List<MeatInventoryEntry> meatInventory = new List<MeatInventoryEntry>();
     public List<GrillSlotSaveState> grillSlots = new List<GrillSlotSaveState>();
 
@@ -85,9 +86,26 @@ public class SaveData
             resolvedStoryGuestIds = new List<string>();
         }
 
+        if (storyGuestRetries == null)
+        {
+            storyGuestRetries = new List<StoryGuestRetryState>();
+        }
+
         if (meatInventory == null)
         {
             meatInventory = new List<MeatInventoryEntry>();
+        }
+
+        for (int i = storyGuestRetries.Count - 1; i >= 0; i--)
+        {
+            var retry = storyGuestRetries[i];
+            if (retry == null || string.IsNullOrEmpty(retry.id))
+            {
+                storyGuestRetries.RemoveAt(i);
+                continue;
+            }
+
+            if (retry.count < 0) retry.count = 0;
         }
 
         for (int i = storyLog.Count - 1; i >= 0; i--)
@@ -257,6 +275,13 @@ public class StoryLogEntry
     public string headline = string.Empty;
     public string line = string.Empty;
     public string districtId = string.Empty;
+}
+
+[Serializable]
+public class StoryGuestRetryState
+{
+    public string id = string.Empty;
+    public int count;
 }
 
 [Serializable]

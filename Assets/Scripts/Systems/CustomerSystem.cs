@@ -9,6 +9,8 @@ public class CustomerQueueEntry
     public string menuName;
     public string storyGuestId;
     public string storyGuestLabel;
+    public string storyBadgeName;
+    public string storyRuleText;
     public double menuBasePrice;
     public float patience;
     public float waitTime;
@@ -19,6 +21,8 @@ public class CustomerQueueEntry
     public bool isStoryGuest;
     public bool isFinaleGuest;
     public bool isBossGuest;
+    public int bossPhase;
+    public int bossPhaseCount;
     public int requestedServings;
     public bool requiresExactCut;
 }
@@ -34,6 +38,8 @@ public struct ServeResult
     public string menuName;
     public string storyGuestId;
     public string storyGuestLabel;
+    public string storyBadgeName;
+    public string storyRuleText;
     public double basePrice;
     public int comboCount;
     public bool isVip;
@@ -42,6 +48,8 @@ public struct ServeResult
     public bool isStoryGuest;
     public bool isFinaleGuest;
     public bool isBossGuest;
+    public int bossPhase;
+    public int bossPhaseCount;
     public int requestedServings;
     public bool requiresExactCut;
 }
@@ -179,6 +187,8 @@ public class CustomerSystem
         result.menuName = served.menuName;
         result.storyGuestId = served.storyGuestId;
         result.storyGuestLabel = served.storyGuestLabel;
+        result.storyBadgeName = served.storyBadgeName;
+        result.storyRuleText = served.storyRuleText;
         result.basePrice = served.menuBasePrice;
         result.comboCount = comboCount;
         result.isVip = served.isVip;
@@ -187,6 +197,8 @@ public class CustomerSystem
         result.isStoryGuest = served.isStoryGuest;
         result.isFinaleGuest = served.isFinaleGuest;
         result.isBossGuest = served.isBossGuest;
+        result.bossPhase = served.bossPhase;
+        result.bossPhaseCount = served.bossPhaseCount;
         result.requestedServings = Mathf.Max(1, served.requestedServings);
         result.requiresExactCut = served.requiresExactCut;
         totalServed++;

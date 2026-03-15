@@ -82,6 +82,13 @@ public class UIController : MonoBehaviour
     private Text sideQuestObjectiveText;
     private Text sideQuestRewardText;
     private float sideQuestHeat;
+    private RectTransform badgeBoardHudRect;
+    private Image badgeBoardHudImage;
+    private Text badgeBoardTitleText;
+    private Text badgeBoardProgressText;
+    private Text badgeBoardDetailText;
+    private Text badgeBoardListText;
+    private float badgeBoardHeat;
     private RectTransform showcaseHudRect;
     private Image showcaseHudImage;
     private Text showcaseTitleText;
@@ -276,6 +283,11 @@ public class UIController : MonoBehaviour
             var pulse = 1f + Mathf.Sin(Time.unscaledTime * (1.5f + sideQuestHeat * 3f)) * (0.006f + sideQuestHeat * 0.008f);
             sideQuestHudRect.localScale = new Vector3(pulse, pulse, 1f);
         }
+        if (badgeBoardHudRect != null)
+        {
+            var pulse = 1f + Mathf.Sin(Time.unscaledTime * (1.2f + badgeBoardHeat * 2.4f)) * (0.006f + badgeBoardHeat * 0.008f);
+            badgeBoardHudRect.localScale = new Vector3(pulse, pulse, 1f);
+        }
         if (showcaseHudRect != null)
         {
             var shimmer = 1f + Mathf.Sin(Time.unscaledTime * (1.6f + showcaseHeat * 3f)) * (0.006f + showcaseHeat * 0.008f);
@@ -332,6 +344,7 @@ public class UIController : MonoBehaviour
         UpdateStoryQuest(gameManager != null ? gameManager.GetStoryQuestUiState() : default);
         UpdateStoryLog(gameManager != null ? gameManager.GetStoryLogUiState() : default);
         UpdateSideQuest(gameManager != null ? gameManager.GetDistrictSideQuestUiState() : default);
+        UpdateBadgeBoard(gameManager != null ? gameManager.GetBadgeBoardUiState() : default);
         UpdateShowcase(gameManager != null ? gameManager.GetRestaurantShowcaseUiState() : default);
         UpdateHypeDisplay(gameManager != null ? gameManager.GetHypeUiState() : default);
         UpdateLiveEventBanner(gameManager != null ? gameManager.GetLiveEventBannerUiState() : default);
@@ -748,6 +761,46 @@ public class UIController : MonoBehaviour
                 new Color(0.16f, 0.10f, 0.08f, 0.82f),
                 new Color(0.34f, 0.18f, 0.08f, 0.92f),
                 sideQuestHeat);
+        }
+    }
+
+    public void UpdateBadgeBoard(BadgeBoardUiState badgeBoard)
+    {
+        EnsureBadgeBoardHud();
+        if (badgeBoardHudRect == null)
+        {
+            return;
+        }
+
+        badgeBoardHudRect.gameObject.SetActive(badgeBoard.visible);
+        if (!badgeBoard.visible)
+        {
+            return;
+        }
+
+        badgeBoardHeat = Mathf.Clamp01(badgeBoard.accent01);
+        if (badgeBoardTitleText != null)
+        {
+            badgeBoardTitleText.text = string.IsNullOrEmpty(badgeBoard.title) ? "BADGE BOARD" : badgeBoard.title;
+        }
+        if (badgeBoardProgressText != null)
+        {
+            badgeBoardProgressText.text = badgeBoard.progressLine;
+        }
+        if (badgeBoardDetailText != null)
+        {
+            badgeBoardDetailText.text = badgeBoard.detailLine;
+        }
+        if (badgeBoardListText != null)
+        {
+            badgeBoardListText.text = badgeBoard.badgeLine;
+        }
+        if (badgeBoardHudImage != null)
+        {
+            badgeBoardHudImage.color = Color.Lerp(
+                new Color(0.16f, 0.10f, 0.08f, 0.82f),
+                new Color(0.38f, 0.18f, 0.08f, 0.94f),
+                badgeBoardHeat);
         }
     }
 
@@ -1264,6 +1317,7 @@ public class UIController : MonoBehaviour
         EnsureStoryQuestHud();
         EnsureStoryLogHud();
         EnsureSideQuestHud();
+        EnsureBadgeBoardHud();
         EnsureShowcaseHud();
         EnsureHypeMeter();
         EnsureMarquee();
@@ -1421,6 +1475,30 @@ public class UIController : MonoBehaviour
         SetLocalTop(sideQuestTitleText.rectTransform, 12f, 10f, 38f, 18f);
         SetLocalBottom(sideQuestObjectiveText.rectTransform, 12f, 10f, 86f, 28f);
         SetLocalBottom(sideQuestRewardText.rectTransform, 110f, 10f, 12f, 18f);
+    }
+
+    private void EnsureBadgeBoardHud()
+    {
+        if (badgeBoardHudRect != null || grillPanel == null)
+        {
+            return;
+        }
+
+        var hud = new GameObject("BadgeBoardHud", typeof(RectTransform), typeof(Image));
+        badgeBoardHudRect = hud.GetComponent<RectTransform>();
+        badgeBoardHudRect.SetParent(grillPanel, false);
+        badgeBoardHudImage = hud.GetComponent<Image>();
+        badgeBoardHudImage.raycastTarget = false;
+
+        badgeBoardTitleText = CreateRuntimeText("BadgeBoardTitle", badgeBoardHudRect, 10, FontStyle.Bold, TextAnchor.UpperLeft, new Color(1f, 0.86f, 0.58f, 0.98f));
+        badgeBoardProgressText = CreateRuntimeText("BadgeBoardProgress", badgeBoardHudRect, 11, FontStyle.Bold, TextAnchor.UpperLeft, new Color(1f, 0.94f, 0.84f, 1f));
+        badgeBoardDetailText = CreateRuntimeText("BadgeBoardDetail", badgeBoardHudRect, 10, FontStyle.Bold, TextAnchor.UpperLeft, new Color(0.98f, 0.90f, 0.80f, 0.96f));
+        badgeBoardListText = CreateRuntimeText("BadgeBoardList", badgeBoardHudRect, 10, FontStyle.Bold, TextAnchor.LowerLeft, new Color(1f, 0.86f, 0.52f, 0.96f));
+
+        SetLocalTop(badgeBoardTitleText.rectTransform, 12f, 10f, 10f, 14f);
+        SetLocalTop(badgeBoardProgressText.rectTransform, 12f, 10f, 24f, 16f);
+        SetLocalTop(badgeBoardDetailText.rectTransform, 12f, 10f, 40f, 18f);
+        SetLocalStretch(badgeBoardListText.rectTransform, 12f, 10f, 12f, 50f);
     }
 
     private void EnsureDistrictBackdrop()
@@ -3120,6 +3198,7 @@ public class UIController : MonoBehaviour
         TintPanel(storyQuestHudRect, Color.Lerp(palette.grillPanel, palette.missionPanel, 0.24f));
         TintPanel(storyLogHudRect, Color.Lerp(palette.bottomBar, palette.grillPanel, 0.30f));
         TintPanel(sideQuestHudRect, Color.Lerp(palette.bottomBar, palette.missionPanel, 0.32f));
+        TintPanel(badgeBoardHudRect, Color.Lerp(palette.bottomBar, palette.missionPanel, 0.40f));
         TintPanel(monetizationPanelRect, Color.Lerp(palette.bottomBar, palette.missionPanel, 0.42f));
         TintPanel(topBrandRibbonRect, Color.Lerp(palette.bottomBar, palette.accent, 0.18f));
         TintPanel(heroHeaderRect, Color.Lerp(palette.bottomBar, palette.accentStrong, 0.20f));
@@ -3146,6 +3225,10 @@ public class UIController : MonoBehaviour
         SetTextColor(sideQuestTitleText, palette.textPrimary);
         SetTextColor(sideQuestObjectiveText, palette.textMuted);
         SetTextColor(sideQuestRewardText, palette.accentStrong);
+        SetTextColor(badgeBoardTitleText, palette.accentStrong);
+        SetTextColor(badgeBoardProgressText, palette.textPrimary);
+        SetTextColor(badgeBoardDetailText, palette.textMuted);
+        SetTextColor(badgeBoardListText, palette.accentStrong);
         SetTextColor(hypeMeterText, palette.textPrimary);
         SetTextColor(hypeDetailText, palette.textMuted);
         SetTextColor(marqueeText, palette.accentStrong);
@@ -3554,6 +3637,7 @@ public class UIController : MonoBehaviour
         LayoutStoryQuestHud(landscape, compact);
         LayoutStoryLogHud(landscape, compact);
         LayoutSideQuestHud(landscape, compact);
+        LayoutBadgeBoardHud(landscape, compact);
         LayoutShowcaseHud(landscape, compact);
         LayoutLiveEventBanner(landscape, compact);
         LayoutMomentSpotlight(landscape, compact);
@@ -3895,6 +3979,22 @@ public class UIController : MonoBehaviour
         sideQuestHudRect.sizeDelta = landscape
             ? (compact ? new Vector2(230f, 88f) : new Vector2(290f, 100f))
             : new Vector2(compact ? 210f : 250f, compact ? 92f : 108f);
+    }
+
+    private void LayoutBadgeBoardHud(bool landscape, bool compact)
+    {
+        if (badgeBoardHudRect == null || grillPanel == null)
+        {
+            return;
+        }
+
+        badgeBoardHudRect.anchorMin = new Vector2(1f, 0f);
+        badgeBoardHudRect.anchorMax = new Vector2(1f, 0f);
+        badgeBoardHudRect.pivot = new Vector2(1f, 0f);
+        badgeBoardHudRect.anchoredPosition = new Vector2(compact ? -12f : -16f, compact ? 112f : 124f);
+        badgeBoardHudRect.sizeDelta = landscape
+            ? (compact ? new Vector2(220f, 106f) : new Vector2(280f, 120f))
+            : new Vector2(compact ? 210f : 250f, compact ? 104f : 118f);
     }
 
     private void LayoutShowcaseHud(bool landscape, bool compact)

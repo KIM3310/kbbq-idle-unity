@@ -379,6 +379,11 @@ public class GameManager : MonoBehaviour
         SyncStoryQuestMeta(false);
         return districtSideQuestSystem != null ? districtSideQuestSystem.GetUiState() : default;
     }
+    public BadgeBoardUiState GetBadgeBoardUiState()
+    {
+        SyncStoryQuestMeta(false);
+        return storyGuestDirector != null ? storyGuestDirector.GetBadgeBoardUiState() : default;
+    }
     public string GetMarqueeText()
     {
         var showcase = GetRestaurantShowcaseUiState();
@@ -751,6 +756,7 @@ public class GameManager : MonoBehaviour
         uiController?.UpdateStoryQuest(GetStoryQuestUiState());
         uiController?.UpdateStoryLog(GetStoryLogUiState());
         uiController?.UpdateSideQuest(GetDistrictSideQuestUiState());
+        uiController?.UpdateBadgeBoard(GetBadgeBoardUiState());
         uiController?.UpdateSessionGoal(GetSessionGoalUiState());
         uiController?.UpdateShowcase(GetRestaurantShowcaseUiState());
         uiController?.UpdateLiveEventBanner(GetLiveEventBannerUiState());
@@ -768,6 +774,7 @@ public class GameManager : MonoBehaviour
         uiController?.UpdateStoryQuest(GetStoryQuestUiState());
         uiController?.UpdateStoryLog(GetStoryLogUiState());
         uiController?.UpdateSideQuest(GetDistrictSideQuestUiState());
+        uiController?.UpdateBadgeBoard(GetBadgeBoardUiState());
         uiController?.UpdateCombo(customerSystem.ComboCount, customerSystem.ComboTimeRemaining, customerSystem.ComboDuration, customerSystem.GetComboMultiplier());
         uiController?.UpdateSessionGoal(GetSessionGoalUiState());
         uiController?.UpdateShowcase(GetRestaurantShowcaseUiState());
@@ -985,7 +992,7 @@ public class GameManager : MonoBehaviour
             districtSideQuestSystem?.RecordServe(result.requestedServings, perfectServe, dailySpecialServed, result.isVip || result.isCritic);
             ProcessStoryQuestUpdates();
             ProcessSideQuestUpdates();
-            ResolveStoryGuestServe(result);
+            var handledStoryGuest = ResolveStoryGuestServe(result, perfectServe, dailySpecialServed);
             GrantServeTip(result, perfectServe, streakBonus);
             GrantGuestSpotlightBonus(result, perfectServe);
             var happy = customerSystem.Satisfaction >= 0.6f;
@@ -1020,31 +1027,31 @@ public class GameManager : MonoBehaviour
                         : "Big table secured. Stack the next rush before the room cools.",
                     result.isVip ? new Color(1f, 0.86f, 0.50f, 1f) : new Color(0.98f, 0.80f, 0.44f, 1f));
             }
-            if (perfectServe)
+            if (!handledStoryGuest && perfectServe)
             {
                 uiController?.ShowGrillStatus("Perfect serve! Rush the next table while the combo window is hot.");
             }
-            else if (dailySpecialServeStreak >= 3)
+            else if (!handledStoryGuest && dailySpecialServeStreak >= 3)
             {
                 uiController?.ShowGrillStatus("Hot streak x" + dailySpecialServeStreak + "! The house special is catching fire.");
             }
-            else if (result.isCritic)
+            else if (!handledStoryGuest && result.isCritic)
             {
                 uiController?.ShowGrillStatus("Critic served. A strong exact-cut plate can swing the whole night.");
             }
-            else if (result.isVip)
+            else if (!handledStoryGuest && result.isVip)
             {
                 uiController?.ShowGrillStatus("VIP table served. Keep the premium flow alive.");
             }
-            else if (result.isPartyTable)
+            else if (!handledStoryGuest && result.isPartyTable)
             {
                 uiController?.ShowGrillStatus("Party table cleared. Big groups love a steady grill rhythm.");
             }
-            else if (IsChefFeverActive())
+            else if (!handledStoryGuest && IsChefFeverActive())
             {
                 uiController?.ShowGrillStatus("Chef Fever! Every clean plate is paying out big.");
             }
-            else
+            else if (!handledStoryGuest)
             {
                 uiController?.ShowGrillStatus(cookedMatch ? "Served fresh grilled meat." : "Served with substitute cut.");
             }
@@ -2705,48 +2712,62 @@ public class GameManager : MonoBehaviour
             return;
         }
 
-        var entry = new CustomerQueueEntry
-        {
-            customerTypeId = "story",
-            customerName = encounter.displayName,
-            menuId = menuItem.id,
-            menuName = menuItem.displayName,
-            storyGuestId = encounter.id,
-            storyGuestLabel = encounter.label,
-            menuBasePrice = menuItem.basePrice * menuItem.bonusMultiplier * (encounter.isFinaleGuest ? 1.35d : 1.18d),
-            patience = Mathf.Max(5f, encounter.patienceSeconds),
-            waitTime = 0f,
-            tipMultiplier = Mathf.Max(1f, encounter.tipMultiplier),
-            isVip = encounter.isVip,
-            isCritic = encounter.isCritic,
-            isPartyTable = !encounter.isVip && !encounter.isCritic && encounter.requestedServings > 1,
-            isStoryGuest = true,
-            isFinaleGuest = encounter.isFinaleGuest,
-            isBossGuest = encounter.isBossGuest,
-            requestedServings = Mathf.Max(1, encounter.requestedServings),
-            requiresExactCut = encounter.requiresExactCut
-        };
+        var entry = BuildStoryGuestQueueEntry(encounter, menuItem, 1);
 
         if (customerSystem.EnqueuePriorityGuest(entry))
         {
             uiController?.ShowGrillStatus(encounter.arrivalLine);
             uiController?.ShowMomentSpotlight(
                 encounter.label,
-                encounter.arrivalLine,
+                encounter.signatureRule + " · " + encounter.arrivalLine,
                 encounter.isFinaleGuest ? new Color(1f, 0.88f, 0.48f, 1f) : new Color(0.96f, 0.78f, 0.46f, 1f));
         }
     }
 
-    private void ResolveStoryGuestServe(ServeResult result)
+    private bool ResolveStoryGuestServe(ServeResult result, bool perfectServe, bool dailySpecialServed)
     {
         if (!result.isStoryGuest || storyGuestDirector == null || economy == null)
         {
-            return;
+            return false;
         }
 
-        if (!storyGuestDirector.TryResolveEncounter(result.storyGuestId, out var encounter))
+        if (!storyGuestDirector.TryGetEncounterSnapshot(result.storyGuestId, out var encounter))
         {
-            return;
+            return false;
+        }
+
+        var phaseRule = result.isBossGuest
+            ? BossBattleRules.GetRule(result.storyGuestId, result.bossPhase, result.bossPhaseCount, result.storyRuleText)
+            : default;
+
+        if (result.isBossGuest && !BossBattleRules.IsSatisfied(phaseRule, perfectServe, dailySpecialServed, result.comboCount, result.waitRatio))
+        {
+            var retryCount = storyGuestDirector.RecordRetry(result.storyGuestId);
+            var retryLine = storyGuestDirector.GetRetryLine(encounter, retryCount);
+            uiController?.ShowGrillStatus("Boss table says no. " + (string.IsNullOrEmpty(result.storyRuleText) ? "Come back cleaner." : result.storyRuleText));
+            uiController?.ShowMomentSpotlight(
+                string.IsNullOrEmpty(result.storyGuestLabel) ? "LEADER REMATCH" : result.storyGuestLabel,
+                string.IsNullOrEmpty(phaseRule.FailureText) ? retryLine : phaseRule.FailureText,
+                new Color(1f, 0.74f, 0.48f, 1f));
+            RequeueBossPhase(encounter, Mathf.Max(1, result.bossPhase));
+            return true;
+        }
+
+        if (result.isBossGuest && result.bossPhase < Mathf.Max(1, result.bossPhaseCount))
+        {
+            var nextPhase = result.bossPhase + 1;
+            uiController?.ShowGrillStatus(string.IsNullOrEmpty(encounter.phaseClearLine) ? "Phase clear. The leader is not done with you yet." : encounter.phaseClearLine);
+            uiController?.ShowMomentSpotlight(
+                string.IsNullOrEmpty(encounter.label) ? "PHASE CLEAR" : encounter.label + " PHASE " + result.bossPhase,
+                "Phase " + result.bossPhase + "/" + result.bossPhaseCount + " clear. Next rule check starts now.",
+                new Color(1f, 0.86f, 0.50f, 1f));
+            RequeueBossPhase(encounter, nextPhase);
+            return true;
+        }
+
+        if (!storyGuestDirector.TryResolveEncounter(result.storyGuestId, out encounter))
+        {
+            return false;
         }
 
         var bonus = Math.Max(
@@ -2756,9 +2777,77 @@ public class GameManager : MonoBehaviour
         audioManager?.PlayTierUp();
         uiController?.ShowGrillStatus(encounter.resolvedLine);
         uiController?.ShowMomentSpotlight(
-            encounter.label,
+            string.IsNullOrEmpty(encounter.badgeName)
+                ? (encounter.isBossGuest ? "BADGE SECURED" : encounter.label)
+                : encounter.badgeName.ToUpperInvariant() + " SECURED",
             encounter.resolvedLine + " +" + FormatUtil.FormatCurrency(bonus),
             encounter.isFinaleGuest ? new Color(1f, 0.90f, 0.54f, 1f) : new Color(0.98f, 0.84f, 0.52f, 1f));
+        return true;
+    }
+
+    private CustomerQueueEntry BuildStoryGuestQueueEntry(StoryGuestEncounter encounter, MenuItem menuItem, int phase)
+    {
+        var clampedPhase = Mathf.Max(1, phase);
+        var phaseCount = Mathf.Max(1, encounter.bossPhases);
+        var isBoss = encounter.isBossGuest;
+        var requestedServings = Mathf.Max(1, encounter.requestedServings);
+        var patienceSeconds = Mathf.Max(5f, encounter.patienceSeconds);
+        var tipMultiplier = Mathf.Max(1f, encounter.tipMultiplier);
+        var requiresExactCut = encounter.requiresExactCut;
+        var phaseRuleText = encounter.signatureRule;
+
+        if (isBoss)
+        {
+            var phaseRule = BossBattleRules.GetRule(encounter.id, clampedPhase, phaseCount, encounter.signatureRule);
+            requestedServings += phaseRule.AdditionalServings;
+            patienceSeconds = Mathf.Max(5f, encounter.patienceSeconds - (clampedPhase - 1) * 0.5f);
+            tipMultiplier += (clampedPhase - 1) * 0.12f;
+            requiresExactCut = encounter.requiresExactCut || phaseRule.ForceExactCut;
+            phaseRuleText = phaseRule.RuleText;
+        }
+
+        return new CustomerQueueEntry
+        {
+            customerTypeId = "story",
+            customerName = encounter.displayName,
+            menuId = menuItem.id,
+            menuName = menuItem.displayName,
+            storyGuestId = encounter.id,
+            storyGuestLabel = encounter.label,
+            storyBadgeName = encounter.badgeName,
+            storyRuleText = phaseRuleText,
+            menuBasePrice = menuItem.basePrice * menuItem.bonusMultiplier * (encounter.isFinaleGuest ? 1.35d : 1.18d) * (isBoss ? (1d + (clampedPhase - 1) * 0.18d) : 1d),
+            patience = patienceSeconds,
+            waitTime = 0f,
+            tipMultiplier = tipMultiplier,
+            isVip = encounter.isVip,
+            isCritic = encounter.isCritic,
+            isPartyTable = !encounter.isVip && !encounter.isCritic && encounter.requestedServings > 1,
+            isStoryGuest = true,
+            isFinaleGuest = encounter.isFinaleGuest,
+            isBossGuest = encounter.isBossGuest,
+            bossPhase = clampedPhase,
+            bossPhaseCount = phaseCount,
+            requestedServings = requestedServings,
+            requiresExactCut = requiresExactCut
+        };
+    }
+
+    private void RequeueBossPhase(StoryGuestEncounter encounter, int phase)
+    {
+        if (customerSystem == null || menuSystem == null)
+        {
+            return;
+        }
+
+        var menuItem = FindMenuItem(GetDailySpecialMenuId()) ?? menuSystem.GetRandomUnlockedItem();
+        if (menuItem == null || string.IsNullOrEmpty(menuItem.id))
+        {
+            return;
+        }
+
+        var entry = BuildStoryGuestQueueEntry(encounter, menuItem, phase);
+        customerSystem.EnqueuePriorityGuest(entry);
     }
 
     public bool ClaimDailyMission(string missionId)
