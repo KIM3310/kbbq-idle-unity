@@ -336,7 +336,9 @@ public class GrillStationView : MonoBehaviour
         }
 
         var selected = meats[selectedIndex];
-        selectionText.text = "CUT: " + selected.displayName;
+        selectionText.text = selected.isFeatured
+            ? "CUT: " + selected.displayName + "  [HOT]"
+            : "CUT: " + selected.displayName;
     }
 
     private void UpdateInventoryText()
@@ -363,6 +365,10 @@ public class GrillStationView : MonoBehaviour
             }
 
             lines.Append(i == 0 ? "> " : "  ");
+            if (entry.isFeatured)
+            {
+                lines.Append("* ");
+            }
             lines.Append(entry.displayName);
             lines.Append("  R");
             lines.Append(entry.rawCount);
@@ -430,12 +436,14 @@ public class GrillStationView : MonoBehaviour
         var percent = Mathf.RoundToInt(progress * 100f);
         if (slot.canFlip)
         {
-            label.text = slotTag + slot.displayName + "\n" + percent + "%\nFLIP NOW";
-            TintButton(button, new Color(0.54f, 0.22f, 0.14f, 0.96f));
-            SetSlotGrillTint(slotIndex, new Color(0.80f, 0.70f, 0.56f, 0.84f));
-            var pulse = 0.96f + Mathf.Sin(Time.unscaledTime * 7.5f) * 0.06f;
+            label.text = slotTag + slot.displayName + "\n" + percent + "%\n" + (slot.perfectWindow ? "PERFECT FLIP" : "FLIP NOW");
+            TintButton(button, slot.perfectWindow ? new Color(0.82f, 0.36f, 0.16f, 0.98f) : new Color(0.54f, 0.22f, 0.14f, 0.96f));
+            SetSlotGrillTint(slotIndex, slot.perfectWindow ? new Color(0.94f, 0.78f, 0.48f, 0.88f) : new Color(0.80f, 0.70f, 0.56f, 0.84f));
+            var pulse = slot.perfectWindow
+                ? 1.02f + Mathf.Sin(Time.unscaledTime * 11.5f) * 0.10f
+                : 0.96f + Mathf.Sin(Time.unscaledTime * 7.5f) * 0.06f;
             SetSlotPixelVisual(slotIndex, pixelRawSprite, new Color(1f, 0.92f, 0.84f, 1f), pulse);
-            UpdateSlotProgress(slotIndex, progress, new Color(0.95f, 0.50f, 0.20f, 0.98f));
+            UpdateSlotProgress(slotIndex, progress, slot.perfectWindow ? new Color(1f, 0.76f, 0.28f, 1f) : new Color(0.95f, 0.50f, 0.20f, 0.98f));
             UpdateSlotSmoke(slotIndex, 0.48f, false);
             return;
         }
@@ -466,7 +474,10 @@ public class GrillStationView : MonoBehaviour
             return;
         }
 
-        statusText.text = "Flow: Buy raw -> Grill -> Flip -> Collect -> Serve";
+        var rhythmHint = gameManager != null && gameManager.GetPlayerLevel() >= 4
+            ? "Keep two slots cycling and plate before the queue spikes."
+            : "Flow: Buy raw -> Grill -> Flip -> Collect -> Serve";
+        statusText.text = rhythmHint;
     }
 
     private void RefreshUpgradeTier()

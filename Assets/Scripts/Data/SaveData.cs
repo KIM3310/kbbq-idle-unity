@@ -4,7 +4,7 @@ using System.Collections.Generic;
 [Serializable]
 public class SaveData
 {
-    public int version = 2;
+    public int version = 6;
     public int playerLevel = 1;
     public int prestigeLevel = 0;
     public int prestigePoints = 0;
@@ -26,6 +26,10 @@ public class SaveData
     public List<string> unlockedMenuIds = new List<string>();
     public List<UpgradeLevelEntry> upgradeLevels = new List<UpgradeLevelEntry>();
     public List<DailyMissionState> dailyMissions = new List<DailyMissionState>();
+    public List<StoryQuestState> storyQuests = new List<StoryQuestState>();
+    public List<DistrictSideQuestState> sideQuests = new List<DistrictSideQuestState>();
+    public List<StoryLogEntry> storyLog = new List<StoryLogEntry>();
+    public List<string> resolvedStoryGuestIds = new List<string>();
     public List<MeatInventoryEntry> meatInventory = new List<MeatInventoryEntry>();
     public List<GrillSlotSaveState> grillSlots = new List<GrillSlotSaveState>();
 
@@ -61,14 +65,79 @@ public class SaveData
             dailyMissions = new List<DailyMissionState>();
         }
 
+        if (storyQuests == null)
+        {
+            storyQuests = new List<StoryQuestState>();
+        }
+
+        if (sideQuests == null)
+        {
+            sideQuests = new List<DistrictSideQuestState>();
+        }
+
+        if (storyLog == null)
+        {
+            storyLog = new List<StoryLogEntry>();
+        }
+
+        if (resolvedStoryGuestIds == null)
+        {
+            resolvedStoryGuestIds = new List<string>();
+        }
+
         if (meatInventory == null)
         {
             meatInventory = new List<MeatInventoryEntry>();
         }
 
+        for (int i = storyLog.Count - 1; i >= 0; i--)
+        {
+            var entry = storyLog[i];
+            if (entry == null || string.IsNullOrEmpty(entry.id))
+            {
+                storyLog.RemoveAt(i);
+                continue;
+            }
+
+            entry.speaker = entry.speaker ?? string.Empty;
+            entry.headline = entry.headline ?? string.Empty;
+            entry.line = entry.line ?? string.Empty;
+            entry.districtId = entry.districtId ?? string.Empty;
+        }
+
         if (grillSlots == null)
         {
             grillSlots = new List<GrillSlotSaveState>();
+        }
+
+        for (int i = sideQuests.Count - 1; i >= 0; i--)
+        {
+            var quest = sideQuests[i];
+            if (quest == null || string.IsNullOrEmpty(quest.id))
+            {
+                sideQuests.RemoveAt(i);
+                continue;
+            }
+
+            if (quest.target < 0) quest.target = 0;
+            if (quest.progress < 0) quest.progress = 0;
+            if (quest.rewardCurrency < 0) quest.rewardCurrency = 0;
+            if (quest.requiredTierIndex < 0) quest.requiredTierIndex = 0;
+        }
+
+        for (int i = storyQuests.Count - 1; i >= 0; i--)
+        {
+            var quest = storyQuests[i];
+            if (quest == null || string.IsNullOrEmpty(quest.id))
+            {
+                storyQuests.RemoveAt(i);
+                continue;
+            }
+
+            if (quest.target < 0) quest.target = 0;
+            if (quest.progress < 0) quest.progress = 0;
+            if (quest.rewardCurrency < 0) quest.rewardCurrency = 0;
+            if (quest.requiredTierIndex < 0) quest.requiredTierIndex = 0;
         }
 
         for (int i = meatInventory.Count - 1; i >= 0; i--)
@@ -145,7 +214,7 @@ public struct UpgradeLevelEntry
 [Serializable]
 public class DailyMissionState
 {
-    public string id;
+    public string id = string.Empty;
     public DailyMissionType type;
     public double target;
     public double progress;
@@ -159,6 +228,67 @@ public enum DailyMissionType
     EarnCurrency,
     UseBoost,
     PurchaseUpgrade
+}
+
+[Serializable]
+public class StoryQuestState
+{
+    public string id = string.Empty;
+    public string districtId = string.Empty;
+    public string actTitle = string.Empty;
+    public string chapterTitle = string.Empty;
+    public string speakerName = string.Empty;
+    public string briefing = string.Empty;
+    public string completionText = string.Empty;
+    public StoryObjectiveType objectiveType;
+    public double target;
+    public double progress;
+    public double rewardCurrency;
+    public int requiredTierIndex;
+    public bool unlocked;
+    public bool completed;
+}
+
+[Serializable]
+public class StoryLogEntry
+{
+    public string id = string.Empty;
+    public string speaker = string.Empty;
+    public string headline = string.Empty;
+    public string line = string.Empty;
+    public string districtId = string.Empty;
+}
+
+[Serializable]
+public class DistrictSideQuestState
+{
+    public string id = string.Empty;
+    public string districtId = string.Empty;
+    public string speakerName = string.Empty;
+    public string title = string.Empty;
+    public string briefing = string.Empty;
+    public string completionText = string.Empty;
+    public StoryObjectiveType objectiveType;
+    public double target;
+    public double progress;
+    public double rewardCurrency;
+    public int requiredTierIndex;
+    public bool unlocked;
+    public bool completed;
+}
+
+public enum StoryObjectiveType
+{
+    ServeOrders,
+    UseBoosts,
+    DailySpecialServes,
+    ReachDistrict,
+    SpotlightServes,
+    PerfectServes,
+    BuyUpgrades,
+    TriggerChefFever,
+    ReachPrestigeReady,
+    PrestigeTimes
 }
 
 [Serializable]

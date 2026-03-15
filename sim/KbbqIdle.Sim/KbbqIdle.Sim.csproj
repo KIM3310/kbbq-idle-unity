@@ -4,4 +4,12 @@
     <ImplicitUsings>enable</ImplicitUsings>
     <Nullable>enable</Nullable>
   </PropertyGroup>
+
+  <ItemGroup>
+    <Compile Include="../../Assets/Scripts/Data/SaveData.cs" Link="Assets/SaveData.cs" />
+    <Compile Include="../../Assets/Scripts/UI/UiModels.cs" Link="Assets/UiModels.cs" />
+    <Compile Include="../../Assets/Scripts/Systems/StoryQuestSystem.cs" Link="Assets/StoryQuestSystem.cs" />
+    <Compile Include="../../Assets/Scripts/Systems/DistrictSideQuestSystem.cs" Link="Assets/DistrictSideQuestSystem.cs" />
+    <Compile Include="../../Assets/Scripts/Systems/StoryGuestDirector.cs" Link="Assets/StoryGuestDirector.cs" />
+  </ItemGroup>
 </Project>

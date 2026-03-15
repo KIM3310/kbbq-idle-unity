@@ -22,6 +22,7 @@ public class UpgradeRowView : MonoBehaviour
     private Shadow labelShadow;
     private UpgradeUiEntry currentEntry;
     private Action<UpgradeUiEntry> requestUpgradeAction;
+    private Vector3 baseScale = Vector3.one;
 
     private void Awake()
     {
@@ -63,6 +64,8 @@ public class UpgradeRowView : MonoBehaviour
             button.onClick.RemoveAllListeners();
             button.onClick.AddListener(HandleClick);
         }
+
+        baseScale = transform.localScale;
     }
 
     public void Bind(GameManager manager)
@@ -84,9 +87,12 @@ public class UpgradeRowView : MonoBehaviour
             var costText = FormatUtil.FormatCurrency(entry.cost);
             var status = entry.affordable ? "BUY NOW" : "LOCKED";
             var bestTag = entry.isBest ? "  BEST PICK" : "";
-            label.text = entry.displayName + "  Lv." + entry.level +
+            var badge = string.IsNullOrEmpty(entry.badgeText) ? "UPGRADE" : entry.badgeText;
+            var impact = string.IsNullOrEmpty(entry.impactText) ? "Sharper kitchen flow." : entry.impactText;
+            label.text = badge + " · " + entry.displayName + "  Lv." + entry.level +
+                         "\n" + impact +
                          "\n" + costText + "  " + status + bestTag;
-            label.color = entry.isBest ? bestTextColor : normalTextColor;
+            label.color = entry.isBest ? bestTextColor : ResolveCategoryTextColor(entry.category);
             label.fontStyle = entry.isBest ? FontStyle.Bold : FontStyle.Normal;
             label.alignment = TextAnchor.MiddleCenter;
         }
@@ -98,7 +104,7 @@ public class UpgradeRowView : MonoBehaviour
 
         if (background != null)
         {
-            background.color = entry.isBest ? bestBackgroundColor : normalBackgroundColor;
+            background.color = entry.isBest ? bestBackgroundColor : ResolveCategoryBackground(entry.category, entry.affordable);
         }
         if (labelShadow != null)
         {
@@ -108,7 +114,7 @@ public class UpgradeRowView : MonoBehaviour
         isBestActive = entry.isBest;
         if (!isBestActive)
         {
-            transform.localScale = Vector3.one;
+            transform.localScale = baseScale;
         }
     }
 
@@ -135,7 +141,7 @@ public class UpgradeRowView : MonoBehaviour
             labelShadow.enabled = false;
         }
         isBestActive = false;
-        transform.localScale = Vector3.one;
+        transform.localScale = baseScale;
     }
 
     private void HandleClick()
@@ -163,7 +169,7 @@ public class UpgradeRowView : MonoBehaviour
 
         var t = (Mathf.Sin(Time.unscaledTime * glowSpeed) + 1f) * 0.5f;
         background.color = Color.Lerp(bestBackgroundColor, bestGlowColor, t);
-        transform.localScale = Vector3.one;
+        transform.localScale = baseScale * (1f + Mathf.Sin(Time.unscaledTime * (glowSpeed * 1.4f)) * 0.012f);
     }
 
     private void CacheColors()
@@ -192,5 +198,51 @@ public class UpgradeRowView : MonoBehaviour
         }
 
         hasCachedColors = true;
+    }
+
+    private Color ResolveCategoryBackground(string category, bool affordable)
+    {
+        var normalized = string.IsNullOrEmpty(category) ? string.Empty : category.ToLowerInvariant();
+        var baseColor = normalBackgroundColor;
+        switch (normalized)
+        {
+            case "income":
+                baseColor = new Color(0.34f, 0.20f, 0.12f, 0.96f);
+                break;
+            case "menu":
+                baseColor = new Color(0.42f, 0.18f, 0.18f, 0.96f);
+                break;
+            case "staff":
+                baseColor = new Color(0.24f, 0.22f, 0.16f, 0.96f);
+                break;
+            case "service":
+                baseColor = new Color(0.22f, 0.18f, 0.26f, 0.96f);
+                break;
+            case "sizzle":
+                baseColor = new Color(0.40f, 0.16f, 0.10f, 0.96f);
+                break;
+        }
+
+        return affordable ? baseColor : Color.Lerp(baseColor, new Color(0.20f, 0.20f, 0.20f, 0.92f), 0.55f);
+    }
+
+    private Color ResolveCategoryTextColor(string category)
+    {
+        var normalized = string.IsNullOrEmpty(category) ? string.Empty : category.ToLowerInvariant();
+        switch (normalized)
+        {
+            case "income":
+                return new Color(1f, 0.93f, 0.78f, 1f);
+            case "menu":
+                return new Color(1f, 0.88f, 0.84f, 1f);
+            case "staff":
+                return new Color(0.96f, 0.92f, 0.78f, 1f);
+            case "service":
+                return new Color(0.90f, 0.90f, 1f, 1f);
+            case "sizzle":
+                return new Color(1f, 0.86f, 0.72f, 1f);
+            default:
+                return normalTextColor;
+        }
     }
 }

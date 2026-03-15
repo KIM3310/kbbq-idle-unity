@@ -8,6 +8,7 @@ public class UpgradeModalView : MonoBehaviour
     private GameManager gameManager;
     private RectTransform root;
     private RectTransform card;
+    private Image cardImage;
     private Text titleText;
     private Text bodyText;
     private Text hintText;
@@ -100,24 +101,27 @@ public class UpgradeModalView : MonoBehaviour
 
         if (titleText != null)
         {
-            titleText.text = currentEntry.displayName;
+            var badge = string.IsNullOrEmpty(currentEntry.badgeText) ? "UPGRADE" : currentEntry.badgeText;
+            titleText.text = badge + "\n" + currentEntry.displayName;
         }
 
         if (bodyText != null)
         {
             var category = string.IsNullOrEmpty(currentEntry.category) ? "General" : currentEntry.category;
+            var impact = string.IsNullOrEmpty(currentEntry.impactText) ? "Sharper service rhythm." : currentEntry.impactText;
             bodyText.text =
-                "Level " + currentEntry.level + "\n" +
-                "Cost " + FormatUtil.FormatCurrency(currentEntry.cost) + "\n" +
-                "Category " + category + "\n" +
-                "Efficiency " + currentEntry.score.ToString("0.000");
+                impact + "\n\n" +
+                "Current level " + currentEntry.level + "\n" +
+                "Category " + category.ToUpperInvariant() + "\n" +
+                "Kitchen value score " + currentEntry.score.ToString("0.000") + "\n" +
+                "Price " + FormatUtil.FormatCurrency(currentEntry.cost);
         }
 
         if (hintText != null)
         {
             hintText.text = currentEntry.affordable
-                ? "Purchase applies instantly and upgrades grill visuals."
-                : "Insufficient funds. Build cash flow first.";
+                ? "Buy now to push service flow, grill heat, or payout immediately."
+                : "Not enough cash yet. Push today's special, combo, or fever before buying.";
             hintText.color = currentEntry.affordable
                 ? new Color(0.90f, 0.86f, 0.74f, 0.96f)
                 : new Color(0.94f, 0.68f, 0.58f, 1f);
@@ -126,6 +130,18 @@ public class UpgradeModalView : MonoBehaviour
         if (buyButton != null)
         {
             buyButton.interactable = currentEntry.affordable;
+            var buyLabel = buyButton.GetComponentInChildren<Text>(true);
+            if (buyLabel != null)
+            {
+                buyLabel.text = currentEntry.affordable
+                    ? "BUY FOR " + FormatUtil.FormatCurrency(currentEntry.cost)
+                    : "NEED " + FormatUtil.FormatCurrency(currentEntry.cost);
+            }
+        }
+
+        if (cardImage != null)
+        {
+            cardImage.color = ResolveCardColor(currentEntry.category);
         }
 
         if (previewImage != null)
@@ -182,7 +198,7 @@ public class UpgradeModalView : MonoBehaviour
         card.pivot = new Vector2(0.5f, 0.5f);
         card.sizeDelta = new Vector2(420f, 360f);
         card.anchoredPosition = Vector2.zero;
-        var cardImage = card.GetComponent<Image>();
+        cardImage = card.GetComponent<Image>();
         cardImage.color = new Color(0.20f, 0.12f, 0.09f, 0.98f);
 
         titleText = CreateText("Title", card, 24, TextAnchor.UpperCenter, new Color(0.98f, 0.90f, 0.70f, 1f));
@@ -204,6 +220,26 @@ public class UpgradeModalView : MonoBehaviour
         closeButton = CreateButton("CloseButton", card, "CLOSE", new Color(0.40f, 0.22f, 0.16f, 1f));
         SetRect(closeButton.transform as RectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-84f, -44f), new Vector2(-20f, -10f));
         closeButton.onClick.AddListener(Hide);
+    }
+
+    private Color ResolveCardColor(string category)
+    {
+        var normalized = string.IsNullOrEmpty(category) ? string.Empty : category.ToLowerInvariant();
+        switch (normalized)
+        {
+            case "income":
+                return new Color(0.26f, 0.16f, 0.10f, 0.98f);
+            case "menu":
+                return new Color(0.28f, 0.14f, 0.14f, 0.98f);
+            case "staff":
+                return new Color(0.20f, 0.18f, 0.12f, 0.98f);
+            case "service":
+                return new Color(0.18f, 0.15f, 0.22f, 0.98f);
+            case "sizzle":
+                return new Color(0.30f, 0.13f, 0.08f, 0.98f);
+            default:
+                return new Color(0.20f, 0.12f, 0.09f, 0.98f);
+        }
     }
 
     private void BuildSprites()

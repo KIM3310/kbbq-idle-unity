@@ -1,9 +1,13 @@
 public enum TutorialStep
 {
     None,
-    TapBoost,
-    BuyUpgrade,
+    BuyMeat,
+    LoadGrill,
+    FlipMeat,
+    CollectMeat,
     ServeCustomer,
+    BuyUpgrade,
+    TapBoost,
     Complete
 }
 
@@ -18,8 +22,12 @@ public class TutorialSystem
     {
         this.gameManager = gameManager;
         this.uiController = uiController;
-        step = completed ? TutorialStep.Complete : TutorialStep.TapBoost;
+        step = completed ? TutorialStep.Complete : TutorialStep.BuyMeat;
     }
+
+    public bool IsActive => active && step != TutorialStep.Complete;
+    public TutorialStep CurrentStep => step;
+    public string CurrentPrompt => BuildPrompt(step);
 
     public void Start()
     {
@@ -34,14 +42,53 @@ public class TutorialSystem
         ShowStep();
     }
 
+    public void OnBuyMeat()
+    {
+        if (!active || step != TutorialStep.BuyMeat)
+        {
+            return;
+        }
+        step = TutorialStep.LoadGrill;
+        ShowStep();
+    }
+
+    public void OnLoadMeat()
+    {
+        if (!active || step != TutorialStep.LoadGrill)
+        {
+            return;
+        }
+        step = TutorialStep.FlipMeat;
+        ShowStep();
+    }
+
+    public void OnFlip()
+    {
+        if (!active || step != TutorialStep.FlipMeat)
+        {
+            return;
+        }
+        step = TutorialStep.CollectMeat;
+        ShowStep();
+    }
+
+    public void OnCollect()
+    {
+        if (!active || step != TutorialStep.CollectMeat)
+        {
+            return;
+        }
+        step = TutorialStep.ServeCustomer;
+        ShowStep();
+    }
+
     public void OnBoost()
     {
         if (!active || step != TutorialStep.TapBoost)
         {
             return;
         }
-        step = TutorialStep.BuyUpgrade;
-        ShowStep();
+        Complete();
     }
 
     public void OnUpgrade()
@@ -50,7 +97,7 @@ public class TutorialSystem
         {
             return;
         }
-        step = TutorialStep.ServeCustomer;
+        step = TutorialStep.TapBoost;
         ShowStep();
     }
 
@@ -60,7 +107,8 @@ public class TutorialSystem
         {
             return;
         }
-        Complete();
+        step = TutorialStep.BuyUpgrade;
+        ShowStep();
     }
 
     public void Skip()
@@ -74,18 +122,29 @@ public class TutorialSystem
         {
             return;
         }
+        uiController.ShowTutorial(BuildPrompt(step));
+    }
 
-        switch (step)
+    private string BuildPrompt(TutorialStep tutorialStep)
+    {
+        switch (tutorialStep)
         {
-            case TutorialStep.TapBoost:
-                uiController.ShowTutorial("지글 부스트 버튼을 눌러보세요!");
-                break;
-            case TutorialStep.BuyUpgrade:
-                uiController.ShowTutorial("업그레이드를 하나 구매하세요!");
-                break;
+            case TutorialStep.BuyMeat:
+                return "1/7 오늘의 첫 손님을 맞이할 준비입니다.\nBUY +1로 고기를 먼저 채워두세요.";
+            case TutorialStep.LoadGrill:
+                return "2/7 빈 그릴 슬롯에 고기를 올리세요.\n기본 루프는 올리기 -> 뒤집기 -> 수거 -> 서빙입니다.";
+            case TutorialStep.FlipMeat:
+                return "3/7 타이밍이 오면 뒤집으세요.\n너무 이르면 육즙이 부족하고, 너무 늦으면 탑니다.";
+            case TutorialStep.CollectMeat:
+                return "4/7 노릇해진 고기를 수거해 cooked 재고를 만드세요.";
             case TutorialStep.ServeCustomer:
-                uiController.ShowTutorial("서빙 버튼을 눌러 손님을 서빙하고 콤보를 쌓아보세요!");
-                break;
+                return "5/7 손님에게 바로 서빙하세요.\n빠르게 서빙할수록 팁과 콤보가 커집니다.";
+            case TutorialStep.BuyUpgrade:
+                return "6/7 업그레이드로 회전율을 올리세요.\n초반엔 service/staff 계열이 체감이 큽니다.";
+            case TutorialStep.TapBoost:
+                return "7/7 마지막으로 지글 부스트를 써보세요.\n피크타임을 버티는 핵심 버튼입니다.";
+            default:
+                return string.Empty;
         }
     }
 

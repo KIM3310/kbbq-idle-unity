@@ -8,20 +8,20 @@ public static class DefaultDataFactory
         return new List<MenuItem>
         {
             CreateMenuItem("pork_belly", "Pork Belly", 1, 1.2f, 1.0f),
-            CreateMenuItem("pork_shoulder", "Pork Shoulder", 2, 1.5f, 1.05f),
-            CreateMenuItem("rib", "Pork Rib", 3, 2.0f, 1.1f),
-            CreateMenuItem("spicy_pork", "Spicy Pork", 4, 2.6f, 1.15f),
-            CreateMenuItem("kimchi_stew", "Kimchi Stew", 5, 3.0f, 1.18f),
-            CreateMenuItem("beef_brisket", "Beef Brisket", 6, 3.8f, 1.2f),
-            CreateMenuItem("premium_beef", "Premium Beef", 7, 4.5f, 1.22f),
-            CreateMenuItem("signature_sauce", "Signature Sauce", 8, 5.5f, 1.25f),
-            CreateMenuItem("cold_noodle", "Cold Noodle", 9, 6.5f, 1.28f),
-            CreateMenuItem("seafood_set", "Seafood Set", 10, 8.0f, 1.3f),
-            CreateMenuItem("mushroom_platter", "Mushroom Platter", 11, 9.5f, 1.32f),
-            CreateMenuItem("rice_set", "Rice Set", 12, 11.0f, 1.35f),
-            CreateMenuItem("soju", "Soju", 13, 12.5f, 1.38f),
-            CreateMenuItem("makgeolli", "Makgeolli", 14, 14.0f, 1.4f),
-            CreateMenuItem("bingsu", "Bingsu", 15, 16.0f, 1.45f)
+            CreateMenuItem("pork_shoulder", "Pork Shoulder", 2, 1.6f, 1.06f),
+            CreateMenuItem("rib", "Pork Rib", 3, 2.2f, 1.12f),
+            CreateMenuItem("spicy_pork", "Spicy Pork", 3, 2.9f, 1.16f),
+            CreateMenuItem("kimchi_stew", "Kimchi Stew", 4, 3.4f, 1.20f),
+            CreateMenuItem("beef_brisket", "Beef Brisket", 5, 4.1f, 1.23f),
+            CreateMenuItem("premium_beef", "Premium Beef", 6, 4.9f, 1.26f),
+            CreateMenuItem("signature_sauce", "Signature Sauce", 7, 6.0f, 1.29f),
+            CreateMenuItem("cold_noodle", "Cold Noodle", 8, 7.0f, 1.31f),
+            CreateMenuItem("seafood_set", "Seafood Set", 9, 8.5f, 1.34f),
+            CreateMenuItem("mushroom_platter", "Mushroom Platter", 10, 10.2f, 1.36f),
+            CreateMenuItem("rice_set", "Rice Set", 11, 11.8f, 1.39f),
+            CreateMenuItem("soju", "Soju", 12, 13.8f, 1.42f),
+            CreateMenuItem("makgeolli", "Makgeolli", 13, 15.2f, 1.45f),
+            CreateMenuItem("bingsu", "Bingsu", 14, 17.8f, 1.50f)
         };
     }
 
@@ -29,15 +29,15 @@ public static class DefaultDataFactory
     {
         return new List<UpgradeData>
         {
-            CreateUpgrade("grill_upgrade", "Grill Upgrade", "income", "", 10f, 1.3f, 0.06f),
-            CreateUpgrade("ventilation", "Ventilation", "income", "", 25f, 1.28f, 0.05f),
-            CreateUpgrade("sizzle_master", "Sizzle Master", "sizzle", "", 15f, 1.25f, 0.03f),
-            CreateUpgrade("staff_training", "Staff Training", "staff", "", 18f, 1.26f, 0.04f),
-            CreateUpgrade("service_flow", "Service Flow", "service", "", 22f, 1.27f, 0.05f),
-            CreateUpgrade("pork_belly_recipe", "Pork Belly Recipe", "menu", "pork_belly", 12f, 1.32f, 0.08f),
-            CreateUpgrade("beef_brisket_recipe", "Beef Brisket Recipe", "menu", "beef_brisket", 18f, 1.33f, 0.08f),
-            CreateUpgrade("premium_beef_recipe", "Premium Beef Recipe", "menu", "premium_beef", 30f, 1.35f, 0.09f),
-            CreateUpgrade("signature_sauce_recipe", "Signature Sauce Recipe", "menu", "signature_sauce", 35f, 1.36f, 0.1f)
+            CreateUpgrade("grill_upgrade", "Grill Upgrade", "income", "", 8f, 1.27f, 0.07f),
+            CreateUpgrade("ventilation", "Ventilation", "income", "", 20f, 1.25f, 0.05f),
+            CreateUpgrade("sizzle_master", "Sizzle Master", "sizzle", "", 12f, 1.22f, 0.04f),
+            CreateUpgrade("staff_training", "Staff Training", "staff", "", 15f, 1.24f, 0.05f),
+            CreateUpgrade("service_flow", "Service Flow", "service", "", 18f, 1.25f, 0.06f),
+            CreateUpgrade("pork_belly_recipe", "Pork Belly Recipe", "menu", "pork_belly", 10f, 1.28f, 0.09f),
+            CreateUpgrade("beef_brisket_recipe", "Beef Brisket Recipe", "menu", "beef_brisket", 16f, 1.30f, 0.09f),
+            CreateUpgrade("premium_beef_recipe", "Premium Beef Recipe", "menu", "premium_beef", 26f, 1.32f, 0.10f),
+            CreateUpgrade("signature_sauce_recipe", "Signature Sauce Recipe", "menu", "signature_sauce", 30f, 1.34f, 0.11f)
         };
     }
 
@@ -46,10 +46,10 @@ public static class DefaultDataFactory
         return new List<StoreTier>
         {
             CreateStoreTier("alley", "Alley", 1, 1.0f),
-            CreateStoreTier("hongdae", "Hongdae", 4, 1.3f),
-            CreateStoreTier("gangnam", "Gangnam", 7, 1.6f),
-            CreateStoreTier("hanok", "Hanok", 10, 1.95f),
-            CreateStoreTier("global", "Global", 14, 2.4f)
+            CreateStoreTier("hongdae", "Hongdae", 3, 1.28f),
+            CreateStoreTier("gangnam", "Gangnam", 6, 1.60f),
+            CreateStoreTier("hanok", "Hanok", 9, 1.96f),
+            CreateStoreTier("global", "Global", 13, 2.45f)
         };
     }
 
@@ -57,9 +57,9 @@ public static class DefaultDataFactory
     {
         return new List<CustomerType>
         {
-            CreateCustomerType("local", "Local", 10f, 1.0f),
-            CreateCustomerType("tourist", "Tourist", 12f, 1.1f),
-            CreateCustomerType("foodie", "Foodie", 8f, 1.2f)
+            CreateCustomerType("local", "Local", 10.5f, 1.0f),
+            CreateCustomerType("tourist", "Tourist", 12.5f, 1.14f),
+            CreateCustomerType("foodie", "Foodie", 8.4f, 1.24f)
         };
     }
 
@@ -81,12 +81,12 @@ public static class DefaultDataFactory
     {
         var tuning = ScriptableObject.CreateInstance<EconomyTuning>();
         tuning.maxLevel = 100;
-        tuning.baseRequirement = 50.0;
-        tuning.requirementGrowth = 1.28;
-        tuning.baseIncomePerSec = 1.0;
-        tuning.incomeGrowth = 1.22;
-        tuning.baseUpgradeCost = 10.0;
-        tuning.upgradeGrowth = 1.3;
+        tuning.baseRequirement = 42.0;
+        tuning.requirementGrowth = 1.24;
+        tuning.baseIncomePerSec = 1.18;
+        tuning.incomeGrowth = 1.20;
+        tuning.baseUpgradeCost = 8.0;
+        tuning.upgradeGrowth = 1.26;
         tuning.RebuildTable();
         return tuning;
     }

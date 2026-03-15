@@ -6,7 +6,7 @@ public class SaveSystem
 {
     private const string SaveKey = "KBBQ_IDLE_SAVE";
     private const string SaveChecksumKey = "KBBQ_IDLE_SAVE_SHA256";
-    private const int CurrentVersion = 2;
+    private const int CurrentVersion = 6;
 
     public void Save(SaveData data)
     {

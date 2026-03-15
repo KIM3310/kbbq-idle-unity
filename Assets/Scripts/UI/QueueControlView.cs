@@ -12,13 +12,18 @@ public class QueueControlView : MonoBehaviour
     private readonly QueueCard[] queueCards = new QueueCard[MaxVisibleCards];
     private readonly Dictionary<string, Sprite> avatarCache = new Dictionary<string, Sprite>();
     private readonly Dictionary<string, Sprite> cutSpriteCache = new Dictionary<string, Sprite>();
+    private readonly float[] cardUrgency = new float[MaxVisibleCards];
+    private readonly float[] cardSpotlight = new float[MaxVisibleCards];
 
     private GameManager gameManager;
     private RectTransform root;
     private RectTransform runtimeRoot;
     private RectTransform cardsRoot;
     private Text summaryText;
+    private Text eventText;
     private Text helperText;
+    private Text serveButtonText;
+    private Text rushButtonText;
     private Text eatText;
     private Image eatAvatar;
     private Image eatSpark;
@@ -47,9 +52,11 @@ public class QueueControlView : MonoBehaviour
         public Image avatar;
         public Image bubble;
         public Image requestIcon;
+        public Text spotlightText;
         public Text bubbleText;
         public Text nameText;
         public Text timerText;
+        public Text rewardText;
         public Image patienceBack;
         public Image patienceFill;
     }
@@ -64,6 +71,7 @@ public class QueueControlView : MonoBehaviour
     private void Update()
     {
         LayoutCardsIfNeeded(false);
+        AnimateQueueCards();
 
         if (eatTimer <= 0f || eatAvatar == null)
         {
@@ -130,12 +138,14 @@ public class QueueControlView : MonoBehaviour
         {
             serveButton.onClick.RemoveAllListeners();
             serveButton.onClick.AddListener(HandleServe);
+            serveButtonText = serveButton.GetComponentInChildren<Text>(true);
         }
 
         if (rushButton != null)
         {
             rushButton.onClick.RemoveAllListeners();
             rushButton.onClick.AddListener(HandleRush);
+            rushButtonText = rushButton.GetComponentInChildren<Text>(true);
         }
     }
 
@@ -155,16 +165,54 @@ public class QueueControlView : MonoBehaviour
             card.root.gameObject.SetActive(has);
             if (!has)
             {
+                cardUrgency[i] = 0f;
+                cardSpotlight[i] = 0f;
                 continue;
             }
 
             var entry = queue[i];
             var remaining = Mathf.Max(0f, entry.patience - entry.waitTime);
             var patience = entry.patience > 0f ? Mathf.Clamp01(remaining / entry.patience) : 0f;
+            cardUrgency[i] = 1f - patience;
+            cardSpotlight[i] = entry.isCritic ? 1f : entry.isVip ? 0.82f : entry.isPartyTable ? 0.55f : 0f;
 
             if (card.nameText != null)
             {
                 card.nameText.text = ClipText(entry.customerName, 11);
+            }
+
+            if (card.spotlightText != null)
+            {
+                if (entry.isStoryGuest)
+                {
+                    card.spotlightText.text = string.IsNullOrEmpty(entry.storyGuestLabel)
+                        ? (entry.isBossGuest ? "RIVAL BOSS" : "STORY GUEST")
+                        : entry.storyGuestLabel;
+                    card.spotlightText.color = entry.isBossGuest
+                        ? new Color(1f, 0.94f, 0.68f, 1f)
+                        : entry.isFinaleGuest
+                        ? new Color(1f, 0.92f, 0.62f, 1f)
+                        : new Color(1f, 0.84f, 0.56f, 1f);
+                }
+                else if (entry.isCritic)
+                {
+                    card.spotlightText.text = "CRITIC TABLE";
+                    card.spotlightText.color = new Color(1f, 0.82f, 0.60f, 1f);
+                }
+                else if (entry.isVip)
+                {
+                    card.spotlightText.text = "VIP TABLE";
+                    card.spotlightText.color = new Color(1f, 0.90f, 0.56f, 1f);
+                }
+                else if (entry.isPartyTable)
+                {
+                    card.spotlightText.text = "GROUP ORDER";
+                    card.spotlightText.color = new Color(0.96f, 0.86f, 0.56f, 0.98f);
+                }
+                else
+                {
+                    card.spotlightText.text = string.Empty;
+                }
             }
 
             if (card.timerText != null)
@@ -175,7 +223,19 @@ public class QueueControlView : MonoBehaviour
 
             if (card.bubbleText != null)
             {
-                card.bubbleText.text = ClipText(entry.menuName, 11);
+                var highlightedOrder = entry.menuName != null && entry.menuName.Length > 0 && entry.isVip;
+                var customerTag = string.IsNullOrEmpty(entry.customerTypeId) ? string.Empty : entry.customerTypeId.ToUpperInvariant();
+                var portionTag = entry.requestedServings > 1 ? "x" + entry.requestedServings + " " : string.Empty;
+                var strictTag = entry.requiresExactCut ? "EXACT " : string.Empty;
+                var orderLabel = portionTag + strictTag + (highlightedOrder ? "HOT " + ClipText(entry.menuName, 8) : ClipText(entry.menuName, 11));
+                if (entry.isStoryGuest)
+                {
+                    card.bubbleText.text = "STORY · " + orderLabel;
+                }
+                else
+                {
+                    card.bubbleText.text = string.IsNullOrEmpty(customerTag) ? orderLabel : customerTag + " · " + orderLabel;
+                }
             }
 
             if (card.avatar != null)
@@ -195,16 +255,113 @@ public class QueueControlView : MonoBehaviour
                 card.patienceFill.fillAmount = patience;
                 card.patienceFill.color = Color.Lerp(new Color(0.90f, 0.22f, 0.18f, 1f), new Color(0.30f, 0.82f, 0.42f, 1f), patience);
             }
+
+            if (card.rewardText != null)
+            {
+                var rewardLine = "TIP x" + entry.tipMultiplier.ToString("0.00");
+                if (entry.isStoryGuest)
+                {
+                    rewardLine += entry.isBossGuest ? "  ·  BOSS" : entry.isFinaleGuest ? "  ·  FINALE" : "  ·  STORY";
+                    card.rewardText.color = entry.isBossGuest
+                        ? new Color(1f, 0.94f, 0.66f, 1f)
+                        : entry.isFinaleGuest
+                        ? new Color(1f, 0.90f, 0.58f, 1f)
+                        : new Color(1f, 0.84f, 0.58f, 1f);
+                }
+                else if (patience <= 0.28f)
+                {
+                    rewardLine += "  ·  PANIC";
+                    card.rewardText.color = new Color(1f, 0.66f, 0.54f, 1f);
+                }
+                else if (entry.isCritic || entry.isVip)
+                {
+                    rewardLine += "  ·  HIGH STAKES";
+                    card.rewardText.color = new Color(1f, 0.88f, 0.62f, 1f);
+                }
+                else
+                {
+                    card.rewardText.color = new Color(0.96f, 0.90f, 0.80f, 0.96f);
+                }
+                card.rewardText.text = rewardLine;
+            }
+
+            if (card.panel != null)
+            {
+                var customerType = string.IsNullOrEmpty(entry.customerTypeId) ? string.Empty : entry.customerTypeId.ToLowerInvariant();
+                card.panel.color = entry.isStoryGuest
+                    ? entry.isBossGuest
+                        ? new Color(0.72f, 0.34f, 0.14f, 0.99f)
+                        : entry.isFinaleGuest
+                        ? new Color(0.64f, 0.36f, 0.14f, 0.99f)
+                        : new Color(0.54f, 0.28f, 0.18f, 0.98f)
+                    : entry.isVip
+                    ? new Color(0.72f, 0.47f, 0.16f, 0.98f)
+                    : entry.isCritic
+                        ? new Color(0.58f, 0.24f, 0.18f, 0.98f)
+                        : entry.isPartyTable
+                            ? new Color(0.36f, 0.28f, 0.14f, 0.96f)
+                        : customerType == "foodie"
+                            ? new Color(0.44f, 0.18f, 0.22f, 0.96f)
+                            : customerType == "tourist"
+                                ? new Color(0.24f, 0.20f, 0.34f, 0.96f)
+                                : new Color(0.30f, 0.18f, 0.12f, 0.96f);
+            }
         }
 
         if (helperText != null)
         {
-            helperText.text = queueCount > 0
-                ? "Tap customer cards to see requested cut. Serve quickly for better combo/tips."
-                : "No customers waiting. Keep grilling to prepare for next wave.";
+            var front = queue != null && queue.Count > 0 ? queue[0] : null;
+            var hasVip = front != null && (front.isVip || front.isCritic);
+            if (front != null && front.isStoryGuest)
+            {
+                helperText.text = front.isBossGuest
+                    ? "Rival boss table seated. Exact timing and no panic."
+                    : front.isFinaleGuest
+                    ? "The finale table is seated. Precision first, panic never."
+                    : "A story guest has arrived. Treat this table like a scene, not a chore.";
+            }
+            else if (hasVip)
+            {
+                helperText.text = "A premium guest is at the front. Nail the timing for a high-tip showcase moment.";
+            }
+            else if (queueCount >= 4)
+            {
+                helperText.text = "Rush hour is building. Plate cooked meat first, then hit boost if the line keeps growing.";
+            }
+            else
+            {
+                helperText.text = queueCount > 0
+                    ? "Tap customer cards to check requested cuts. Fast serving builds combo, tips, and hype."
+                    : "No customers waiting. Restock and keep one grill cycle warm for the next wave.";
+            }
         }
 
+        UpdateActionButtons(queue);
+
         RefreshSummary();
+    }
+
+    private void AnimateQueueCards()
+    {
+        for (int i = 0; i < queueCards.Length; i++)
+        {
+            var card = queueCards[i];
+            if (card.root == null || !card.root.gameObject.activeSelf)
+            {
+                continue;
+            }
+
+            var urgency = Mathf.Clamp01(cardUrgency[i]);
+            var spotlight = Mathf.Clamp01(cardSpotlight[i]);
+            var pulse = 1f + Mathf.Sin(Time.unscaledTime * (2.2f + urgency * 8f + spotlight * 3f) + i) * (0.005f + urgency * 0.018f + spotlight * 0.012f);
+            card.root.localScale = new Vector3(pulse, pulse, 1f);
+
+            if (card.requestIcon != null)
+            {
+                var iconPulse = 1f + Mathf.Sin(Time.unscaledTime * (3.2f + spotlight * 4f) + i * 0.5f) * (0.04f + spotlight * 0.08f);
+                card.requestIcon.rectTransform.localScale = new Vector3(iconPulse, iconPulse, 1f);
+            }
+        }
     }
 
     public void RenderMetrics(QueueMetrics metrics, double currency)
@@ -247,6 +404,69 @@ public class QueueControlView : MonoBehaviour
         gameManager?.TriggerRushService();
     }
 
+    private void UpdateActionButtons(IReadOnlyList<CustomerQueueEntry> queue)
+    {
+        var front = queue != null && queue.Count > 0 ? queue[0] : null;
+        var hasVip = front != null && (front.isVip || front.isCritic);
+        var queueCount = queue != null ? queue.Count : 0;
+        var heavyPressure = queueCount >= 4;
+        var specialFront = front != null && (front.isVip || front.isCritic || front.isPartyTable);
+
+        if (serveButtonText != null)
+        {
+            serveButtonText.text = hasVip ? "SERVE VIP" : queueCount >= 4 ? "SERVE FAST" : "SERVE";
+            serveButtonText.fontStyle = FontStyle.Bold;
+        }
+        ApplyButtonTone(
+            serveButton,
+            hasVip
+                ? new Color(0.82f, 0.54f, 0.18f, 1f)
+                : heavyPressure
+                    ? new Color(0.78f, 0.28f, 0.18f, 1f)
+                    : new Color(0.58f, 0.24f, 0.16f, 1f));
+
+        if (rushButtonText != null)
+        {
+            var showcase = gameManager != null ? gameManager.GetRestaurantShowcaseUiState() : default;
+            if (showcase.title == "HOUSE SPECIAL")
+            {
+                rushButtonText.text = queueCount >= 4 ? "BOOST RUSH" : "BOOST";
+            }
+            else
+            {
+                rushButtonText.text = queueCount >= 4 ? "RUSH HOUR" : "HYPE UP";
+            }
+            rushButtonText.fontStyle = FontStyle.Bold;
+        }
+        ApplyButtonTone(
+            rushButton,
+            gameManager != null && gameManager.IsChefFeverRunning()
+                ? new Color(0.90f, 0.52f, 0.16f, 1f)
+                : specialFront
+                    ? new Color(0.66f, 0.28f, 0.20f, 1f)
+                    : new Color(0.42f, 0.18f, 0.14f, 1f));
+    }
+
+    private void ApplyButtonTone(Button button, Color color)
+    {
+        if (button == null)
+        {
+            return;
+        }
+
+        if (button.targetGraphic is Image image)
+        {
+            image.color = color;
+        }
+
+        var colors = button.colors;
+        colors.normalColor = color;
+        colors.highlightedColor = Color.Lerp(color, Color.white, 0.16f);
+        colors.pressedColor = Color.Lerp(color, Color.black, 0.14f);
+        colors.selectedColor = colors.highlightedColor;
+        button.colors = colors;
+    }
+
     private void RefreshSummary()
     {
         if (summaryText == null)
@@ -257,7 +477,15 @@ public class QueueControlView : MonoBehaviour
         summaryText.text = "$ " + FormatUtil.FormatCurrency(latestCurrency)
             + "   |   SERVED " + latestMetrics.totalServed
             + "   |   CUSTOMERS " + latestMetrics.totalArrived
-            + "   |   QUEUE " + latestMetrics.queueCount;
+            + "   |   QUEUE " + latestMetrics.queueCount
+            + "   |   " + latestMetrics.servedPerMinute.ToString("0") + "/MIN";
+
+        if (eventText != null && gameManager != null)
+        {
+            var showcase = gameManager.GetRestaurantShowcaseUiState();
+            eventText.text = showcase.title + " · " + showcase.secondary;
+            eventText.color = Color.Lerp(new Color(0.92f, 0.78f, 0.54f, 0.95f), new Color(1f, 0.95f, 0.72f, 1f), showcase.heat01);
+        }
     }
 
     private void BuildRuntimeVisual()
@@ -284,6 +512,9 @@ public class QueueControlView : MonoBehaviour
 
         summaryText = CreateText("SummaryText", runtimeRoot, 12, TextAnchor.MiddleLeft, new Color(0.97f, 0.93f, 0.82f, 1f));
         SetRect(summaryText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(44f, -42f), new Vector2(-8f, -8f));
+
+        eventText = CreateText("EventText", runtimeRoot, 11, TextAnchor.MiddleRight, new Color(1f, 0.86f, 0.58f, 0.95f));
+        SetRect(eventText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(170f, -42f), new Vector2(-10f, -8f));
 
         cardsRoot = new GameObject("CardsRoot", typeof(RectTransform)).GetComponent<RectTransform>();
         cardsRoot.SetParent(runtimeRoot, false);
@@ -338,6 +569,9 @@ public class QueueControlView : MonoBehaviour
         card.nameText = CreateText("Name", card.root, 11, TextAnchor.UpperLeft, new Color(0.95f, 0.91f, 0.82f, 1f));
         SetRect(card.nameText.rectTransform, new Vector2(0f, 1f), new Vector2(0f, 1f), new Vector2(56f, -20f), new Vector2(132f, -2f));
 
+        card.spotlightText = CreateText("Spotlight", card.root, 10, TextAnchor.UpperLeft, new Color(1f, 0.86f, 0.56f, 0.98f));
+        SetRect(card.spotlightText.rectTransform, new Vector2(0f, 1f), new Vector2(1f, 1f), new Vector2(136f, -20f), new Vector2(-92f, -2f));
+
         card.timerText = CreateText("Timer", card.root, 11, TextAnchor.UpperRight, new Color(1f, 0.76f, 0.62f, 1f));
         SetRect(card.timerText.rectTransform, new Vector2(1f, 1f), new Vector2(1f, 1f), new Vector2(-58f, -20f), new Vector2(-8f, -2f));
 
@@ -349,6 +583,9 @@ public class QueueControlView : MonoBehaviour
 
         card.bubbleText = CreateText("BubbleText", card.root, 11, TextAnchor.MiddleCenter, new Color(0.21f, 0.12f, 0.08f, 1f));
         SetRect(card.bubbleText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 1f), new Vector2(96f, 12f), new Vector2(-14f, -26f));
+
+        card.rewardText = CreateText("RewardText", card.root, 10, TextAnchor.LowerLeft, new Color(0.96f, 0.90f, 0.80f, 0.96f));
+        SetRect(card.rewardText.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(58f, 12f), new Vector2(-8f, 28f));
 
         card.patienceBack = CreateImage("PatienceBack", card.root, null, new Color(0.22f, 0.12f, 0.10f, 0.92f), false);
         SetRect(card.patienceBack.rectTransform, new Vector2(0f, 0f), new Vector2(1f, 0f), new Vector2(58f, 4f), new Vector2(-8f, 10f));

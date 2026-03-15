@@ -3,13 +3,24 @@ using UnityEngine;
 
 public class CustomerQueueEntry
 {
+    public string customerTypeId;
     public string customerName;
     public string menuId;
     public string menuName;
+    public string storyGuestId;
+    public string storyGuestLabel;
     public double menuBasePrice;
     public float patience;
     public float waitTime;
     public float tipMultiplier;
+    public bool isVip;
+    public bool isCritic;
+    public bool isPartyTable;
+    public bool isStoryGuest;
+    public bool isFinaleGuest;
+    public bool isBossGuest;
+    public int requestedServings;
+    public bool requiresExactCut;
 }
 
 public struct ServeResult
@@ -21,12 +32,26 @@ public struct ServeResult
     public string customerName;
     public string menuId;
     public string menuName;
+    public string storyGuestId;
+    public string storyGuestLabel;
     public double basePrice;
     public int comboCount;
+    public bool isVip;
+    public bool isCritic;
+    public bool isPartyTable;
+    public bool isStoryGuest;
+    public bool isFinaleGuest;
+    public bool isBossGuest;
+    public int requestedServings;
+    public bool requiresExactCut;
 }
 
 public class CustomerSystem
 {
+    private const float VipChance = 0.08f;
+    private const float CriticChance = 0.06f;
+    private const float RegularGroupChance = 0.10f;
+
     private readonly List<CustomerType> customers = new List<CustomerType>();
     private readonly List<CustomerQueueEntry> queue = new List<CustomerQueueEntry>();
     private readonly Queue<ServeSample> serveSamples = new Queue<ServeSample>();
@@ -41,6 +66,10 @@ public class CustomerSystem
     private float rushMultiplier = 1f;
     private float spawnRateMultiplier = 1f;
     private float serviceRateMultiplier = 1f;
+    private float eventSpawnMultiplier = 1f;
+    private float eventPatienceMultiplier = 1f;
+    private float eventTipMultiplier = 1f;
+    private float eventVipChanceBonus = 0f;
     private float runtime = 0f;
     private float serveWaitSum = 0f;
     private int comboCount = 0;
@@ -59,6 +88,7 @@ public class CustomerSystem
     public int ComboCount => comboCount;
     public float ComboTimeRemaining => comboTimer;
     public float ComboDuration => comboDuration;
+    public bool IsRushActive => rushTimer > 0f;
 
     public float GetComboMultiplier()
     {
@@ -147,8 +177,18 @@ public class CustomerSystem
         result.customerName = served.customerName;
         result.menuId = served.menuId;
         result.menuName = served.menuName;
+        result.storyGuestId = served.storyGuestId;
+        result.storyGuestLabel = served.storyGuestLabel;
         result.basePrice = served.menuBasePrice;
         result.comboCount = comboCount;
+        result.isVip = served.isVip;
+        result.isCritic = served.isCritic;
+        result.isPartyTable = served.isPartyTable;
+        result.isStoryGuest = served.isStoryGuest;
+        result.isFinaleGuest = served.isFinaleGuest;
+        result.isBossGuest = served.isBossGuest;
+        result.requestedServings = Mathf.Max(1, served.requestedServings);
+        result.requiresExactCut = served.requiresExactCut;
         totalServed++;
         return result;
     }
@@ -163,6 +203,14 @@ public class CustomerSystem
         serviceRateMultiplier = Mathf.Clamp(value, 0.25f, 3f);
     }
 
+    public void SetLiveEventModifiers(float spawnMultiplier, float patienceMultiplier, float tipMultiplier, float vipChanceBonus)
+    {
+        eventSpawnMultiplier = Mathf.Clamp(spawnMultiplier, 0.5f, 2.5f);
+        eventPatienceMultiplier = Mathf.Clamp(patienceMultiplier, 0.6f, 1.5f);
+        eventTipMultiplier = Mathf.Clamp(tipMultiplier, 0.8f, 2.2f);
+        eventVipChanceBonus = Mathf.Clamp01(vipChanceBonus);
+    }
+
     public void SetAutoServeEnabled(bool enabled)
     {
         autoServeEnabled = enabled;
@@ -171,6 +219,37 @@ public class CustomerSystem
     public CustomerQueueEntry PeekNext()
     {
         return queue.Count > 0 ? queue[0] : null;
+    }
+
+    public bool EnqueuePriorityGuest(CustomerQueueEntry entry)
+    {
+        if (entry == null || queue.Count >= maxQueue)
+        {
+            return false;
+        }
+
+        queue.Insert(0, entry);
+        totalArrived++;
+        return true;
+    }
+
+    public bool HasStoryGuest(string storyGuestId)
+    {
+        if (string.IsNullOrEmpty(storyGuestId))
+        {
+            return false;
+        }
+
+        for (int i = 0; i < queue.Count; i++)
+        {
+            var entry = queue[i];
+            if (entry != null && string.Equals(entry.storyGuestId, storyGuestId, System.StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public QueueMetrics GetMetrics()
@@ -229,7 +308,7 @@ public class CustomerSystem
             }
 
             var satisfactionFactor = Mathf.Lerp(1.25f, 0.65f, satisfaction);
-            var spawnMultiplier = Mathf.Max(0.25f, spawnRateMultiplier);
+            var spawnMultiplier = Mathf.Max(0.25f, spawnRateMultiplier * eventSpawnMultiplier);
             spawnTimer = (baseSpawnInterval * satisfactionFactor * Random.Range(0.85f, 1.2f)) / spawnMultiplier;
         }
 
@@ -267,9 +346,11 @@ public class CustomerSystem
     private CustomerQueueEntry GenerateEntry(MenuSystem menuSystem)
     {
         var customer = customers.Count > 0 ? customers[Random.Range(0, customers.Count)] : null;
-        var menuItem = menuSystem != null ? menuSystem.GetRandomUnlockedItem() : null;
+        var customerTypeId = customer != null ? customer.id : string.Empty;
+        var menuItem = menuSystem != null ? menuSystem.GetPreferredUnlockedItem(customerTypeId) : null;
 
         var entry = new CustomerQueueEntry();
+        entry.customerTypeId = customerTypeId;
         entry.customerName = customer != null && !string.IsNullOrEmpty(customer.displayName) ? customer.displayName : "Guest";
         entry.menuId = menuItem != null ? menuItem.id : "";
         entry.menuName = menuItem != null && !string.IsNullOrEmpty(menuItem.displayName) ? menuItem.displayName : "BBQ Set";
@@ -277,7 +358,46 @@ public class CustomerSystem
         entry.patience = customer != null ? Mathf.Max(3f, customer.patience) : 10f;
         entry.waitTime = 0f;
         entry.tipMultiplier = customer != null ? Mathf.Max(0.8f, customer.tipMultiplier) : 1f;
+        entry.requestedServings = 1;
+        entry.requiresExactCut = false;
+        entry.patience *= eventPatienceMultiplier;
+        entry.tipMultiplier *= eventTipMultiplier;
+        ApplyGuestFlavor(entry);
         return entry;
+    }
+
+    private void ApplyGuestFlavor(CustomerQueueEntry entry)
+    {
+        var vipChance = Mathf.Clamp01(VipChance + eventVipChanceBonus);
+        var criticChance = Mathf.Clamp01(CriticChance + eventVipChanceBonus * 0.8f);
+        var roll = Random.value;
+        if (roll < vipChance)
+        {
+            entry.isVip = true;
+            entry.customerName = "VIP " + entry.customerName;
+            entry.tipMultiplier *= 1.75f;
+            entry.patience *= 0.88f;
+            return;
+        }
+
+        if (roll < vipChance + criticChance)
+        {
+            entry.isCritic = true;
+            entry.customerName = "Critic " + entry.customerName;
+            entry.tipMultiplier *= 1.45f;
+            entry.patience *= 0.82f;
+            entry.requiresExactCut = true;
+            return;
+        }
+
+        if (roll < VipChance + CriticChance + RegularGroupChance)
+        {
+            entry.isPartyTable = true;
+            entry.customerName = "Table 2 " + entry.customerName;
+            entry.tipMultiplier *= 1.20f;
+            entry.patience *= 1.12f;
+            entry.requestedServings = 2;
+        }
     }
 
     private void UpdateComboTimer(float dt)
