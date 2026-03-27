@@ -1,0 +1,32 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "kbbq-idle-backend"
+version = "0.1.0"
+description = "Optional backend service for KBBQ Idle WebGL review, telemetry, and ops surfaces."
+readme = "server/README.md"
+requires-python = ">=3.11"
+authors = [{ name = "Kim" }]
+license = { text = "MIT" }
+dependencies = [
+  "fastapi==0.121.3",
+  "uvicorn[standard]==0.30.6",
+  "pydantic==2.12.5",
+  "python-dotenv==1.0.1",
+  "httpx==0.28.1",
+  "pytest==8.3.5"
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==8.3.5"
+]
+
+[tool.setuptools.packages.find]
+include = ["server*"]
+
+[tool.pytest.ini_options]
+testpaths = ["server/tests"]
+addopts = "-q"

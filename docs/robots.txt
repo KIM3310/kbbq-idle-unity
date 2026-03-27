@@ -1,0 +1,7 @@
+User-agent: Mediapartners-Google
+Allow: /
+
+User-agent: *
+Allow: /
+
+Sitemap: https://kbbq-idle-unity.pages.dev/sitemap.xml

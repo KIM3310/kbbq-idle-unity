@@ -1,0 +1,1446 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="KBBQ Idle | Playable WebGL">
+    <meta property="og:description" content="Unity WebGL idle tycoon game about running a K-BBQ restaurant with economy, progression, offline earnings, and prestige.">
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="KBBQ Idle | Playable WebGL">
+    <meta name="twitter:description" content="Unity WebGL idle tycoon game about running a K-BBQ restaurant with economy, progression, offline earnings, and prestige."><meta name="google-adsense-account" content="ca-pub-4973160293737562" />
+    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4973160293737562"
+     crossorigin="anonymous"></script>
+    <title>KBBQ Idle | Playable WebGL</title>
+    <meta name="description" content="Play KBBQ Idle on Cloudflare Pages with optional backend integrations and policy-ready site sections." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Silkscreen:wght@400;700&display=swap" rel="stylesheet" />
+    <style>
+      :root {
+        --bg:#1a120f;
+        --bg2:#281714;
+        --card:#221814;
+        --line:#5c3a29;
+        --ink:#f7e5c7;
+        --muted:#caaf88;
+        --accent:#e86a2f;
+        --accent-soft:#ffb25a;
+      }
+      * { box-sizing:border-box; }
+      body {
+        margin:0;
+        font-family: "Silkscreen", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+        color:var(--ink);
+        background:
+          radial-gradient(circle at 1px 1px, rgba(255, 182, 99, 0.12) 1px, transparent 0) 0 0/16px 16px,
+          linear-gradient(160deg, var(--bg) 0%, var(--bg2) 100%);
+      }
+      header {
+        padding:14px 20px;
+        background:rgba(20, 13, 11, 0.86);
+        border-bottom:1px solid var(--line);
+        display:flex;
+        gap:14px;
+        flex-wrap:wrap;
+        align-items:center;
+        position:sticky;
+        top:0;
+        z-index:5;
+        backdrop-filter: blur(6px);
+      }
+      header a { color:var(--accent-soft); text-decoration:none; font-size:12px; letter-spacing:.4px; }
+      .wrap { max-width:1320px; margin:0 auto; padding:22px 14px 30px; display:grid; gap:14px; }
+      .card {
+        border:1px solid var(--line);
+        background:linear-gradient(180deg, #2a1a15 0%, #221713 100%);
+        border-radius:12px;
+        padding:14px;
+        box-shadow: 0 12px 26px rgba(0,0,0,.30);
+      }
+      .hero-grid {
+        display:grid;
+        grid-template-columns: 1.2fr 0.8fr;
+        gap:14px;
+      }
+      .mini-cards {
+        display:grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap:10px;
+        margin-top:12px;
+      }
+      .mini-card {
+        border:1px solid var(--line);
+        border-radius:10px;
+        background:#2c1d18;
+        padding:12px;
+      }
+      .mini-card strong {
+        display:block;
+        margin-bottom:8px;
+        color:var(--accent-soft);
+        font-size:12px;
+      }
+      h1,h2 { margin:0 0 10px; }
+      h1 { font-size:24px; color:var(--accent-soft); letter-spacing:.8px; }
+      h2 { font-size:18px; color:var(--accent-soft); }
+      p,li { color:var(--muted); line-height:1.6; font-size:12px; }
+      .playbox { display:grid; gap:12px; }
+      .toolbar { display:flex; gap:8px; flex-wrap:wrap; }
+      input,button {
+        border-radius:8px;
+        border:1px solid var(--line);
+        padding:10px 12px;
+        font-size:12px;
+        font-family: inherit;
+        color:var(--ink);
+        background:#2c1d18;
+      }
+      input { min-width:220px; }
+      button {
+        background:linear-gradient(180deg, #6d2f18 0%, #542416 100%);
+        cursor:pointer;
+        transition: transform .08s ease, filter .15s ease;
+      }
+      button:hover { filter:brightness(1.1); }
+      button:active { transform:translateY(1px); }
+      #unityContainer {
+        width:100%;
+        min-height:0;
+        aspect-ratio: 16 / 10;
+        max-height: 78vh;
+        border:1px solid var(--line);
+        border-radius:10px;
+        background:
+          radial-gradient(circle at top, rgba(232, 106, 47, 0.18), transparent 42%),
+          linear-gradient(180deg, #120c0a 0%, #100b09 100%);
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        overflow:hidden;
+        position:relative;
+      }
+      #unityContainer::before {
+        content:"";
+        position:absolute;
+        inset:0;
+        pointer-events:none;
+        border:2px solid rgba(255, 178, 90, .25);
+        border-radius:10px;
+        box-shadow: inset 0 0 40px rgba(0,0,0,.35);
+      }
+      .placeholder-grid {
+        position:relative;
+        z-index:1;
+        width:min(100%, 980px);
+        display:grid;
+        grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
+        gap:14px;
+        padding:18px;
+      }
+      .placeholder-panel,
+      .placeholder-list {
+        border:1px solid rgba(255, 178, 90, .18);
+        border-radius:12px;
+        background:rgba(33, 22, 18, .92);
+        box-shadow:0 10px 24px rgba(0,0,0,.28);
+      }
+      .placeholder-panel { padding:16px; }
+      .placeholder-list { padding:14px 16px; }
+      .placeholder-eyebrow {
+        display:inline-flex;
+        align-items:center;
+        gap:8px;
+        padding:6px 10px;
+        border-radius:999px;
+        border:1px solid rgba(255, 178, 90, .28);
+        background:rgba(255, 178, 90, .08);
+        color:var(--accent-soft);
+        font-size:11px;
+        letter-spacing:.4px;
+        text-transform:uppercase;
+      }
+      .placeholder-title {
+        margin:14px 0 8px;
+        font-size:22px;
+        color:var(--ink);
+      }
+      .placeholder-copy {
+        margin:0;
+        color:var(--muted);
+        line-height:1.7;
+        font-size:12px;
+      }
+      .placeholder-actions {
+        display:flex;
+        flex-wrap:wrap;
+        gap:10px;
+        margin-top:14px;
+      }
+      .placeholder-badges,
+      .placeholder-summary,
+      .placeholder-signals {
+        display:flex;
+        flex-wrap:wrap;
+        gap:8px;
+      }
+      .placeholder-badges { margin-top:14px; }
+      .placeholder-badge {
+        display:inline-flex;
+        align-items:center;
+        gap:6px;
+        min-height:30px;
+        padding:7px 10px;
+        border:1px solid rgba(255, 178, 90, .16);
+        border-radius:999px;
+        background:rgba(255, 255, 255, .03);
+        color:var(--ink);
+        font-size:11px;
+      }
+      .placeholder-badge span { color:var(--muted); }
+      .placeholder-link {
+        display:inline-flex;
+        align-items:center;
+        justify-content:center;
+        min-height:38px;
+        padding:10px 12px;
+        border:1px solid var(--line);
+        border-radius:8px;
+        color:var(--ink);
+        background:#2c1d18;
+        text-decoration:none;
+        font-size:12px;
+      }
+      .placeholder-link--accent {
+        background:linear-gradient(180deg, #6d2f18 0%, #542416 100%);
+      }
+      .placeholder-list h3 {
+        margin:0 0 10px;
+        color:var(--accent-soft);
+        font-size:13px;
+      }
+      .placeholder-list ol {
+        margin:0;
+        padding-left:18px;
+      }
+      .placeholder-list li {
+        margin-bottom:10px;
+        color:var(--muted);
+        line-height:1.6;
+        font-size:12px;
+      }
+      .placeholder-list strong { color:var(--ink); }
+      .placeholder-summary {
+        margin-top:14px;
+        display:grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .placeholder-summary-card {
+        border:1px solid rgba(255, 178, 90, .14);
+        border-radius:10px;
+        padding:10px;
+        background:rgba(255,255,255,.02);
+      }
+      .placeholder-summary-card strong {
+        display:block;
+        margin-bottom:6px;
+        color:var(--accent-soft);
+        font-size:11px;
+        text-transform:uppercase;
+        letter-spacing:.35px;
+      }
+      .placeholder-summary-card p {
+        margin:0;
+        font-size:11px;
+        line-height:1.55;
+      }
+      .placeholder-signals {
+        margin-top:12px;
+        align-items:center;
+      }
+      .placeholder-signal {
+        display:inline-flex;
+        align-items:center;
+        gap:7px;
+        min-height:32px;
+        padding:7px 10px;
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:9px;
+        background:rgba(255,255,255,.02);
+        color:var(--muted);
+        font-size:11px;
+      }
+      .placeholder-signal::before {
+        content:"";
+        width:8px;
+        height:8px;
+        border-radius:999px;
+        background:#8d6c54;
+        box-shadow:0 0 0 3px rgba(141, 108, 84, .18);
+      }
+      .placeholder-signal[data-state="ok"]::before {
+        background:#71d99e;
+        box-shadow:0 0 0 3px rgba(113, 217, 158, .18);
+      }
+      .placeholder-signal[data-state="warn"]::before {
+        background:#ffb25a;
+        box-shadow:0 0 0 3px rgba(255, 178, 90, .18);
+      }
+      .placeholder-signal[data-state="missing"]::before {
+        background:#e86a2f;
+        box-shadow:0 0 0 3px rgba(232, 106, 47, .18);
+      }
+      .placeholder-filelist {
+        margin:12px 0 0;
+        padding:0;
+        list-style:none;
+        display:grid;
+        gap:8px;
+      }
+      .placeholder-filelist li {
+        margin:0;
+        padding:9px 10px;
+        border:1px solid rgba(255,255,255,.06);
+        border-radius:10px;
+        background:rgba(255,255,255,.02);
+        display:flex;
+        align-items:center;
+        justify-content:space-between;
+        gap:10px;
+      }
+      .placeholder-filelist code {
+        color:var(--ink);
+        font-size:11px;
+      }
+      .placeholder-filelist span {
+        color:var(--muted);
+        font-size:11px;
+        text-align:right;
+      }
+      .placeholder-note {
+        margin-top:12px;
+        padding-top:12px;
+        border-top:1px solid rgba(255,255,255,.08);
+        font-size:11px;
+        color:var(--muted);
+        line-height:1.6;
+      }
+      #unityCanvas { width:100%; height:100%; display:none; image-rendering:pixelated; position:relative; z-index:2; }
+      #status { font-size:12px; color:var(--accent-soft); }
+      #preflight { font-size:11px; color:var(--muted); line-height:1.5; }
+      #adStatus { margin:8px 2px 0; font-size:11px; color:var(--muted); }
+      .ad { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#1f1512; }
+      .reviewer-dock {
+        margin-top:12px;
+        border:1px solid rgba(255, 178, 90, .18);
+        border-radius:12px;
+        background:rgba(16, 11, 9, .58);
+        padding:12px;
+        display:grid;
+        gap:10px;
+      }
+      .reviewer-dock-head {
+        display:flex;
+        align-items:flex-start;
+        justify-content:space-between;
+        gap:10px;
+        flex-wrap:wrap;
+      }
+      .reviewer-dock-head strong {
+        color:var(--accent-soft);
+        font-size:12px;
+      }
+      .reviewer-dock-head p {
+        margin:4px 0 0;
+        font-size:11px;
+      }
+      .reviewer-dock-grid {
+        display:grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap:10px;
+      }
+      .reviewer-dock-card {
+        border:1px solid rgba(255,255,255,.08);
+        border-radius:10px;
+        background:rgba(255,255,255,.03);
+        padding:10px;
+      }
+      .reviewer-dock-card strong {
+        display:block;
+        margin-bottom:6px;
+        color:var(--accent-soft);
+        font-size:11px;
+        letter-spacing:.35px;
+        text-transform:uppercase;
+      }
+      .reviewer-dock-card p {
+        margin:0;
+        font-size:11px;
+        line-height:1.6;
+      }
+      .reviewer-dock-actions {
+        display:flex;
+        justify-content:space-between;
+        gap:10px;
+        align-items:center;
+        flex-wrap:wrap;
+      }
+      .reviewer-dock-actions p {
+        margin:0;
+        font-size:11px;
+      }
+      footer { max-width:1320px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:11px; }
+      @media (max-width: 900px) {
+        .hero-grid, .mini-cards, .placeholder-grid, .reviewer-dock-grid { grid-template-columns: 1fr; }
+        #unityContainer { aspect-ratio: 3 / 4; max-height: none; }
+        input { min-width: 160px; width: 100%; }
+        .toolbar { flex-direction: column; }
+      }
+    </style>
+<meta name="clarity-project-id" content="" />
+<meta name="gtm-container-id" content="" />
+<meta name="analytics-require-consent" content="false" />
+</head>
+  <body>
+    <header>
+      <a href="./index.html">Play</a>
+      <a href="./help.html">Help</a>
+      <a href="./about.html">About</a>
+      <a href="./privacy.html">Privacy</a>
+      <a href="./terms.html">Terms</a>
+      <a href="./contact.html">Contact</a>
+      <a href="./compliance.html">Compliance</a>
+      <a href="https://github.com/KIM3310/kbbq-idle-unity">GitHub</a>
+    </header>
+
+    <main class="wrap">
+      <section class="hero-grid">
+        <section class="card">
+          <h1>KBBQ Idle WebGL</h1>
+          <p>
+            Recruiter-facing proof path for a playable idle game: confirm the build is healthy, show the core economy
+            loop, then explain why the WebGL surface is safe to host publicly.
+          </p>
+          <div class="mini-cards">
+            <article class="mini-card">
+              <strong>01 · Build health</strong>
+              <p>Check the uploaded WebGL bundle before making any “playable” claim.</p>
+            </article>
+            <article class="mini-card">
+              <strong>02 · Core loop</strong>
+              <p>Explain grill → serve → upgrade → prestige as one clean economy story.</p>
+            </article>
+            <article class="mini-card">
+              <strong>03 · Public posture</strong>
+              <p>Use compliance and policy pages before discussing ads or rollout.</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="card">
+          <h2>First reviewer path</h2>
+          <ul>
+            <li><strong>1 · Frame it:</strong> confirm whether the build is intentionally absent or ready for preflight.</li>
+            <li><strong>2 · Verify:</strong> use Check Build Files before making any playable claim.</li>
+            <li><strong>3 · Defend:</strong> open Help / Compliance to explain rollout checks and public guardrails.</li>
+          </ul>
+        </section>
+      </section>
+
+      <section class="card playbox">
+        <p>
+          This primary panel stays intentionally docs-first until a verified Unity WebGL build is attached.
+          If a real build exists under <code>docs/Build/</code>, set the build name below
+          (for example <code>KBBQIdleWebGL</code>) and run preflight before starting it.
+        </p>
+        <div class="toolbar">
+          <input id="buildName" placeholder="Unity build base name" value="KBBQIdleWebGL" />
+          <button id="checkBtn">Check Build Files</button>
+          <button id="startBtn">Start Game</button>
+          <button id="fullscreenBtn">Fullscreen</button>
+          <button id="copyChecklistBtn">Copy Build Checklist</button>
+          <button id="copyBuildChecklistBtn">Copy Review Route</button>
+        </div>
+        <section class="reviewer-dock" aria-label="Reviewer handoff">
+          <div class="reviewer-dock-head">
+            <div>
+              <strong>Reviewer handoff</strong>
+              <p>Use this to narrate the current state without overstating whether the build is actually live.</p>
+            </div>
+            <button id="copyReviewerStateBtn" type="button">Copy Current State</button>
+          </div>
+          <div class="reviewer-dock-grid">
+            <article class="reviewer-dock-card">
+              <strong>Current mode</strong>
+              <p id="reviewerDockMode">Docs-first review</p>
+            </article>
+            <article class="reviewer-dock-card">
+              <strong>Playable claim</strong>
+              <p id="reviewerDockClaim">On hold until preflight and launch succeed.</p>
+            </article>
+            <article class="reviewer-dock-card">
+              <strong>Next move</strong>
+              <p id="reviewerDockNext">Run Check Build Files before any playable claim.</p>
+            </article>
+            <article class="reviewer-dock-card">
+              <strong>Evidence note</strong>
+              <p id="reviewerDockEvidence">Build verification and live launch are intentionally kept separate.</p>
+            </article>
+          </div>
+          <div class="reviewer-dock-actions">
+            <p id="reviewerDockStatus">Ready to summarize the current reviewer posture.</p>
+          </div>
+        </section>
+        <div id="status">Ready. Click Start Game after uploading WebGL build artifacts.</div>
+        <div id="preflight">Tip: if your build uses `.unityweb`/`.br`/`.gz`, this page auto-detects those formats. Keyboard: C check · S start · F fullscreen · B copy checklist · ? help.</div>
+        <div id="unityContainer">
+          <div id="placeholderState" class="placeholder-grid" aria-live="polite">
+            <section class="placeholder-panel">
+              <span id="placeholderEyebrow" class="placeholder-eyebrow">Reviewer placeholder · build not loaded</span>
+              <h3 id="placeholderTitle" class="placeholder-title">The playable build is intentionally not assumed to be live.</h3>
+              <p id="placeholderCopy" class="placeholder-copy">
+                Use this restrained pass to show reviewers what should happen next: verify the build bundle,
+                explain the loop with the docs pages, and keep rollout language honest until preflight passes.
+              </p>
+              <div class="placeholder-badges" aria-label="Reviewer guardrails">
+                <div class="placeholder-badge"><strong>Base</strong> <span id="placeholderBuildName">KBBQIdleWebGL</span></div>
+                <div class="placeholder-badge"><strong>Mode</strong> <span id="placeholderModeLabel">Docs-first review</span></div>
+                <div class="placeholder-badge"><strong>Claim</strong> <span id="placeholderClaimLabel">No fake playable promise</span></div>
+              </div>
+              <div class="placeholder-summary" aria-label="Reviewer snapshot">
+                <article class="placeholder-summary-card">
+                  <strong>What reviewers can assess now</strong>
+                  <p id="placeholderSummaryNow">Docs route, controls copy, economy explanation, and release posture can be reviewed before Unity is live.</p>
+                </article>
+                <article class="placeholder-summary-card">
+                  <strong>What still needs proof</strong>
+                  <p id="placeholderSummaryProof">A real playable claim still depends on preflight plus a clean WebGL launch.</p>
+                </article>
+                <article class="placeholder-summary-card">
+                  <strong>Next recommended move</strong>
+                  <p id="placeholderSummaryNext">Run Check Build Files, then use Help and About as the reviewer script if the bundle is absent.</p>
+                </article>
+                <article class="placeholder-summary-card">
+                  <strong>Evidence anchor</strong>
+                  <p id="placeholderSummaryEvidence">The panel below tracks manifest and core asset presence without pretending the game is already running.</p>
+                </article>
+              </div>
+              <div class="placeholder-actions">
+                <a class="placeholder-link placeholder-link--accent" href="./help.html">Open rollout checklist</a>
+                <a class="placeholder-link" href="./about.html">Open gameplay overview</a>
+                <a class="placeholder-link" href="./compliance.html">Open public guardrails</a>
+              </div>
+            </section>
+            <aside class="placeholder-list">
+              <h3>Reviewer evidence board</h3>
+              <div class="placeholder-signals" aria-label="Reviewer signals">
+                <div id="signalDocs" class="placeholder-signal" data-state="ok">Docs route ready</div>
+                <div id="signalBuild" class="placeholder-signal" data-state="warn">Build not yet checked</div>
+                <div id="signalClaim" class="placeholder-signal" data-state="warn">Playable claim on hold</div>
+              </div>
+              <ul class="placeholder-filelist" aria-label="Build file status">
+                <li><code>Build/build-manifest.json</code><span id="fileManifestStatus">Waiting for page check</span></li>
+                <li><code>Build/KBBQIdleWebGL.loader.js</code><span id="fileLoaderStatus">Verify before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.data*</code><span id="fileDataStatus">Verify before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.framework.js*</code><span id="fileFrameworkStatus">Verify before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.wasm*</code><span id="fileWasmStatus">Verify before launch</span></li>
+              </ul>
+              <h3 style="margin-top:14px;">What to verify before public rollout</h3>
+              <ol>
+                <li><strong>Bundle present:</strong> loader, data, framework, and wasm files resolve from <code>docs/Build/</code>.</li>
+                <li><strong>Reviewer route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
+                <li><strong>Public claims held back:</strong> do not call this page playable until preflight and launch both succeed.</li>
+              </ol>
+              <p class="placeholder-note">If build files are missing, this panel should remain as the honest primary state instead of reading like a broken black box.</p>
+            </aside>
+          </div>
+          <canvas id="unityCanvas" width="960" height="600"></canvas>
+        </div>
+      </section>
+
+      <section class="card">
+        <h2>Reviewer Path</h2>
+        <ul>
+          <li><strong>1.</strong> If the playable build is absent, keep the placeholder visible and narrate the review route instead of implying a live game.</li>
+          <li><strong>2.</strong> Run <em>Check Build Files</em> before claiming the WebGL surface is live.</li>
+          <li><strong>3.</strong> Open <a href="./help.html">Help</a> and <a href="./about.html">About</a> to explain controls, loop, and deployment posture.</li>
+          <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing monetization or public rollout.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>How to Play</h2>
+        <ul>
+          <li>Buy raw meat, place it on a grill slot, then flip and collect when it is ready.</li>
+          <li>Serve customers with cooked inventory to keep queue flow and income stable.</li>
+          <li>Use upgrades and boosts to speed up sizzle throughput and unlock better cuts.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Trust & Policy</h2>
+        <ul>
+          <li>Support: use <a href="https://github.com/KIM3310/kbbq-idle-unity/issues">GitHub Issues</a> for bug reports and account-service requests.</li>
+          <li>Privacy: gameplay/account telemetry is limited to service operation scope.</li>
+          <li>Terms: in-game economy values may change during balancing updates.</li>
+        </ul>
+      </section>
+
+      <section class="card">
+        <h2>Sponsored Slot</h2>
+        <div class="ad">
+          <ins class="adsbygoogle" style="display:block" data-ad-client="" data-ad-slot="" data-ad-format="auto" data-full-width-responsive="true"></ins>
+          <p id="adStatus">Ad slot stays disabled until a real publisher ID and slot are configured for the public build.</p>
+        </div>
+      </section>
+    </main>
+
+    <footer>
+      Cloudflare Pages output directory: <code>docs</code>
+      <br />
+      <span id="buildInfo">Build info: awaiting preflight.</span>
+    </footer>
+
+    <script>
+      const canvas = document.getElementById('unityCanvas');
+      const container = document.getElementById('unityContainer');
+      const placeholderState = document.getElementById('placeholderState');
+      const placeholderEyebrow = document.getElementById('placeholderEyebrow');
+      const placeholderTitle = document.getElementById('placeholderTitle');
+      const placeholderCopy = document.getElementById('placeholderCopy');
+      const placeholderBuildNameNode = document.getElementById('placeholderBuildName');
+      const placeholderModeLabelNode = document.getElementById('placeholderModeLabel');
+      const placeholderClaimLabelNode = document.getElementById('placeholderClaimLabel');
+      const placeholderSummaryNowNode = document.getElementById('placeholderSummaryNow');
+      const placeholderSummaryProofNode = document.getElementById('placeholderSummaryProof');
+      const placeholderSummaryNextNode = document.getElementById('placeholderSummaryNext');
+      const placeholderSummaryEvidenceNode = document.getElementById('placeholderSummaryEvidence');
+      const signalDocsNode = document.getElementById('signalDocs');
+      const signalBuildNode = document.getElementById('signalBuild');
+      const signalClaimNode = document.getElementById('signalClaim');
+      const fileManifestStatusNode = document.getElementById('fileManifestStatus');
+      const fileLoaderStatusNode = document.getElementById('fileLoaderStatus');
+      const fileDataStatusNode = document.getElementById('fileDataStatus');
+      const fileFrameworkStatusNode = document.getElementById('fileFrameworkStatus');
+      const fileWasmStatusNode = document.getElementById('fileWasmStatus');
+      const statusNode = document.getElementById('status');
+      const preflightNode = document.getElementById('preflight');
+      const buildInput = document.getElementById('buildName');
+      const checkBtn = document.getElementById('checkBtn');
+      const startBtn = document.getElementById('startBtn');
+      const fullscreenBtn = document.getElementById('fullscreenBtn');
+      const copyChecklistBtn = document.getElementById('copyChecklistBtn');
+      const copyReviewerStateBtn = document.getElementById('copyReviewerStateBtn');
+      const recentBuildsNode = document.getElementById('recentBuilds');
+      const copyBuildChecklistBtn = document.getElementById('copyBuildChecklistBtn');
+      const adNode = document.querySelector('.adsbygoogle');
+      const adStatusNode = document.getElementById('adStatus');
+      const buildInfoNode = document.getElementById('buildInfo');
+      const reviewerDockModeNode = document.getElementById('reviewerDockMode');
+      const reviewerDockClaimNode = document.getElementById('reviewerDockClaim');
+      const reviewerDockNextNode = document.getElementById('reviewerDockNext');
+      const reviewerDockEvidenceNode = document.getElementById('reviewerDockEvidence');
+      const reviewerDockStatusNode = document.getElementById('reviewerDockStatus');
+      let unityInstance = null;
+      const RECENT_BUILDS_KEY = 'kbbq_idle_recent_builds_v1';
+      let currentLoadId = 0;
+      let buildManifestCache = null;
+      let buildManifestFetched = false;
+      let reviewerSnapshot = {
+        buildBase: 'KBBQIdleWebGL',
+        claim: 'On hold until preflight and launch succeed.',
+        evidence: 'Build verification and live launch are intentionally kept separate.',
+        mode: 'Docs-first review',
+        next: 'Run Check Build Files before any playable claim.',
+        state: 'idle',
+      };
+      const buildRevision = (() => {
+        const fromLastModified = Date.parse(document.lastModified || '');
+        if (Number.isFinite(fromLastModified) && fromLastModified > 0) {
+          return String(fromLastModified);
+        }
+        return String(Math.floor(Date.now() / (60 * 1000)));
+      })();
+
+      function setStatus(text) {
+        statusNode.textContent = text;
+      }
+
+      function setPreflight(text) {
+        preflightNode.textContent = text;
+      }
+
+      function setBuildInfo(text) {
+        if (buildInfoNode) {
+          buildInfoNode.textContent = text;
+        }
+      }
+
+      function renderReviewerDock() {
+        if (reviewerDockModeNode) reviewerDockModeNode.textContent = reviewerSnapshot.mode;
+        if (reviewerDockClaimNode) reviewerDockClaimNode.textContent = reviewerSnapshot.claim;
+        if (reviewerDockNextNode) reviewerDockNextNode.textContent = reviewerSnapshot.next;
+        if (reviewerDockEvidenceNode) reviewerDockEvidenceNode.textContent = reviewerSnapshot.evidence;
+        if (reviewerDockStatusNode) {
+          reviewerDockStatusNode.textContent = `${reviewerSnapshot.claim} Base ${reviewerSnapshot.buildBase} is currently ${reviewerSnapshot.state}.`;
+        }
+      }
+
+      function setSignal(node, state, text) {
+        if (!node) return;
+        node.dataset.state = state;
+        node.textContent = text;
+      }
+
+      function setFileStatus(node, text) {
+        if (!node) return;
+        node.textContent = text;
+      }
+
+      function updatePlaceholderDetails(mode, buildBase, config, options = {}) {
+        const base = String(buildBase || buildInput?.value || 'KBBQIdleWebGL').trim() || 'KBBQIdleWebGL';
+        if (placeholderBuildNameNode) {
+          placeholderBuildNameNode.textContent = base;
+        }
+        const filePrefix = `Build/${base}`;
+        setFileStatus(fileLoaderStatusNode, `${filePrefix}.loader.js · pending`);
+        setFileStatus(fileDataStatusNode, `${filePrefix}.data* · pending`);
+        setFileStatus(fileFrameworkStatusNode, `${filePrefix}.framework.js* · pending`);
+        setFileStatus(fileWasmStatusNode, `${filePrefix}.wasm* · pending`);
+        setFileStatus(fileManifestStatusNode, buildManifestCache ? 'Manifest loaded for this docs surface' : 'Manifest not yet confirmed');
+        if (buildManifestCache) {
+          const manifestBase = String(buildManifestCache.buildName || '').trim();
+          const baseMatches = !manifestBase || manifestBase.toLowerCase() === base.toLowerCase();
+          if (baseMatches && mode !== 'ready' && mode !== 'loading' && mode !== 'playing') {
+            setFileStatus(fileLoaderStatusNode, `${normalizeBuildPath(buildManifestCache.loaderUrl || `${base}.loader.js`, base)} · listed in manifest`);
+            setFileStatus(fileDataStatusNode, `${normalizeBuildPath(buildManifestCache.dataUrl || `${base}.data`, base)} · listed in manifest`);
+            setFileStatus(fileFrameworkStatusNode, `${normalizeBuildPath(buildManifestCache.frameworkUrl || `${base}.framework.js`, base)} · listed in manifest`);
+            setFileStatus(fileWasmStatusNode, `${normalizeBuildPath(buildManifestCache.codeUrl || `${base}.wasm`, base)} · listed in manifest`);
+          }
+        }
+
+        const summaries = {
+          idle: {
+            modeLabel: 'Docs-first review',
+            claim: 'On hold until preflight and launch succeed.',
+            now: 'Docs route, controls copy, economy explanation, and release posture can be reviewed before Unity is live.',
+            proof: 'A real playable claim still depends on preflight plus a clean WebGL launch.',
+            next: 'Run Check Build Files, then use Help and About as the reviewer script if the bundle is absent.',
+            evidence: 'The evidence board stays honest by separating docs review from launch verification.',
+            buildSignal: ['warn', 'Build not yet checked'],
+            claimSignal: ['warn', 'Playable claim on hold'],
+          },
+          checking: {
+            modeLabel: 'Preflight running',
+            claim: 'Still on hold while build files are checked.',
+            now: 'The page is checking whether the expected build assets resolve from docs/Build/.',
+            proof: 'A green result only means the files are present; launch still needs to succeed.',
+            next: 'Wait for the asset check, then launch only if the real bundle is confirmed.',
+            evidence: 'This pass tests for manifest/core files instead of showing a fake in-engine screenshot.',
+            buildSignal: ['warn', 'Build check running'],
+            claimSignal: ['warn', 'Playable claim on hold'],
+          },
+          ready: {
+            modeLabel: 'Verified bundle found',
+            claim: 'Almost ready, but launch still needs to succeed.',
+            now: 'The primary bundle appears present, so reviewers can move from docs review to real launch.',
+            proof: 'Unity initialization is still the final gate before calling the page playable.',
+            next: 'Click Start Game and confirm the loop, then keep Help/Compliance open for rollout context.',
+            evidence: 'Preflight resolved loader/data/framework/wasm references for the chosen build name.',
+            buildSignal: ['ok', 'Build files verified'],
+            claimSignal: ['warn', 'Launch still required'],
+          },
+          missing: {
+            modeLabel: 'Honest missing-build state',
+            claim: 'Blocked until the WebGL bundle is restored.',
+            now: 'Reviewers can still assess navigation, product framing, controls copy, and public guardrails.',
+            proof: 'Playable status must stay withheld until the WebGL files are restored and launch succeeds.',
+            next: 'Keep the placeholder visible, use Help as the walkthrough, and rebuild docs/Build before rollout.',
+            evidence: options.error ? `Last check: ${options.error}` : 'The evidence board documents what is missing instead of hiding it behind an empty panel.',
+            buildSignal: ['missing', 'Build still missing'],
+            claimSignal: ['warn', 'Playable claim blocked'],
+          },
+          loading: {
+            modeLabel: 'Launching Unity',
+            claim: 'Pending live canvas confirmation.',
+            now: 'The docs surface has done its job; the real canvas is taking over if initialization succeeds.',
+            proof: 'A failed loader or runtime init should return to the honest placeholder state.',
+            next: 'Watch loader progress and keep the docs links available for policy/context questions.',
+            evidence: 'The placeholder remains visible until the canvas truly takes over.',
+            buildSignal: ['ok', 'Build files verified'],
+            claimSignal: ['warn', 'Waiting for live canvas'],
+          },
+          playing: {
+            modeLabel: 'Live canvas',
+            claim: 'Playable claim earned for this session.',
+            now: 'Unity is now the primary surface.',
+            proof: 'Use docs pages as supporting evidence only.',
+            next: 'Review the playable loop and note any launch issues.',
+            evidence: 'Canvas replaced placeholder after successful initialization.',
+            buildSignal: ['ok', 'Build running'],
+            claimSignal: ['ok', 'Playable claim earned'],
+          },
+        };
+
+        const next = summaries[mode] || summaries.idle;
+        if (placeholderModeLabelNode) placeholderModeLabelNode.textContent = next.modeLabel;
+        if (placeholderClaimLabelNode) placeholderClaimLabelNode.textContent = next.claim;
+        if (placeholderSummaryNowNode) placeholderSummaryNowNode.textContent = next.now;
+        if (placeholderSummaryProofNode) placeholderSummaryProofNode.textContent = next.proof;
+        if (placeholderSummaryNextNode) placeholderSummaryNextNode.textContent = next.next;
+        if (placeholderSummaryEvidenceNode) placeholderSummaryEvidenceNode.textContent = next.evidence;
+        reviewerSnapshot = {
+          buildBase: base,
+          claim: next.claim,
+          evidence: next.evidence,
+          mode: next.modeLabel,
+          next: next.next,
+          state: mode,
+        };
+        renderReviewerDock();
+        setSignal(signalDocsNode, 'ok', 'Docs route ready');
+        setSignal(signalBuildNode, next.buildSignal[0], next.buildSignal[1]);
+        setSignal(signalClaimNode, next.claimSignal[0], next.claimSignal[1]);
+
+        if (config) {
+          setFileStatus(fileLoaderStatusNode, `${config.loaderUrl || `${filePrefix}.loader.js`} · detected`);
+          setFileStatus(fileDataStatusNode, `${config.dataUrl || `${filePrefix}.data*`} · detected`);
+          setFileStatus(fileFrameworkStatusNode, `${config.frameworkUrl || `${filePrefix}.framework.js*`} · detected`);
+          setFileStatus(fileWasmStatusNode, `${config.codeUrl || `${filePrefix}.wasm*`} · detected`);
+        } else if (mode === 'missing') {
+          setFileStatus(fileLoaderStatusNode, `${filePrefix}.loader.js · recheck required`);
+          setFileStatus(fileDataStatusNode, `${filePrefix}.data* · missing or unresolved`);
+          setFileStatus(fileFrameworkStatusNode, `${filePrefix}.framework.js* · missing or unresolved`);
+          setFileStatus(fileWasmStatusNode, `${filePrefix}.wasm* · missing or unresolved`);
+        }
+      }
+
+      function setPlaceholderState(mode) {
+        if (!placeholderState || !placeholderEyebrow || !placeholderTitle || !placeholderCopy) return;
+        if (canvas && mode !== 'playing') {
+          canvas.style.display = 'none';
+        }
+        const states = {
+          idle: {
+            eyebrow: 'Reviewer placeholder · build not loaded',
+            title: 'The playable build is intentionally not assumed to be live.',
+            copy: 'Use this restrained pass to show reviewers what should happen next: verify the build bundle, explain the loop with the docs pages, and keep rollout language honest until preflight passes.',
+            hidden: false,
+          },
+          checking: {
+            eyebrow: 'Preflight running',
+            title: 'Checking whether the WebGL bundle is review-ready.',
+            copy: 'This validates that the required docs/Build files exist before anyone calls the page playable.',
+            hidden: false,
+          },
+          ready: {
+            eyebrow: 'Build verified',
+            title: 'Core build files were found. You can now launch the real WebGL surface.',
+            copy: 'Next reviewer move: start the build, confirm the loop, then use Help and Compliance to explain the release posture.',
+            hidden: false,
+          },
+          missing: {
+            eyebrow: 'Build still absent',
+            title: 'Keep the placeholder as the primary state until a verified bundle is attached.',
+            copy: 'Use Help, About, and Compliance to review controls, progression, and rollout guardrails instead of presenting a fake live game.',
+            hidden: false,
+          },
+          loading: {
+            eyebrow: 'Launching build',
+            title: 'Unity is loading into the primary panel.',
+            copy: 'Once initialization succeeds, this placeholder disappears and the real canvas takes over.',
+            hidden: false,
+          },
+          playing: {
+            eyebrow: '',
+            title: '',
+            copy: '',
+            hidden: true,
+          },
+        };
+        const next = states[mode] || states.idle;
+        placeholderState.hidden = Boolean(next.hidden);
+        if (next.hidden) {
+          if (canvas) {
+            canvas.style.display = 'block';
+          }
+          return;
+        }
+        placeholderEyebrow.textContent = next.eyebrow;
+        placeholderTitle.textContent = next.title;
+        placeholderCopy.textContent = next.copy;
+        updatePlaceholderDetails(mode);
+      }
+      function readRecentBuilds() {
+        try {
+          const parsed = JSON.parse(localStorage.getItem(RECENT_BUILDS_KEY) || '[]');
+          return Array.isArray(parsed) ? parsed.filter((item) => typeof item === 'string' && item.trim()) : [];
+        } catch (_err) {
+          return [];
+        }
+      }
+
+      function writeRecentBuilds(items) {
+        localStorage.setItem(RECENT_BUILDS_KEY, JSON.stringify(items.slice(0, 4)));
+      }
+
+      function rememberBuildName(value) {
+        const trimmed = String(value || '').trim();
+        if (!trimmed) return;
+        const next = [trimmed, ...readRecentBuilds().filter((item) => item !== trimmed)];
+        writeRecentBuilds(next);
+        renderRecentBuilds();
+      }
+
+      function renderRecentBuilds() {
+        if (!recentBuildsNode) return;
+        const items = readRecentBuilds();
+        recentBuildsNode.innerHTML = '';
+        if (items.length === 0) {
+          const hint = document.createElement('span');
+          hint.style.fontSize = '11px';
+          hint.style.color = 'var(--muted)';
+          hint.textContent = 'Recent builds appear here after a successful check or launch.';
+          recentBuildsNode.appendChild(hint);
+          return;
+        }
+        items.forEach((item, index) => {
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.textContent = index === 0 ? `${item} · recent` : item;
+          button.addEventListener('click', () => {
+            buildInput.value = item;
+            setStatus(`Loaded recent build name: ${item}`);
+          });
+          recentBuildsNode.appendChild(button);
+        });
+      }
+
+      function setControlsEnabled(enabled) {
+        const isEnabled = Boolean(enabled);
+        buildInput.disabled = !isEnabled;
+        checkBtn.disabled = !isEnabled;
+        startBtn.disabled = !isEnabled;
+      }
+
+      function isHtmlContentType(contentType) {
+        return typeof contentType === 'string' && contentType.toLowerCase().includes('text/html');
+      }
+
+      function withRevision(url) {
+        const value = String(url || '');
+        if (!value) return value;
+        const joiner = value.includes('?') ? '&' : '?';
+        return `${value}${joiner}v=${encodeURIComponent(buildRevision)}`;
+      }
+
+      async function copyTextValue(text) {
+        if (!text) return false;
+        try {
+          if (navigator.clipboard?.writeText) {
+            await navigator.clipboard.writeText(text);
+            return true;
+          }
+        } catch (_err) {
+          // Fallback below.
+        }
+        try {
+          const helper = document.createElement('textarea');
+          helper.value = text;
+          helper.style.position = 'fixed';
+          helper.style.opacity = '0';
+          document.body.appendChild(helper);
+          helper.focus();
+          helper.select();
+          const ok = document.execCommand('copy');
+          document.body.removeChild(helper);
+          return Boolean(ok);
+        } catch (_err) {
+          return false;
+        }
+      }
+
+      async function copyBuildChecklist() {
+        const buildName = String(buildInput.value || 'KBBQIdleWebGL').trim() || 'KBBQIdleWebGL';
+        const payload = [
+          'KBBQ Idle build checklist',
+          `- Build base name: ${buildName}`,
+          `- Loader: docs/Build/${buildName}.loader.js`,
+          `- Framework: docs/Build/${buildName}.framework.js(.unityweb/.br/.gz)`,
+          `- Data: docs/Build/${buildName}.data(.unityweb/.br/.gz)`,
+          `- Wasm: docs/Build/${buildName}.wasm(.unityweb/.br/.gz)`,
+          '- Run Check Build Files before claiming the WebGL surface is live.',
+        ].join('\\n');
+        const ok = await copyTextValue(payload);
+        setStatus(ok ? 'Build checklist copied.' : 'Failed to copy build checklist.');
+      }
+
+      async function fetchProbe(url, needsText = false) {
+        const options = {
+          method: 'GET',
+          cache: 'no-store',
+          headers: { Range: 'bytes=0-2047' },
+        };
+
+        const response = await fetch(url, options);
+        const contentType = response.headers.get('content-type') || '';
+        if (!response.ok || isHtmlContentType(contentType)) {
+          return { ok: false, contentType, text: '' };
+        }
+
+        if (!needsText) {
+          return { ok: true, contentType, text: '' };
+        }
+
+        const text = await response.text();
+        const lowered = text.trimStart().toLowerCase();
+        if (lowered.startsWith('<!doctype html') || lowered.startsWith('<html')) {
+          return { ok: false, contentType, text };
+        }
+
+        return { ok: true, contentType, text };
+      }
+
+      async function urlExists(url) {
+        try {
+          const head = await fetch(url, { method: 'HEAD', cache: 'no-store' });
+          const contentType = head.headers.get('content-type') || '';
+          if (head.ok && !isHtmlContentType(contentType)) {
+            return true;
+          }
+        } catch (_err) {
+          // fallback below
+        }
+
+        try {
+          const probe = await fetchProbe(url);
+          return probe.ok;
+        } catch (_err) {
+          return false;
+        }
+      }
+
+      async function pickCandidate(candidates, validator) {
+        for (const candidate of candidates) {
+          try {
+            const candidateUrl = withRevision(candidate);
+            const head = await fetch(candidateUrl, { method: 'HEAD', cache: 'no-store' });
+            const headType = head.headers.get('content-type') || '';
+            if (!head.ok || isHtmlContentType(headType)) {
+              const fallback = await fetchProbe(candidateUrl, Boolean(validator));
+              if (!fallback.ok) {
+                continue;
+              }
+              if (!validator || validator(fallback.text, fallback.contentType)) {
+                return candidateUrl;
+              }
+              continue;
+            }
+
+            if (!validator) {
+              return candidateUrl;
+            }
+
+            const probe = await fetchProbe(candidateUrl, true);
+            if (probe.ok && validator(probe.text, probe.contentType)) {
+              return candidateUrl;
+            }
+          } catch (_err) {
+            // try next
+          }
+        }
+        return '';
+      }
+
+      function normalizeBuildPath(path, base) {
+        const raw = String(path || '').trim();
+        if (!raw) return '';
+        if (raw.startsWith('http://') || raw.startsWith('https://') || raw.startsWith('Build/')) return raw;
+        if (raw.startsWith('/')) return raw.slice(1);
+        return `Build/${base}.${raw}`;
+      }
+
+      async function loadBuildManifest() {
+        if (buildManifestFetched) {
+          return buildManifestCache;
+        }
+
+        buildManifestFetched = true;
+        try {
+          const response = await fetch(withRevision('Build/build-manifest.json'), { cache: 'no-store' });
+          const contentType = response.headers.get('content-type') || '';
+          if (!response.ok || isHtmlContentType(contentType)) {
+            buildManifestCache = null;
+            return null;
+          }
+          const parsed = await response.json();
+          if (!parsed || typeof parsed !== 'object') {
+            buildManifestCache = null;
+            return null;
+          }
+          buildManifestCache = parsed;
+          const fileCount = Array.isArray(parsed.files) ? parsed.files.length : 0;
+          const product = parsed.productName || 'KBBQ Idle';
+          const version = parsed.productVersion || '1.0';
+          const stamp = parsed.generatedAtUtc || 'unknown';
+          setBuildInfo(`Build info: ${product} v${version} · files ${fileCount} · generated ${stamp}`);
+          updatePlaceholderDetails('idle');
+          return buildManifestCache;
+        } catch (_err) {
+          buildManifestCache = null;
+          setBuildInfo('Build info: manifest not found. Using runtime detection.');
+          updatePlaceholderDetails('idle');
+          return null;
+        }
+      }
+
+      async function resolveConfig(base) {
+        const manifest = await loadBuildManifest();
+        if (manifest && manifest.dataUrl && manifest.frameworkUrl && manifest.codeUrl) {
+          const manifestBase = String(manifest.buildName || '').trim();
+          const baseMatches = !manifestBase || manifestBase.toLowerCase() === base.toLowerCase();
+          if (baseMatches) {
+            return {
+              dataUrl: withRevision(normalizeBuildPath(manifest.dataUrl, base)),
+              frameworkUrl: withRevision(normalizeBuildPath(manifest.frameworkUrl, base)),
+              codeUrl: withRevision(normalizeBuildPath(manifest.codeUrl, base)),
+              symbolsUrl: manifest.symbolsUrl ? withRevision(normalizeBuildPath(manifest.symbolsUrl, base)) : undefined,
+              loaderUrl: manifest.loaderUrl ? withRevision(normalizeBuildPath(manifest.loaderUrl, base)) : withRevision(`Build/${base}.loader.js`),
+              companyName: manifest.companyName || 'KBBQ',
+              productName: manifest.productName || 'KBBQ Idle',
+              productVersion: manifest.productVersion || '1.0',
+              streamingAssetsUrl: manifest.streamingAssetsUrl || 'StreamingAssets',
+              autoSyncPersistentDataPath: true,
+            };
+          }
+        }
+
+        const direct = {
+          dataUrl: withRevision(`Build/${base}.data`),
+          frameworkUrl: withRevision(`Build/${base}.framework.js`),
+          codeUrl: withRevision(`Build/${base}.wasm`),
+          symbolsUrl: withRevision(`Build/${base}.symbols.json`),
+        };
+        if (await urlExists(direct.dataUrl) && await urlExists(direct.frameworkUrl) && await urlExists(direct.codeUrl)) {
+          return {
+            dataUrl: direct.dataUrl,
+            frameworkUrl: direct.frameworkUrl,
+            codeUrl: direct.codeUrl,
+            symbolsUrl: (await urlExists(direct.symbolsUrl)) ? direct.symbolsUrl : undefined,
+            loaderUrl: withRevision(`Build/${base}.loader.js`),
+            streamingAssetsUrl: 'StreamingAssets',
+            companyName: 'KBBQ',
+            productName: 'KBBQ Idle',
+            productVersion: '1.0',
+            autoSyncPersistentDataPath: true,
+          };
+        }
+
+        const candidates = {
+          dataUrl: [
+            `Build/${base}.data`,
+            `Build/${base}.data.unityweb`,
+            `Build/${base}.data.br`,
+            `Build/${base}.data.gz`,
+          ],
+          frameworkUrl: [
+            `Build/${base}.framework.js`,
+            `Build/${base}.framework.js.unityweb`,
+            `Build/${base}.framework.js.br`,
+            `Build/${base}.framework.js.gz`,
+          ],
+          codeUrl: [
+            `Build/${base}.wasm`,
+            `Build/${base}.wasm.unityweb`,
+            `Build/${base}.wasm.br`,
+            `Build/${base}.wasm.gz`,
+          ],
+        };
+
+        const resolved = {};
+        resolved.dataUrl = await pickCandidate(candidates.dataUrl);
+        resolved.frameworkUrl = await pickCandidate(candidates.frameworkUrl, (text) => text.includes('createUnityInstance') || text.includes('unityFramework'));
+        resolved.codeUrl = await pickCandidate(candidates.codeUrl);
+
+        if (!resolved.dataUrl || !resolved.frameworkUrl || !resolved.codeUrl) {
+          throw new Error('Missing core build files (.data/.framework.js/.wasm).');
+        }
+
+        return {
+          dataUrl: resolved.dataUrl,
+          frameworkUrl: resolved.frameworkUrl,
+          codeUrl: resolved.codeUrl,
+          symbolsUrl: undefined,
+          loaderUrl: withRevision(`Build/${base}.loader.js`),
+          streamingAssetsUrl: 'StreamingAssets',
+          companyName: 'KBBQ',
+          productName: 'KBBQ Idle',
+          productVersion: '1.0',
+          autoSyncPersistentDataPath: true,
+        };
+      }
+
+      async function preflightCheck(buildBase) {
+        const base = String(buildBase || '').trim();
+        if (!base) {
+          setPreflight('Build name is required.');
+          return null;
+        }
+        setPlaceholderState('checking');
+        setPreflight('Scanning Build/ assets...');
+        try {
+          const config = await resolveConfig(base);
+          setPlaceholderState('ready');
+          updatePlaceholderDetails('ready', base, config);
+          setPreflight(`OK - data: ${config.dataUrl}, framework: ${config.frameworkUrl}, wasm: ${config.codeUrl}`);
+          return config;
+        } catch (err) {
+          setPlaceholderState('missing');
+          updatePlaceholderDetails('missing', base, null, { error: err?.message || String(err) });
+          setPreflight(`Build check failed: ${err?.message || String(err)}`);
+          return null;
+        }
+      }
+
+      async function disposeUnityInstance() {
+        if (!unityInstance || typeof unityInstance.Quit !== 'function') return;
+        try {
+          await unityInstance.Quit();
+        } catch (_err) {
+          // no-op
+        }
+        unityInstance = null;
+      }
+
+      async function loadUnity(buildBase) {
+        const base = String(buildBase || '').trim();
+        if (!base) {
+          setPlaceholderState('missing');
+          setStatus('Build name is required.');
+          return;
+        }
+
+        if (typeof WebAssembly !== 'object') {
+          setPlaceholderState('missing');
+          setStatus('This browser does not support WebAssembly.');
+          return;
+        }
+
+        const loadId = ++currentLoadId;
+        setControlsEnabled(false);
+        const config = await preflightCheck(base);
+        if (!config) {
+          setPlaceholderState('missing');
+          setStatus('Cannot start. Build check failed.');
+          setControlsEnabled(true);
+          return;
+        }
+
+        await disposeUnityInstance();
+        if (loadId !== currentLoadId) {
+          setControlsEnabled(true);
+          return;
+        }
+
+        setPlaceholderState('loading');
+        updatePlaceholderDetails('loading', base, config);
+        setStatus('Loading Unity loader...');
+        const loaderUrl = config.loaderUrl || withRevision(`Build/${base}.loader.js`);
+        const existing = document.getElementById('unity-loader-script');
+        if (existing) existing.remove();
+
+        const script = document.createElement('script');
+        script.id = 'unity-loader-script';
+        script.src = loaderUrl;
+        script.onload = () => {
+          const createFn = window.createUnityInstance || (typeof createUnityInstance === 'function' ? createUnityInstance : null);
+          if (typeof createFn !== 'function') {
+            setPlaceholderState('missing');
+            setStatus('Unity loader loaded but createUnityInstance is missing. Check build output.');
+            setControlsEnabled(true);
+            return;
+          }
+          setStatus('Initializing game...');
+          createFn(canvas, config, (progress) => {
+            setStatus(`Loading ${(progress * 100).toFixed(0)}%`);
+          })
+            .then((instance) => {
+              if (loadId !== currentLoadId) {
+                try { instance.Quit && instance.Quit(); } catch (_err) {}
+                setControlsEnabled(true);
+                return;
+              }
+              unityInstance = instance;
+              setPlaceholderState('playing');
+              updatePlaceholderDetails('playing', base, config);
+              setStatus('Game loaded.');
+              setControlsEnabled(true);
+            })
+            .catch((err) => {
+              setPlaceholderState('missing');
+              updatePlaceholderDetails('missing', base, null, { error: String(err) });
+              setStatus(`Failed to launch: ${err}`);
+              setControlsEnabled(true);
+            });
+        };
+        script.onerror = () => {
+          setPlaceholderState('missing');
+          updatePlaceholderDetails('missing', base, null, { error: 'Loader file not found.' });
+          setStatus('Loader file not found. Build Unity WebGL and copy files into docs/Build/.');
+          setControlsEnabled(true);
+        };
+        document.body.appendChild(script);
+      }
+
+      function setAdStatus(text) {
+        if (adStatusNode) {
+          adStatusNode.textContent = text;
+        }
+      }
+
+      function hasConfiguredAdClient(client) {
+        const raw = String(client || '').trim();
+        if (!/^ca-pub-\d{8,20}$/.test(raw)) return false;
+        return raw !== 'ca-pub-0000000000000000';
+      }
+
+      function hasConfiguredAdSlot(slot) {
+        const raw = String(slot || '').trim();
+        if (!/^\d{6,20}$/.test(raw)) return false;
+        return raw !== '1234567890';
+      }
+
+      function shouldLoadAds() {
+        const host = location.hostname;
+        const isLocal = host === 'localhost' || host === '127.0.0.1';
+        if (location.protocol !== 'https:' && !isLocal) {
+          setAdStatus('Ads disabled: HTTPS is required.');
+          return false;
+        }
+
+        return true;
+      }
+
+      function initializeAdsense() {
+        if (!adNode) return;
+        const client = adNode.getAttribute('data-ad-client') || '';
+        const slot = adNode.getAttribute('data-ad-slot') || '';
+        if (!hasConfiguredAdClient(client) || !hasConfiguredAdSlot(slot)) {
+          setAdStatus('Ad slot stays disabled until a real publisher ID and slot are configured for the public build.');
+          return;
+        }
+        if (!shouldLoadAds()) return;
+
+        const script = document.createElement('script');
+        script.async = true;
+        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}`;
+        script.crossOrigin = 'anonymous';
+        script.onload = () => {
+          try {
+            (window.adsbygoogle = window.adsbygoogle || []).push({});
+            setAdStatus('Ads active.');
+          } catch (_err) {
+            setAdStatus('Ad script loaded, but ad fill is pending.');
+          }
+        };
+        script.onerror = () => {
+          setAdStatus('Ad script failed to load. Check network policy and AdSense settings.');
+        };
+        document.head.appendChild(script);
+      }
+
+      checkBtn.addEventListener('click', () => {
+        rememberBuildName(buildInput.value);
+        void preflightCheck(buildInput.value);
+      });
+      startBtn.addEventListener('click', () => {
+        rememberBuildName(buildInput.value);
+        void loadUnity(buildInput.value);
+      });
+      buildInput.addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          event.preventDefault();
+          void loadUnity(buildInput.value);
+        }
+      });
+      buildInput.addEventListener('input', () => {
+        updatePlaceholderDetails('idle', buildInput.value);
+      });
+      if (copyChecklistBtn) {
+        copyChecklistBtn.addEventListener('click', () => {
+          void copyBuildChecklist();
+        });
+      }
+      if (copyReviewerStateBtn) {
+        copyReviewerStateBtn.addEventListener('click', async () => {
+          const payload = [
+            'KBBQ Idle reviewer state',
+            `- Build base: ${reviewerSnapshot.buildBase}`,
+            `- Mode: ${reviewerSnapshot.mode}`,
+            `- Playable claim: ${reviewerSnapshot.claim}`,
+            `- Next move: ${reviewerSnapshot.next}`,
+            `- Evidence note: ${reviewerSnapshot.evidence}`,
+          ].join('\\n');
+          const ok = await copyTextValue(payload);
+          if (reviewerDockStatusNode) {
+            reviewerDockStatusNode.textContent = ok ? 'Current reviewer state copied.' : 'Failed to copy current reviewer state.';
+          }
+        });
+      }
+      fullscreenBtn.addEventListener('click', async () => {
+        const target = container || canvas;
+        if (!target) return;
+        try {
+          if (document.fullscreenElement) {
+            await document.exitFullscreen();
+          } else {
+            await target.requestFullscreen();
+          }
+        } catch (_err) {
+          setStatus('Fullscreen is not available in this browser.');
+        }
+      });
+      copyBuildChecklistBtn.addEventListener('click', async () => {
+        const payload = [
+          'KBBQ Idle reviewer route',
+          '- ./index.html -> build preflight and playable surface',
+          '- ./help.html -> controls, support path, and troubleshooting',
+          '- ./about.html -> gameplay loop and deployment posture',
+          '- ./compliance.html -> public rollout and monetization guardrails',
+        ].join('\\n');
+        const ok = await copyTextValue(payload);
+        setStatus(ok ? 'Review route copied.' : 'Failed to copy review route.');
+      });
+      document.addEventListener('keydown', async (event) => {
+        if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;
+        const key = event.key.toLowerCase();
+        if (key === '?') {
+          setPreflight('Keyboard: C check build · S start game · F fullscreen · B copy build checklist.');
+          return;
+        }
+        if (key === 'c') {
+          event.preventDefault();
+          checkBtn.click();
+        }
+        if (key === 's') {
+          event.preventDefault();
+          startBtn.click();
+        }
+        if (key === 'f') {
+          event.preventDefault();
+          fullscreenBtn.click();
+        }
+        if (key === 'b') {
+          event.preventDefault();
+          await copyBuildChecklist();
+        }
+      });
+      setPlaceholderState('idle');
+      void loadBuildManifest();
+      initializeAdsense();
+    </script>
+  
+<script defer src="./analytics.js"></script>
+</body>
+</html>

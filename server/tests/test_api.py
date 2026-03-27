@@ -1,0 +1,379 @@
+import json
+import os
+import tempfile
+import time
+import asyncio
+import unittest
+from unittest.mock import patch
+
+import httpx
+
+from server.security import hmac_b64
+
+
+def _sign_headers(*, secret: str, player_id: str, nonce: str, ts: int, raw_body: str) -> dict:
+    payload = f"{player_id}|{nonce}|{ts}|{raw_body or ''}"
+    sig = hmac_b64(secret, payload)
+    return {
+        "X-Nonce": nonce,
+        "X-Timestamp": str(ts),
+        "X-Signature": sig,
+    }
+
+
+class TestApi(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls._tmp = tempfile.TemporaryDirectory(prefix="kbbq_idle_server_test_")
+        cls.db_path = os.path.join(cls._tmp.name, "kbbq_test.db")
+        os.environ["KBBQ_DB_PATH"] = cls.db_path
+        os.environ["KBBQ_HMAC_SECRET"] = "unit-test-secret"
+        os.environ["KBBQ_TOKEN_SALT"] = "unit-test-salt"
+        os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = "9999"
+        os.environ["KBBQ_OPS_TOKEN"] = "unit-ops-token"
+
+        from server.app import app
+
+        cls.app = app
+
+    @classmethod
+    def tearDownClass(cls):
+        try:
+            cls._tmp.cleanup()
+        except Exception:
+            pass
+
+    def test_root_and_health(self):
+        r = self._request("GET", "/")
+        self.assertEqual(r.status_code, 200)
+        root_payload = r.json()
+        self.assertTrue(root_payload.get("ok"))
+        self.assertEqual(root_payload.get("meta"), "/meta")
+        self.assertEqual(root_payload.get("readiness"), "/readiness")
+        self.assertEqual(root_payload.get("review_pack"), "/review-pack")
+
+        r = self._request("GET", "/health")
+        self.assertEqual(r.status_code, 200)
+        payload = r.json()
+        self.assertTrue(payload.get("ok"))
+        self.assertEqual(payload.get("status"), "ok")
+        self.assertEqual(payload.get("service"), "kbbq-idle-backend")
+        self.assertEqual(payload.get("ops_contract", {}).get("schema"), "ops-envelope-v1")
+        self.assertEqual(payload.get("links", {}).get("meta"), "/meta")
+        self.assertEqual(payload.get("links", {}).get("economy_balance_drill"), "/ops/economy-balance-drill")
+        self.assertEqual(payload.get("links", {}).get("release_readiness"), "/ops/release-readiness")
+        self.assertTrue(payload.get("diagnostics", {}).get("ready"))
+        self.assertTrue(payload.get("diagnostics", {}).get("webgl_delivery", {}).get("ready"))
+        self.assertEqual(
+            payload.get("diagnostics", {}).get("webgl_delivery", {}).get("status"),
+            "verified-build-present",
+        )
+        self.assertIn("next_action", payload.get("diagnostics", {}))
+
+        meta = self._request("GET", "/meta")
+        self.assertEqual(meta.status_code, 200)
+        meta_payload = meta.json()
+        self.assertEqual(meta_payload.get("service"), "kbbq-idle-backend")
+        self.assertEqual(meta_payload.get("ops_contract", {}).get("schema"), "ops-envelope-v1")
+        self.assertTrue(meta_payload.get("capabilities", {}).get("guest_auth"))
+        self.assertIn("next_action", meta_payload.get("diagnostics", {}))
+        self.assertTrue(meta_payload.get("diagnostics", {}).get("webgl_delivery", {}).get("ready"))
+        self.assertEqual(meta_payload.get("review_pack_contract"), "kbbq-idle-review-pack-v1")
+        self.assertEqual(meta_payload.get("links", {}).get("review_pack"), "/review-pack")
+        self.assertEqual(meta_payload.get("links", {}).get("economy_balance_drill"), "/ops/economy-balance-drill")
+        self.assertEqual(meta_payload.get("links", {}).get("release_readiness"), "/ops/release-readiness")
+
+        review_pack = self._request("GET", "/review-pack")
+        self.assertEqual(review_pack.status_code, 200)
+        review_payload = review_pack.json()
+        self.assertEqual(review_payload.get("readiness_contract"), "kbbq-idle-review-pack-v1")
+        self.assertIn("economy_contract", review_payload)
+        self.assertTrue(review_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
+        self.assertEqual(review_payload.get("webgl_delivery", {}).get("status"), "verified-build-present")
+        self.assertEqual(
+            review_payload.get("webgl_delivery", {}).get("claim_posture"),
+            "verified-webgl-runtime",
+        )
+        self.assertEqual(
+            review_payload.get("reviewer_posture", {}).get("claim_tier"),
+            "runtime-backed-review-ready",
+        )
+        self.assertIn(
+            "reviewer aids",
+            review_payload.get("reviewer_posture", {}).get("claim_rule", ""),
+        )
+        self.assertIn(
+            "claim live WebGL reviewer delivery",
+            review_payload.get("webgl_delivery", {}).get("claim_rule", ""),
+        )
+        self.assertIn("Build/KBBQIdleWebGL.loader.js", review_payload.get("webgl_delivery", {}).get("required_assets", []))
+        self.assertEqual(review_payload.get("webgl_delivery", {}).get("missing_assets"), [])
+        self.assertEqual(review_payload.get("links", {}).get("release_readiness"), "/ops/release-readiness")
+        self.assertIn("/ops/economy-balance-drill", review_payload.get("review_sequence", []))
+        self.assertIn("/ops/release-readiness", review_payload.get("review_sequence", []))
+        self.assertEqual(len(review_payload.get("two_minute_review", [])), 4)
+        self.assertEqual(review_payload.get("proof_assets", [])[0]["path"], "/health")
+        self.assertEqual(review_payload.get("links", {}).get("review_pack"), "/review-pack")
+
+        release_readiness = self._request("GET", "/ops/release-readiness")
+        self.assertEqual(release_readiness.status_code, 200)
+        readiness_payload = release_readiness.json()
+        self.assertEqual(readiness_payload.get("contract_version"), "kbbq-release-readiness-v1")
+        self.assertTrue(readiness_payload.get("summary", {}).get("backend_ready"))
+        self.assertTrue(readiness_payload.get("summary", {}).get("webgl_delivery_ready"))
+        self.assertEqual(readiness_payload.get("links", {}).get("release_readiness"), "/ops/release-readiness")
+
+        balance_drill = self._request("GET", "/ops/economy-balance-drill", headers={"X-Ops-Token": os.environ["KBBQ_OPS_TOKEN"]})
+        self.assertEqual(balance_drill.status_code, 200)
+        drill_payload = balance_drill.json()
+        self.assertEqual(drill_payload.get("contract_version"), "kbbq-idle-balance-drill-v1")
+        self.assertFalse(drill_payload.get("summary", {}).get("monetization_enabled"))
+        self.assertGreaterEqual(drill_payload.get("summary", {}).get("guardian_triggers"), 1)
+        self.assertGreater(drill_payload.get("summary", {}).get("offline_pressure_delta_minutes"), 0)
+        self.assertGreater(drill_payload.get("summary", {}).get("income_gain_pct"), 0)
+        self.assertIn("guardian_mode_posture", drill_payload.get("summary", {}))
+        self.assertEqual(drill_payload.get("links", {}).get("economy_balance_drill"), "/ops/economy-balance-drill")
+        self.assertGreaterEqual(len(drill_payload.get("tiers", [])), 3)
+
+    def test_review_pack_marks_webgl_delivery_unready_when_artifacts_are_missing(self):
+        with tempfile.TemporaryDirectory(prefix="kbbq_missing_webgl_") as temp_docs:
+            with patch.dict(os.environ, {"KBBQ_WEBGL_DOCS_ROOT": temp_docs}):
+                review_pack = self._request("GET", "/review-pack")
+                self.assertEqual(review_pack.status_code, 200)
+                review_payload = review_pack.json()
+                self.assertFalse(review_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
+                self.assertEqual(
+                    review_payload.get("webgl_delivery", {}).get("status"),
+                    "placeholder-or-missing-build",
+                )
+                self.assertEqual(
+                    review_payload.get("webgl_delivery", {}).get("claim_posture"),
+                    "docs-placeholder-only",
+                )
+                self.assertIn("index.html", review_payload.get("webgl_delivery", {}).get("missing_assets", []))
+                self.assertIn(
+                    "Do not claim live WebGL delivery",
+                    review_payload.get("webgl_delivery", {}).get("claim_rule", ""),
+                )
+                self.assertIn("build_webgl_docs.sh", review_payload.get("webgl_delivery", {}).get("next_action", ""))
+
+    def test_auth_then_signed_leaderboard_and_replay_protection(self):
+        # 1) Guest auth
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-test-001"})
+        self.assertEqual(r.status_code, 200)
+        data = r.json()
+        player_id = data["playerId"]
+        token = data["token"]
+
+        # 2) Signed request should work
+        secret = os.environ["KBBQ_HMAC_SECRET"]
+        ts = int(time.time())
+        nonce = "nonce-top-1"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=""),
+        }
+        r = self._request("GET", "/leaderboard/top?region=KR&limit=5", headers=headers)
+        self.assertEqual(r.status_code, 200)
+        self.assertIn("entries", r.json())
+
+        # 3) Reusing the same nonce should fail (replay protection)
+        r2 = self._request("GET", "/leaderboard/top?region=KR&limit=5", headers=headers)
+        self.assertEqual(r2.status_code, 401)
+        self.assertIn("replay", r2.text.lower())
+
+    def test_readiness_and_metrics_endpoints(self):
+        r = self._request("GET", "/readiness")
+        self.assertEqual(r.status_code, 200)
+        payload = r.json()
+        self.assertIn("ready", payload)
+        self.assertIn("checks", payload)
+        self.assertIn("advisories", payload)
+        self.assertTrue(any(c.get("name") == "db" for c in payload.get("checks", [])))
+
+        m = self._request("GET", "/metrics")
+        self.assertEqual(m.status_code, 200)
+        self.assertIn("kbbq_players_total", m.text)
+        self.assertIn("kbbq_uptime_seconds", m.text)
+
+    def test_ops_alerts_requires_token(self):
+        denied = self._request("GET", "/ops/alerts")
+        self.assertEqual(denied.status_code, 401)
+
+        allowed = self._request("GET", "/ops/alerts", headers={"X-Ops-Token": os.environ["KBBQ_OPS_TOKEN"]})
+        self.assertEqual(allowed.status_code, 200)
+        payload = allowed.json()
+        self.assertIn("alerts", payload)
+        self.assertGreaterEqual(len(payload["alerts"]), 1)
+
+    def test_submit_score_requires_signed_headers(self):
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-test-002"})
+        self.assertEqual(r.status_code, 200)
+        data = r.json()
+        player_id = data["playerId"]
+        token = data["token"]
+
+        body = {
+            "playerId": player_id,
+            "score": 123.4,
+            "timestamp": int(time.time()),
+            "nonce": "body-nonce-1",
+            # Body signature is validated server-side (rounded score).
+            "signature": "",
+        }
+
+        secret = os.environ["KBBQ_HMAC_SECRET"]
+        score_int = int(round(float(body["score"])))
+        body["signature"] = hmac_b64(secret, f"{player_id}|{score_int}|{body['timestamp']}")
+
+        raw_body = json.dumps(body, separators=(",", ":"))
+        ts = int(time.time())
+        nonce = "header-nonce-1"
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=raw_body),
+        }
+
+        r = self._request("POST", "/leaderboard/submit", headers=headers, content=raw_body)
+        self.assertEqual(r.status_code, 200)
+        self.assertTrue(r.json().get("ok"))
+
+        # Using the same header nonce again should fail.
+        r2 = self._request("POST", "/leaderboard/submit", headers=headers, content=raw_body)
+        self.assertEqual(r2.status_code, 401)
+        self.assertIn("replay", r2.text.lower())
+
+    def test_invalid_clock_skew_env_uses_fallback(self):
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-test-003"})
+        self.assertEqual(r.status_code, 200)
+        data = r.json()
+        player_id = data["playerId"]
+        token = data["token"]
+
+        prev_skew = os.environ.get("KBBQ_MAX_CLOCK_SKEW_SECONDS")
+        os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = "not-a-number"
+        try:
+            secret = os.environ["KBBQ_HMAC_SECRET"]
+            ts = int(time.time())
+            nonce = "nonce-skew-fallback-1"
+            headers = {
+                "Authorization": f"Bearer {token}",
+                **_sign_headers(secret=secret, player_id=player_id, nonce=nonce, ts=ts, raw_body=""),
+            }
+            res = self._request("GET", "/leaderboard/top?region=KR&limit=5", headers=headers)
+            self.assertEqual(res.status_code, 200)
+            self.assertIn("entries", res.json())
+        finally:
+            if prev_skew is None:
+                os.environ.pop("KBBQ_MAX_CLOCK_SKEW_SECONDS", None)
+            else:
+                os.environ["KBBQ_MAX_CLOCK_SKEW_SECONDS"] = prev_skew
+
+    def test_feedback_relay_requires_endpoint(self):
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-feedback-001"})
+        self.assertEqual(r.status_code, 200)
+        auth = r.json()
+        player_id = auth["playerId"]
+        token = auth["token"]
+
+        body = {
+            "playerId": player_id,
+            "message": "Need more daily mission variety.",
+            "email": "player@example.com",
+            "channel": "in-game",
+            "timestamp": int(time.time()),
+            "nonce": "feedback-body-nonce-1",
+            "signature": "",
+        }
+        secret = os.environ["KBBQ_HMAC_SECRET"]
+        normalized_message = " ".join(body["message"].split())
+        body["signature"] = hmac_b64(secret, f"{player_id}|{body['timestamp']}|{normalized_message}")
+
+        raw_body = json.dumps(body, separators=(",", ":"))
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            **_sign_headers(
+                secret=secret,
+                player_id=player_id,
+                nonce="feedback-header-nonce-1",
+                ts=int(time.time()),
+                raw_body=raw_body,
+            ),
+        }
+
+        prev_endpoint = os.environ.pop("KBBQ_FORMSPREE_ENDPOINT", None)
+        try:
+            res = self._request("POST", "/community/feedback", headers=headers, content=raw_body)
+            self.assertEqual(res.status_code, 503)
+            self.assertIn("not configured", res.text.lower())
+        finally:
+            if prev_endpoint is not None:
+                os.environ["KBBQ_FORMSPREE_ENDPOINT"] = prev_endpoint
+
+    def test_feedback_relay_success(self):
+        r = self._request("POST", "/auth/guest", json={"deviceId": "device-feedback-002"})
+        self.assertEqual(r.status_code, 200)
+        auth = r.json()
+        player_id = auth["playerId"]
+        token = auth["token"]
+
+        body = {
+            "playerId": player_id,
+            "message": "Please add event recap in inbox.",
+            "email": "qa@example.com",
+            "channel": "in-game",
+            "timestamp": int(time.time()),
+            "nonce": "feedback-body-nonce-2",
+            "signature": "",
+        }
+        secret = os.environ["KBBQ_HMAC_SECRET"]
+        normalized_message = " ".join(body["message"].split())
+        body["signature"] = hmac_b64(secret, f"{player_id}|{body['timestamp']}|{normalized_message}")
+
+        raw_body = json.dumps(body, separators=(",", ":"))
+        headers = {
+            "Authorization": f"Bearer {token}",
+            "Content-Type": "application/json",
+            **_sign_headers(
+                secret=secret,
+                player_id=player_id,
+                nonce="feedback-header-nonce-2",
+                ts=int(time.time()),
+                raw_body=raw_body,
+            ),
+        }
+
+        class _Resp:
+            status_code = 200
+
+            @staticmethod
+            def json():
+                return {"ok": True}
+
+        prev_endpoint = os.environ.get("KBBQ_FORMSPREE_ENDPOINT")
+        os.environ["KBBQ_FORMSPREE_ENDPOINT"] = "https://formspree.io/f/mock"
+        try:
+            with patch("server.app.httpx.post", return_value=_Resp()) as mocked_post:
+                res = self._request("POST", "/community/feedback", headers=headers, content=raw_body)
+            self.assertEqual(res.status_code, 200)
+            self.assertTrue(res.json().get("ok"))
+            self.assertEqual(mocked_post.call_count, 1)
+        finally:
+            if prev_endpoint is None:
+                os.environ.pop("KBBQ_FORMSPREE_ENDPOINT", None)
+            else:
+                os.environ["KBBQ_FORMSPREE_ENDPOINT"] = prev_endpoint
+
+    async def _request_async(self, method: str, url: str, **kwargs) -> httpx.Response:
+        transport = httpx.ASGITransport(app=self.app)
+        async with httpx.AsyncClient(transport=transport, base_url="http://testserver") as client:
+            return await client.request(method, url, **kwargs)
+
+    def _request(self, method: str, url: str, **kwargs) -> httpx.Response:
+        return asyncio.run(self._request_async(method, url, **kwargs))
+
+
+if __name__ == "__main__":
+    unittest.main()

@@ -1,0 +1,39 @@
+name: pages
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "docs/**"
+  workflow_dispatch:
+
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+concurrency:
+  group: pages
+  cancel-in-progress: true
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - id: configure_pages
+        uses: actions/configure-pages@v5
+        continue-on-error: true
+      - name: Skip deploy when GitHub Pages is not enabled
+        if: ${{ steps.configure_pages.outcome == 'failure' }}
+        run: echo "GitHub Pages is not enabled for this repository; skipping Pages deploy."
+      - uses: actions/upload-pages-artifact@v3
+        if: ${{ steps.configure_pages.outcome == 'success' }}
+        with:
+          path: docs
+      - id: deployment
+        uses: actions/deploy-pages@v4
+        if: ${{ steps.configure_pages.outcome == 'success' }}
