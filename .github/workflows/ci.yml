@@ -8,7 +8,7 @@ jobs:
   dotnet:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
       - uses: actions/setup-dotnet@v4
         with:
           dotnet-version: "10.0.x"
@@ -18,8 +18,8 @@ jobs:
   python:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-python@v5
+      - uses: actions/checkout@v6
+      - uses: actions/setup-python@v6
         with:
           python-version: "3.11"
       - name: Install
@@ -36,7 +36,7 @@ jobs:
         run: python server/scripts/exercise_review_pack.py --output artifacts/kbbq-review-pack.json
 
       - name: Upload backend review-pack artifact
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: kbbq-review-pack-proof
           path: artifacts/kbbq-review-pack.json
@@ -44,7 +44,7 @@ jobs:
   review-gate:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v6
 
       - name: Install ripgrep
         run: |

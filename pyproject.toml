@@ -30,3 +30,6 @@ include = ["server*"]
 [tool.pytest.ini_options]
 testpaths = ["server/tests"]
 addopts = "-q"
+
+[project.urls]
+Repository = "https://github.com/KIM3310/kbbq-idle-unity"
