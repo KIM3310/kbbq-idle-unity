@@ -8,7 +8,7 @@ version = "0.1.0"
 description = "Optional backend service for KBBQ Idle WebGL review, telemetry, and ops surfaces."
 readme = "server/README.md"
 requires-python = ">=3.11"
-authors = [{ name = "Kim" }]
+authors = [{name = "Doeon Kim", email = "ehdjs1351@gmail.com"}]
 license = { text = "MIT" }
 dependencies = [
   "fastapi==0.121.3",
