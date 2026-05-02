@@ -25,15 +25,15 @@ jobs:
     steps:
       - uses: actions/checkout@v6
       - id: configure_pages
-        uses: actions/configure-pages@v5
+        uses: actions/configure-pages@v6
         continue-on-error: true
       - name: Skip deploy when GitHub Pages is not enabled
         if: ${{ steps.configure_pages.outcome == 'failure' }}
         run: echo "GitHub Pages is not enabled for this repository; skipping Pages deploy."
-      - uses: actions/upload-pages-artifact@v3
+      - uses: actions/upload-pages-artifact@v5
         if: ${{ steps.configure_pages.outcome == 'success' }}
         with:
           path: docs
       - id: deployment
-        uses: actions/deploy-pages@v4
+        uses: actions/deploy-pages@v5
         if: ${{ steps.configure_pages.outcome == 'success' }}
