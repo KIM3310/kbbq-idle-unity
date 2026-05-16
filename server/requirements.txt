@@ -1,6 +1,6 @@
-fastapi==0.121.3
-uvicorn[standard]==0.30.6
-pydantic==2.12.5
+fastapi==0.136.1
+uvicorn[standard]==0.47.0
+pydantic==2.13.4
 python-dotenv==1.2.2
 
 # Testing (small dependency, used by FastAPI/Starlette TestClient)
