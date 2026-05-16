@@ -11,9 +11,9 @@ requires-python = ">=3.11"
 authors = [{name = "Doeon Kim", email = "ehdjs1351@gmail.com"}]
 license = { text = "MIT" }
 dependencies = [
-  "fastapi==0.121.3",
-  "uvicorn[standard]==0.30.6",
-  "pydantic==2.12.5",
+  "fastapi==0.136.1",
+  "uvicorn[standard]==0.47.0",
+  "pydantic==2.13.4",
   "python-dotenv==1.2.2",
   "httpx==0.28.1",
   "pytest==9.0.3"
