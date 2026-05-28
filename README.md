@@ -14,6 +14,15 @@ Updated: **February 18, 2026**
 - **플랫폼/클라우드 아키텍트 관점:** reviewer surface, 배포 문서, 정적 호스팅 경로가 명확하게 정리되어 있습니다.
 - **제품/필드 관점:** 바로 플레이 가능한 결과물이 있어서 슬라이드보다 설득력이 높습니다.
 
+## Product and Review Surface
+
+| Lens | Decision signal |
+|---|---|
+| Buyer | Casual WebGL game publishers, ad-supported mini-game operators, and portfolio reviewers looking for a playable loop rather than a mockup. |
+| Commercial proof | The grill loop, customer queue, upgrade economy, WebGL host path, and AdSense-friendly static surface show a route from prototype to monetized play. |
+| Reviewer proof | Unity scene, docs front door, build preflight, deterministic economy harness, and reviewer pages make the runtime inspectable in minutes. |
+| Safety posture | Placeholder behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path. |
+
 
 ## 포트폴리오 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군
