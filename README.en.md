@@ -4,6 +4,18 @@ KBBQ Idle is an idle/tycoon game project focused on a grill-management gameplay 
 
 Updated: **February 18, 2026**
 
+## Product and Review Surface
+
+A playable Unity WebGL project that proves shipping discipline through game loop, build pipeline, and release checks.
+
+| Lens | Definition |
+|---|---|
+| Buyer or user | Game reviewers, WebGL publishers, casual-game operators, and portfolio reviewers checking delivery craft. |
+| Commercial route | Monetize through web ads, small in-game upgrades, sponsorship placements, or a publisher-ready prototype pitch. |
+| Review signal | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
+| Safety boundary | Ad and analytics values must be configured only in production; gameplay data should stay separate from personal data. |
+| Fast proof | Run `tools/portfolio_quality_gate.sh` or the WebGL release check before publishing. |
+
 ## What Changed In This Build
 - 4 grill slots for active cooking flow
 - Pixel customer queue cards with speech bubbles and requested-cut icons
