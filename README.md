@@ -23,6 +23,13 @@ Updated: **February 18, 2026**
 | Reviewer proof | Unity scene, docs front door, build preflight, deterministic economy harness, and reviewer pages make the runtime inspectable in minutes. |
 | Safety posture | Placeholder behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path. |
 
+## Reviewer Fast Path
+
+- **First minute:** Open `Assets/Scenes/Main.unity`, play the grill loop, then review the WebGL `docs/` surface.
+- **Local demo:** Build WebGL with `./tools/build_webgl_docs.sh`; optional backend review starts from `server/`.
+- **Verification:** Run `python -m pytest` for the optional backend and `KBBQ/Validate Data (Portfolio)` inside Unity for data checks.
+- **Commercial read:** Treat the game as a monetizable loop prototype with a static hosting and ad-review path.
+
 
 ## 포트폴리오 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군
