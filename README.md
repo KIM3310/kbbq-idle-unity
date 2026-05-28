@@ -31,6 +31,10 @@ Updated: **February 18, 2026**
 - **Commercial read:** Treat the game as a monetizable loop prototype with a static hosting and ad-review path.
 
 
+## Commercialization Playbook
+
+- [Monetization and GTM playbook](docs/monetization-playbook.md) maps the repository to buyer segments, offer ladder, pricing hypotheses, proof gates, and risk boundaries.
+
 ## 포트폴리오 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군
 - **이 레포의 역할:** 실제 플레이 루프와 배포 검증을 같이 보여주는 인터랙티브 런타임 포트폴리오입니다.
