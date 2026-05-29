@@ -35,6 +35,11 @@ Updated: **February 18, 2026**
 
 - [Monetization and GTM playbook](docs/monetization-playbook.md) maps the repository to buyer segments, offer ladder, pricing hypotheses, proof gates, and risk boundaries.
 
+## Executive Proof Pack
+
+- [Reviewer evidence map](docs/reviewer-evidence-map.md) gives a 7-minute route through the strongest hiring, buyer, and architecture signals.
+- [Quality gate](docs/quality-gate.md) lists the local checks, CI surface, release boundary, and no-key/demo expectations for this repository.
+
 ## 포트폴리오 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군
 - **이 레포의 역할:** 실제 플레이 루프와 배포 검증을 같이 보여주는 인터랙티브 런타임 포트폴리오입니다.
