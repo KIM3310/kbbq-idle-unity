@@ -1,5 +1,10 @@
 # KBBQ Idle WebGL (Unity 2022.3 LTS)
 
+> **Curated supporting repo**
+> This repository is kept as optional proof, but it no longer leads the portfolio.
+> Current front door: **doeon-kim-portfolio and the B2B flagship repositories**.
+> Reason: Game/ad monetization distracts from the enterprise AI and infrastructure portfolio signal.
+
 K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드와 GitHub/Cloudflare reviewer surface까지 함께 검토할 수 있도록 정리되어 있습니다.
 
 Updated: **February 18, 2026**
@@ -41,6 +46,7 @@ Updated: **February 18, 2026**
 - [Quality notes](docs/quality-gate.md) lists the local checks, CI surface, and release expectations for this repository.
 - [Revenue growth model](docs/revenue-growth-model.md) maps the project to an ethical revenue path, activation loop, pricing logic, and growth experiments.
 - [Enterprise readiness notes](docs/enterprise-readiness.md) outlines security, data, operations, integration, and handoff expectations.
+- [Portfolio fit](docs/portfolio-fit.md) explains why this repository is archived/supporting and where the current portfolio front door lives.
 
 ## 포트폴리오 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군
