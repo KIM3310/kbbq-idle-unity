@@ -1,6 +1,6 @@
 # Service Architecture - kbbq-idle-unity
 
-This document defines the deployment and resource plan for turning this repository into a buyer-reviewable service. It intentionally avoids public public financial assumptions, public financial guesses, or contract assumptions.
+This document defines the deployment and resource plan for turning this repository into a buyer-reviewable service. It intentionally avoids public financial assumptions, public financial guesses, or contract assumptions.
 
 ## Commercial Role
 
@@ -42,6 +42,15 @@ Visitor or operator
 
 - store/build credentials
 - backend token if saves enabled
+
+## Revenue Channel Architecture
+
+- **Primary channel:** B2C app and game distribution
+- **Monetization route:** Playable game launch with ads, in-app purchases, publisher pitch, or community support path.
+- **Acquisition motion:** Playable demo, store listing, creator clips, lightweight community loop, and portfolio proof.
+- **Activation path:** Validate fun loop, retention, device stability, store assets, and privacy copy before monetization.
+- **Margin control:** Use static or serverless hosting first; add paid backend resources only for accounts, payments, multiplayer, or durable state.
+- **Public boundary:** Keep revenue, pricing, and contract assumptions in private planning; this repository publishes service structure, resource needs, and technical proof only.
 
 ## Cost and Risk Controls
 
