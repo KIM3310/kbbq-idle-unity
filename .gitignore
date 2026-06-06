@@ -70,3 +70,4 @@ __pycache__/
 server/.env
 build_webgl.log
 .codex_runs/
+.wrangler/
