@@ -50,8 +50,8 @@ This note specializes the repository for service launch. It combines product str
 ## Conversion Path
 
 - Optional entry: Ad-supported WebGL game (Ads/IAP experiments) when this archived proof exactly matches the buyer problem.
-- Revival step: Publisher prototype ($500-$3k publisher prototype) only after the active successor and support boundary are clear.
-- Longer-term path: Playable portfolio/game-jam asset ($2k-$8k playable polish contract) if the repository is refreshed and assigned an owner.
+- Revival step: Publisher prototype (scope after buyer intake) only after the active successor and support boundary are clear.
+- Longer-term path: Playable portfolio/game-jam asset (scope after buyer intake) if the repository is refreshed and assigned an owner.
 
 ## Scope Frame
 

@@ -33,8 +33,8 @@ This repository is now curated as supporting material. Review it only after the 
 | Possible offer | Working scope assumption | Scope |
 |---|---|---|
 | Ad-supported WebGL game | Ads/IAP experiments | Scoped after review. |
-| Publisher prototype | $500-$3k publisher prototype | Scoped after review. |
-| Playable portfolio/game-jam asset | $2k-$8k playable polish contract | Scoped after review. |
+| Publisher prototype | Scope after buyer intake | Scoped after review. |
+| Playable portfolio/game-jam asset | Scope after buyer intake | Scoped after review. |
 
 ## Boundaries
 

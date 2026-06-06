@@ -21,8 +21,8 @@ This is the buyer-ready version of the repository. It turns the technical proof 
 | Offer | Scope assumption | Buyer-facing scope |
 |---|---|---|
 | Ad-supported WebGL game | Ads/IAP experiments | Add 5-minute session analytics |
-| Publisher prototype | $500-$3k publisher prototype | Test ad slot UX |
-| Playable portfolio/game-jam asset | $2k-$8k playable polish contract | Publish one WebGL build |
+| Publisher prototype | Scope after buyer intake | Test ad slot UX |
+| Playable portfolio/game-jam asset | Scope after buyer intake | Publish one WebGL build |
 
 ## Close Path
 
