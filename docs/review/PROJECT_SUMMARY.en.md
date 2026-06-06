@@ -16,22 +16,22 @@
 - **Orchestrator**: `GameManager` initializes systems, drives the tick loop, persists saves, and updates UI.
 - **Save**: `SaveSystem` stores `SaveData` in PlayerPrefs (`KBBQ_IDLE_SAVE`).
 - **State**: `GameStateMachine` (Boot/Tutorial/MainLoop/Pause/OfflineCalc).
-- **UI**: `UIController` binds views for missions, prestige, queue, upgrades, debug/perf overlay, tutorial, leaderboard, and monetization.
+- **UI**: `UIController` binds views for missions, prestige, queue, upgrades, debug/perf overlay, tutorial, leaderboard, and service launch.
 - **Analytics**: `AnalyticsService` logs events to console and can optionally forward events to the local backend (best-effort) when networking is enabled.
 
 ## Data & content
 - ScriptableObject assets in `Assets/Data`:
   - Menu items, upgrades, store tiers, customer types.
-  - Config: `GameDataCatalog`, `EconomyTuning`, `MonetizationConfig`, `ApiConfig`.
+  - Config: `GameDataCatalog`, `EconomyTuning`, `Service launchConfig`, `ApiConfig`.
 - Example content:
   - Menu items: Pork Belly, Beef Brisket, Soju, Bingsu, etc.
   - Upgrades: Grill Upgrade, Ventilation, recipe upgrades, etc.
   - Store tiers: Alley → Hongdae → Gangnam → Hanok → Global.
 - `GameDataCatalog` ties assets together; `DefaultDataFactory` provides fallback data if assets are missing.
 
-## Monetization
-- `MonetizationConfig` defines rewarded boost, interstitial reward, and IAP packs.
-- `MonetizationService` supports local-safe grant flow and optional backend verification (`/iap/verify`) before currency is granted.
+## Service launch
+- `Service launchConfig` defines rewarded boost, interstitial reward, and IAP packs.
+- `Service launchService` supports local-safe grant flow and optional backend verification (`/iap/verify`) before currency is granted.
 - Real store receipt verification (App Store / Play Store) remains an integration step for production deployment.
   - Added production-ready store verification mode hooks (`mock` / `structured` / `store`) on backend.
 

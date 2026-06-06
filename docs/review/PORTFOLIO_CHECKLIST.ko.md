@@ -21,7 +21,7 @@ STRICT_PORTFOLIO_GATE=1 tools/portfolio_quality_gate.sh
 1. `Assets/Scenes/Main.unity`를 실행하고 초당 수익 증가 확인
 2. 업그레이드 구매 후 `Income/sec` 상승 확인
 3. `Serve`/`Rush`로 큐 처리와 만족도 변화를 확인
-4. Monetization 패널에서 광고 보상/패키지 구매 플로우 확인
+4. Service launch 패널에서 광고 보상/패키지 구매 플로우 확인
 5. Leaderboard 패널에서 새로고침(네트워크 off: mock, on: live) 확인
 
 ## 3) 기술 포인트 설명(면접 답변용)
@@ -32,7 +32,7 @@ STRICT_PORTFOLIO_GATE=1 tools/portfolio_quality_gate.sh
 
 ## 4) 주요 파일 맵
 - 게임 오케스트레이션: `Assets/Scripts/Core/GameManager.cs`
-- 수익화/구매: `Assets/Scripts/Core/MonetizationService.cs`
+- 수익화/구매: `Assets/Scripts/Core/Service launchService.cs`
 - 리더보드 UI: `Assets/Scripts/UI/LeaderboardView.cs`
 - 네트워크 클라이언트: `Assets/Scripts/Network/`
 - 백엔드 API: `server/app.py`, `server/tests/test_api.py`

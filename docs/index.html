@@ -566,7 +566,7 @@
           <li><strong>1.</strong> If the playable build is absent, keep the placeholder visible and narrate the review route instead of implying a live game.</li>
           <li><strong>2.</strong> Run <em>Check Build Files</em> before claiming the WebGL surface is live.</li>
           <li><strong>3.</strong> Open <a href="./help.html">Help</a> and <a href="./about.html">About</a> to explain controls, loop, and deployment posture.</li>
-          <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing monetization or public rollout.</li>
+          <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing service launch or public rollout.</li>
         </ul>
       </section>
 
@@ -1408,7 +1408,7 @@
           '- ./index.html -> build preflight and playable surface',
           '- ./help.html -> controls, support path, and troubleshooting',
           '- ./about.html -> gameplay loop and deployment posture',
-          '- ./compliance.html -> public rollout and monetization guardrails',
+          '- ./compliance.html -> public rollout and service launch guardrails',
         ].join('\\n');
         const ok = await copyTextValue(payload);
         setStatus(ok ? 'Review route copied.' : 'Failed to copy review route.');

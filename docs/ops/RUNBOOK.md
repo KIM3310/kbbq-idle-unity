@@ -17,7 +17,7 @@ This repo is a Unity project (2022.3 LTS). The main gameplay runs in a single sc
 3. Use the boost button and confirm temporary multiplier.
 4. Tap “Serve” a few times to see tips/combos and satisfaction impact.
 5. Open missions/login UI and claim at least one reward.
-6. Open monetization UI and verify reward/ad or pack purchase status feedback.
+6. Open service launch UI and verify reward/ad or pack purchase status feedback.
 7. (Optional) Open the leaderboard panel:
    - With networking disabled (default), it uses mock data.
    - With networking enabled + backend running, it fetches live entries.
@@ -89,7 +89,7 @@ Unity opt-in:
   - `hmacSecret=CHANGE_ME` (must match `KBBQ_HMAC_SECRET`)
 
 Optional IAP verify path:
-- Monetization purchase flow can call `POST /iap/verify` to confirm pack grants server-side.
+- Service launch purchase flow can call `POST /iap/verify` to confirm pack grants server-side.
 - Default catalog (when not overridden): `starter=500`, `premium=4000`.
 
 Ops endpoints:

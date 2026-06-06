@@ -10,9 +10,9 @@ This repository is now curated as supporting material. Review it only after the 
 |---|---|
 | Repository | `kbbq-idle-unity` |
 | Status | Archived supporting repository |
-| Lane | B2C game and ad monetization |
+| Lane | B2C game and ad service launch |
 | Primary reader | Casual game publishers, ad-supported mini-game operators, and playable portfolio reviewers. |
-| Why it moved back | Game/ad monetization distracts from the enterprise AI and infrastructure portfolio signal. |
+| Why it moved back | Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal. |
 | Current successor | doeon-kim-portfolio and the B2B flagship repositories |
 
 ## Open First
@@ -30,7 +30,7 @@ This repository is now curated as supporting material. Review it only after the 
 
 ## Commercial Notes
 
-| Possible offer | Working price assumption | Scope |
+| Possible offer | Working scope assumption | Scope |
 |---|---|---|
 | Ad-supported WebGL game | Ads/IAP experiments | Scoped after review. |
 | Publisher prototype | $500-$3k publisher prototype | Scoped after review. |
@@ -41,7 +41,7 @@ This repository is now curated as supporting material. Review it only after the 
 - No copied assets
 - Ad compliance required
 - Retention must be measured before scaling
-- Game/ad monetization distracts from the enterprise AI and infrastructure portfolio signal.
+- Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal.
 - Do not present this as a current flagship or maintained product surface.
 
 ## Useful Metrics

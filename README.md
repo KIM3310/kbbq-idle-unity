@@ -3,7 +3,7 @@
 > **Curated supporting repo**
 > This repository is kept as optional proof, but it no longer leads the portfolio.
 > Current front door: **doeon-kim-portfolio and the B2B flagship repositories**.
-> Reason: Game/ad monetization distracts from the enterprise AI and infrastructure portfolio signal.
+> Reason: Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal.
 
 K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드와 GitHub/Cloudflare reviewer surface까지 함께 검토할 수 있도록 정리되어 있습니다.
 
@@ -36,17 +36,17 @@ Updated: **February 18, 2026**
 - **Commercial read:** Treat the game as a monetizable loop prototype with a static hosting and ad-review path.
 
 
-## Commercialization Playbook
+## Service Launch Playbook
 
-- [Monetization and GTM playbook](docs/monetization-playbook.md) maps the repository to buyer segments, offer ladder, pricing hypotheses, proof gates, and risk boundaries.
+- [Service launch playbook](docs/service-launch-playbook.md) maps the repository to buyer segments, offer ladder, proof gates, proof gates, and risk boundaries.
 
 ## Review Notes
 
 - [Review guide](docs/reviewer-evidence-map.md) summarizes the project angle, first files to inspect, verification commands, and known boundaries.
 - [Quality notes](docs/quality-gate.md) lists the local checks, CI surface, and release expectations for this repository.
-- [Revenue growth model](docs/revenue-growth-model.md) maps the project to an ethical revenue path, activation loop, pricing logic, and growth experiments.
+- [Service growth model](docs/service-growth-model.md) maps the project to an ethical service path, activation loop, scope logic, and growth experiments.
 - [Enterprise readiness notes](docs/enterprise-readiness.md) outlines security, data, operations, integration, and handoff expectations.
-- [Conversion UX model](docs/conversion-ux-model.md) maps the buyer path, behavioral design, UI/UX direction, pricing frame, and ethical conversion guardrails.
+- [Conversion UX model](docs/conversion-ux-model.md) maps the buyer path, behavioral design, UI/UX direction, scope frame, and ethical conversion guardrails.
 - [Commercial offer](docs/commercial-offer.md) packages the repository into a buyer-ready offer ladder, proof gate, outreach angle, and close path.
 - [Portfolio fit](docs/portfolio-fit.md) explains why this repository is archived/supporting and where the current portfolio front door lives.
 
@@ -155,16 +155,16 @@ This validates:
 - `server/README.md`: backend-only setup and API notes
 
 ## Reviewer Surface
-- Unity perf overlay now exposes `kbbq-idle-review-pack-v1` with live tier, queue, income, and monetization posture.
+- Unity perf overlay now exposes `kbbq-idle-review-pack-v1` with live tier, queue, income, and service launch posture.
 - Optional backend exposes `GET /health`, `GET /meta`, `GET /readiness`, `GET /review-pack`, and `GET /ops/release-readiness` for delivery and ops review.
-- Recommended review order: inspect backend posture, play the grill loop in Unity/WebGL, then verify monetization remains optional.
+- Recommended review order: inspect backend posture, play the grill loop in Unity/WebGL, then verify service launch remains optional.
 
 ## Review Flow
 - Open `/health` and `/meta` to confirm runtime posture, enabled surfaces, and next action.
 - Open `/ops/release-readiness` before `/review-pack` to confirm launch blockers, operator rules, and release posture.
-- Open `/review-pack` to pin gameplay loop, economy contract, and monetization posture.
+- Open `/review-pack` to pin gameplay loop, economy contract, and service launch posture.
 - Run the Unity WebGL build or Editor scene and validate the grill -> serve -> upgrade loop.
-- Read the live perf overlay before claiming delivery or monetization readiness.
+- Read the live perf overlay before claiming delivery or service launch readiness.
 
 ## Proof Assets
 - `Health Envelope` -> `/health`
@@ -206,4 +206,8 @@ This repository includes a neutral cloud and AI engineering blueprint that maps 
 
 ## Enterprise Productization
 
-- [Product operating model](docs/product-operating-model.md) defines the buyer, paid wedge, trust boundary, operating checks, and revenue path for this repository.
+- [Product operating model](docs/product-operating-model.md) defines the buyer, paid wedge, trust boundary, operating checks, and service path for this repository.
+
+## Service Architecture
+
+- [Service architecture](docs/service-architecture.md) defines the cloud resources, account information, cost controls, and production guardrails needed to turn this repo into a scoped service without publishing public financial assumptions.

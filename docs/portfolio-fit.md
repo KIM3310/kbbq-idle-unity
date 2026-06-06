@@ -7,7 +7,7 @@ Updated: 2026-05-30
 | Field | Decision |
 |---|---|
 | Status | Archived/supporting |
-| Why | Game/ad monetization distracts from the enterprise AI and infrastructure portfolio signal. |
+| Why | Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal. |
 | Show instead | doeon-kim-portfolio and the B2B flagship repositories |
 | Still useful for | Keep as a creative side experiment only. |
 
