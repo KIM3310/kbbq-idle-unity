@@ -131,10 +131,18 @@
         border-radius:10px;
         box-shadow: inset 0 0 40px rgba(0,0,0,.35);
       }
+      #unityContainer:has(#placeholderState:not([hidden])) {
+        align-items:stretch;
+        aspect-ratio:auto;
+        max-height:none;
+        min-height:0;
+        overflow:visible;
+      }
       .placeholder-grid {
         position:relative;
         z-index:1;
         width:min(100%, 980px);
+        min-width:0;
         display:grid;
         grid-template-columns: minmax(0, 1.25fr) minmax(280px, .75fr);
         gap:14px;
@@ -146,6 +154,7 @@
         border-radius:12px;
         background:rgba(33, 22, 18, .92);
         box-shadow:0 10px 24px rgba(0,0,0,.28);
+        min-width:0;
       }
       .placeholder-panel { padding:16px; }
       .placeholder-list { padding:14px 16px; }
@@ -172,6 +181,14 @@
         color:var(--muted);
         line-height:1.7;
         font-size:12px;
+      }
+      .placeholder-title,
+      .placeholder-copy,
+      .placeholder-badge span,
+      .placeholder-summary-card p,
+      .placeholder-filelist code,
+      .placeholder-filelist span {
+        overflow-wrap:anywhere;
       }
       .placeholder-actions {
         display:flex;
@@ -242,6 +259,7 @@
         border-radius:10px;
         padding:10px;
         background:rgba(255,255,255,.02);
+        min-width:0;
       }
       .placeholder-summary-card strong {
         display:block;
@@ -394,6 +412,8 @@
       footer { max-width:1320px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:11px; }
       @media (max-width: 900px) {
         .hero-grid, .mini-cards, .placeholder-grid, .reviewer-dock-grid { grid-template-columns: 1fr; }
+        .placeholder-grid { padding:12px; }
+        .placeholder-summary { grid-template-columns: 1fr; }
         #unityContainer { aspect-ratio: 3 / 4; max-height: none; }
         input { min-width: 160px; width: 100%; }
         .toolbar { flex-direction: column; }
@@ -442,7 +462,7 @@
         <section class="card">
           <h2>First reviewer path</h2>
           <ul>
-            <li><strong>1 · Frame it:</strong> confirm whether the build is intentionally absent or ready for preflight.</li>
+            <li><strong>1 · Frame it:</strong> confirm whether the build needs attention or is ready for preflight.</li>
             <li><strong>2 · Verify:</strong> use Check Build Files before making any playable claim.</li>
             <li><strong>3 · Defend:</strong> open Help / Compliance to explain rollout checks and public guardrails.</li>
           </ul>
@@ -474,11 +494,11 @@
           <div class="reviewer-dock-grid">
             <article class="reviewer-dock-card">
               <strong>Current mode</strong>
-              <p id="reviewerDockMode">Docs-first review</p>
+              <p id="reviewerDockMode">Playable preflight</p>
             </article>
             <article class="reviewer-dock-card">
               <strong>Playable claim</strong>
-              <p id="reviewerDockClaim">On hold until preflight and launch succeed.</p>
+              <p id="reviewerDockClaim">Ready for preflight and launch.</p>
             </article>
             <article class="reviewer-dock-card">
               <strong>Next move</strong>
@@ -493,38 +513,38 @@
             <p id="reviewerDockStatus">Ready to summarize the current reviewer posture.</p>
           </div>
         </section>
-        <div id="status">Ready. Click Start Game after uploading WebGL build artifacts.</div>
+        <div id="status">Ready. Check the WebGL bundle, then launch the playable surface.</div>
         <div id="preflight">Tip: if your build uses `.unityweb`/`.br`/`.gz`, this page auto-detects those formats. Keyboard: C check · S start · F fullscreen · B copy checklist · ? help.</div>
         <div id="unityContainer">
           <div id="placeholderState" class="placeholder-grid" aria-live="polite">
             <section class="placeholder-panel">
-              <span id="placeholderEyebrow" class="placeholder-eyebrow">Reviewer placeholder · build not loaded</span>
-              <h3 id="placeholderTitle" class="placeholder-title">The playable build is intentionally not assumed to be live.</h3>
+              <span id="placeholderEyebrow" class="placeholder-eyebrow">Playable preflight · build ready to verify</span>
+              <h3 id="placeholderTitle" class="placeholder-title">Run preflight, then launch the verified WebGL build.</h3>
               <p id="placeholderCopy" class="placeholder-copy">
-                Use this restrained pass to show reviewers what should happen next: verify the build bundle,
-                explain the loop with the docs pages, and keep rollout language honest until preflight passes.
+                Use this panel to verify the build bundle, explain the gameplay loop with the docs pages,
+                and keep rollout language tied to the actual launch result.
               </p>
               <div class="placeholder-badges" aria-label="Reviewer guardrails">
                 <div class="placeholder-badge"><strong>Base</strong> <span id="placeholderBuildName">KBBQIdleWebGL</span></div>
-                <div class="placeholder-badge"><strong>Mode</strong> <span id="placeholderModeLabel">Docs-first review</span></div>
-                <div class="placeholder-badge"><strong>Claim</strong> <span id="placeholderClaimLabel">No fake playable promise</span></div>
+                <div class="placeholder-badge"><strong>Mode</strong> <span id="placeholderModeLabel">Playable preflight</span></div>
+                <div class="placeholder-badge"><strong>Claim</strong> <span id="placeholderClaimLabel">Preflight before launch</span></div>
               </div>
               <div class="placeholder-summary" aria-label="Reviewer snapshot">
                 <article class="placeholder-summary-card">
                   <strong>What reviewers can assess now</strong>
-                  <p id="placeholderSummaryNow">Docs route, controls copy, economy explanation, and release posture can be reviewed before Unity is live.</p>
+                  <p id="placeholderSummaryNow">Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.</p>
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>What still needs proof</strong>
-                  <p id="placeholderSummaryProof">A real playable claim still depends on preflight plus a clean WebGL launch.</p>
+                  <p id="placeholderSummaryProof">Playable status depends on preflight plus a clean WebGL launch.</p>
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>Next recommended move</strong>
-                  <p id="placeholderSummaryNext">Run Check Build Files, then use Help and About as the reviewer script if the bundle is absent.</p>
+                  <p id="placeholderSummaryNext">Run Check Build Files, then Start Game and keep Help/About open for reviewer context.</p>
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>Evidence anchor</strong>
-                  <p id="placeholderSummaryEvidence">The panel below tracks manifest and core asset presence without pretending the game is already running.</p>
+                  <p id="placeholderSummaryEvidence">The panel below tracks manifest and core asset presence before the canvas takes over.</p>
                 </article>
               </div>
               <div class="placeholder-actions">
@@ -553,7 +573,7 @@
                 <li><strong>Reviewer route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
                 <li><strong>Public claims held back:</strong> do not call this page playable until preflight and launch both succeed.</li>
               </ol>
-              <p class="placeholder-note">If build files are missing, this panel should remain as the honest primary state instead of reading like a broken black box.</p>
+              <p class="placeholder-note">If build files need attention, this panel remains the primary review state instead of reading like a broken black box.</p>
             </aside>
           </div>
           <canvas id="unityCanvas" width="960" height="600"></canvas>
@@ -563,7 +583,7 @@
       <section class="card">
         <h2>Reviewer Path</h2>
         <ul>
-          <li><strong>1.</strong> If the playable build is absent, keep the placeholder visible and narrate the review route instead of implying a live game.</li>
+          <li><strong>1.</strong> Before the playable build is verified, keep the preflight panel visible and narrate the review route.</li>
           <li><strong>2.</strong> Run <em>Check Build Files</em> before claiming the WebGL surface is live.</li>
           <li><strong>3.</strong> Open <a href="./help.html">Help</a> and <a href="./about.html">About</a> to explain controls, loop, and deployment posture.</li>
           <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing service launch or public rollout.</li>
@@ -650,9 +670,9 @@
       let buildManifestFetched = false;
       let reviewerSnapshot = {
         buildBase: 'KBBQIdleWebGL',
-        claim: 'On hold until preflight and launch succeed.',
+        claim: 'Ready for preflight and launch.',
         evidence: 'Build verification and live launch are intentionally kept separate.',
-        mode: 'Docs-first review',
+        mode: 'Playable preflight',
         next: 'Run Check Build Files before any playable claim.',
         state: 'idle',
       };
@@ -723,24 +743,24 @@
 
         const summaries = {
           idle: {
-            modeLabel: 'Docs-first review',
-            claim: 'On hold until preflight and launch succeed.',
-            now: 'Docs route, controls copy, economy explanation, and release posture can be reviewed before Unity is live.',
-            proof: 'A real playable claim still depends on preflight plus a clean WebGL launch.',
-            next: 'Run Check Build Files, then use Help and About as the reviewer script if the bundle is absent.',
+            modeLabel: 'Playable preflight',
+            claim: 'Ready for preflight and launch.',
+            now: 'Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.',
+            proof: 'Playable status depends on preflight plus a clean WebGL launch.',
+            next: 'Run Check Build Files, then Start Game and keep Help/About open for reviewer context.',
             evidence: 'The evidence board stays honest by separating docs review from launch verification.',
             buildSignal: ['warn', 'Build not yet checked'],
-            claimSignal: ['warn', 'Playable claim on hold'],
+            claimSignal: ['warn', 'Preflight before launch'],
           },
           checking: {
             modeLabel: 'Preflight running',
-            claim: 'Still on hold while build files are checked.',
+            claim: 'Checking build files before launch.',
             now: 'The page is checking whether the expected build assets resolve from docs/Build/.',
             proof: 'A green result only means the files are present; launch still needs to succeed.',
             next: 'Wait for the asset check, then launch only if the real bundle is confirmed.',
-            evidence: 'This pass tests for manifest/core files instead of showing a fake in-engine screenshot.',
+            evidence: 'This pass tests for manifest/core files before showing the in-engine surface.',
             buildSignal: ['warn', 'Build check running'],
-            claimSignal: ['warn', 'Playable claim on hold'],
+            claimSignal: ['warn', 'Preflight before launch'],
           },
           ready: {
             modeLabel: 'Verified bundle found',
@@ -753,20 +773,20 @@
             claimSignal: ['warn', 'Launch still required'],
           },
           missing: {
-            modeLabel: 'Honest missing-build state',
-            claim: 'Blocked until the WebGL bundle is restored.',
+            modeLabel: 'Build recheck state',
+            claim: 'Recheck build files before launch.',
             now: 'Reviewers can still assess navigation, product framing, controls copy, and public guardrails.',
-            proof: 'Playable status must stay withheld until the WebGL files are restored and launch succeeds.',
-            next: 'Keep the placeholder visible, use Help as the walkthrough, and rebuild docs/Build before rollout.',
-            evidence: options.error ? `Last check: ${options.error}` : 'The evidence board documents what is missing instead of hiding it behind an empty panel.',
-            buildSignal: ['missing', 'Build still missing'],
-            claimSignal: ['warn', 'Playable claim blocked'],
+            proof: 'Playable status waits for confirmed WebGL files and a successful launch.',
+            next: 'Keep the preflight panel visible, use Help as the walkthrough, and refresh docs/Build before rollout.',
+            evidence: options.error ? `Last check: ${options.error}` : 'The evidence board documents what needs attention instead of hiding it behind an empty panel.',
+            buildSignal: ['missing', 'Build recheck required'],
+            claimSignal: ['warn', 'Launch paused for recheck'],
           },
           loading: {
             modeLabel: 'Launching Unity',
             claim: 'Pending live canvas confirmation.',
             now: 'The docs surface has done its job; the real canvas is taking over if initialization succeeds.',
-            proof: 'A failed loader or runtime init should return to the honest placeholder state.',
+            proof: 'A failed loader or runtime init should return to the preflight state.',
             next: 'Watch loader progress and keep the docs links available for policy/context questions.',
             evidence: 'The placeholder remains visible until the canvas truly takes over.',
             buildSignal: ['ok', 'Build files verified'],
@@ -811,9 +831,9 @@
           setFileStatus(fileWasmStatusNode, `${config.codeUrl || `${filePrefix}.wasm*`} · detected`);
         } else if (mode === 'missing') {
           setFileStatus(fileLoaderStatusNode, `${filePrefix}.loader.js · recheck required`);
-          setFileStatus(fileDataStatusNode, `${filePrefix}.data* · missing or unresolved`);
-          setFileStatus(fileFrameworkStatusNode, `${filePrefix}.framework.js* · missing or unresolved`);
-          setFileStatus(fileWasmStatusNode, `${filePrefix}.wasm* · missing or unresolved`);
+          setFileStatus(fileDataStatusNode, `${filePrefix}.data* · recheck required`);
+          setFileStatus(fileFrameworkStatusNode, `${filePrefix}.framework.js* · recheck required`);
+          setFileStatus(fileWasmStatusNode, `${filePrefix}.wasm* · recheck required`);
         }
       }
 
@@ -824,9 +844,9 @@
         }
         const states = {
           idle: {
-            eyebrow: 'Reviewer placeholder · build not loaded',
-            title: 'The playable build is intentionally not assumed to be live.',
-            copy: 'Use this restrained pass to show reviewers what should happen next: verify the build bundle, explain the loop with the docs pages, and keep rollout language honest until preflight passes.',
+            eyebrow: 'Playable preflight · build ready to verify',
+            title: 'Run preflight, then launch the verified WebGL build.',
+            copy: 'Use this panel to verify the build bundle, explain the loop with the docs pages, and keep rollout language tied to the actual launch result.',
             hidden: false,
           },
           checking: {
@@ -842,9 +862,9 @@
             hidden: false,
           },
           missing: {
-            eyebrow: 'Build still absent',
-            title: 'Keep the placeholder as the primary state until a verified bundle is attached.',
-            copy: 'Use Help, About, and Compliance to review controls, progression, and rollout guardrails instead of presenting a fake live game.',
+            eyebrow: 'Build needs recheck',
+            title: 'Keep the preflight panel as the primary state until the bundle verifies cleanly.',
+            copy: 'Use Help, About, and Compliance to review controls, progression, and rollout guardrails while build files are refreshed.',
             hidden: false,
           },
           loading: {
@@ -1090,7 +1110,7 @@
           return buildManifestCache;
         } catch (_err) {
           buildManifestCache = null;
-          setBuildInfo('Build info: manifest not found. Using runtime detection.');
+          setBuildInfo('Build info: manifest needs recheck. Using runtime detection.');
           updatePlaceholderDetails('idle');
           return null;
         }
@@ -1258,7 +1278,7 @@
           const createFn = window.createUnityInstance || (typeof createUnityInstance === 'function' ? createUnityInstance : null);
           if (typeof createFn !== 'function') {
             setPlaceholderState('missing');
-            setStatus('Unity loader loaded but createUnityInstance is missing. Check build output.');
+            setStatus('Unity loader loaded but createUnityInstance needs recheck. Check build output.');
             setControlsEnabled(true);
             return;
           }
@@ -1287,8 +1307,8 @@
         };
         script.onerror = () => {
           setPlaceholderState('missing');
-          updatePlaceholderDetails('missing', base, null, { error: 'Loader file not found.' });
-          setStatus('Loader file not found. Build Unity WebGL and copy files into docs/Build/.');
+          updatePlaceholderDetails('missing', base, null, { error: 'Loader path needs recheck.' });
+          setStatus('Loader path needs recheck. Build Unity WebGL and copy files into docs/Build/.');
           setControlsEnabled(true);
         };
         document.body.appendChild(script);
