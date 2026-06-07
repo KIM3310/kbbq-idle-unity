@@ -11,8 +11,8 @@ public struct IapPack
     public double currencyReward;
 }
 
-[CreateAssetMenu(menuName = "KBBQ/Monetization Config")]
-public class MonetizationConfig : ScriptableObject
+[CreateAssetMenu(menuName = "KBBQ/OptionalEconomy Config")]
+public class OptionalEconomyConfig : ScriptableObject
 {
     public bool enableAds = true;
     public bool enableIap = true;

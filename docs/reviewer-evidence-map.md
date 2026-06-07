@@ -30,7 +30,7 @@ This repository is now curated as supporting material. Review it only after the 
 
 ## Review Notes
 
-| Possible offer | Working scope assumption | Scope |
+| Possible next step | Working scope assumption | Scope |
 |---|---|---|
 | WebGL gameplay prototype | Optional economy experiments | Scoped after review. |
 | Publisher prototype | Scope after reviewer intake | Scoped after review. |

@@ -2,7 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.UI;
 
-public class MonetizationView : MonoBehaviour
+public class OptionalEconomyView : MonoBehaviour
 {
     [SerializeField] private Text statusText;
     [SerializeField] private Button rewardedButton;
@@ -11,14 +11,14 @@ public class MonetizationView : MonoBehaviour
     [SerializeField] private Button[] packButtons;
     [SerializeField] private Text[] packLabels;
 
-    private MonetizationService service;
+    private OptionalEconomyService service;
     private GameManager gameManager;
     private List<IapPack> packs = new List<IapPack>();
 
     public void Bind(GameManager manager)
     {
         gameManager = manager;
-        service = manager != null ? manager.GetMonetizationService() : null;
+        service = manager != null ? manager.GetOptionalEconomyService() : null;
 
         if (rewardedButton != null)
         {
@@ -121,7 +121,7 @@ public class MonetizationView : MonoBehaviour
 
         var pack = packs[index];
         var ok = service != null && service.PurchasePack(pack.id);
-        SetStatus(ok ? pack.displayName + " 구매 완료" : "구매 실패");
+        SetStatus(ok ? pack.displayName + " 적용 완료" : "적용 실패");
         gameManager?.GetAudioManager()?.PlayButton();
     }
 

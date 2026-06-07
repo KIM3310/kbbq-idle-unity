@@ -22,16 +22,16 @@
 ## Data & content
 - ScriptableObject assets in `Assets/Data`:
   - Menu items, upgrades, store tiers, customer types.
-  - Config: `GameDataCatalog`, `EconomyTuning`, `Service launchConfig`, `ApiConfig`.
+  - Config: `GameDataCatalog`, `EconomyTuning`, `OptionalEconomyConfig`, `ApiConfig`.
 - Example content:
   - Menu items: Pork Belly, Beef Brisket, Soju, Bingsu, etc.
   - Upgrades: Grill Upgrade, Ventilation, recipe upgrades, etc.
   - Store tiers: Alley → Hongdae → Gangnam → Hanok → Global.
 - `GameDataCatalog` ties assets together; `DefaultDataFactory` provides fallback data if assets are missing.
 
-## Service launch
-- `Service launchConfig` defines rewarded boost, interstitial reward, and IAP packs.
-- `Service launchService` supports local-safe grant flow and optional backend verification (`/iap/verify`) before currency is granted.
+## Optional economy
+- `OptionalEconomyConfig` defines rewarded boost, interstitial reward, and optional packs.
+- `OptionalEconomyService` supports local-safe grant flow and optional backend verification (`/iap/verify`) before currency is granted.
 - Real store receipt verification (App Store / Play Store) remains an integration step for production deployment.
   - Added production-ready store verification mode hooks (`mock` / `structured` / `store`) on backend.
 

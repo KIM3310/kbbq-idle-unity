@@ -2349,7 +2349,7 @@ GameObject:
   - component: {fileID: 645632971894261182}
   - component: {fileID: 1071919366613937354}
   m_Layer: 0
-  m_Name: MonetizationPanel
+  m_Name: OptionalEconomyPanel
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -4788,7 +4788,7 @@ MonoBehaviour:
     m_PersistentCalls:
       m_Calls:
       - m_Target: {fileID: 1071919366613937354}
-        m_TargetAssemblyTypeName: MonetizationView, Assembly-CSharp
+        m_TargetAssemblyTypeName: OptionalEconomyView, Assembly-CSharp
         m_MethodName: Open
         m_Mode: 0
         m_Arguments:
@@ -8943,7 +8943,7 @@ MonoBehaviour:
   perfOverlayView: {fileID: 7209178732376937311}
   tutorialView: {fileID: 5281034278964758894}
   leaderboardView: {fileID: 8936166023562909966}
-  monetizationView: {fileID: 1071919366613937354}
+  optionalEconomyView: {fileID: 1071919366613937354}
 --- !u!1 &8498799843034351384
 GameObject:
   m_ObjectHideFlags: 0

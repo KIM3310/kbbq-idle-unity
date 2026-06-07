@@ -531,13 +531,13 @@ MonoBehaviour:
   customerTypes: []
   apiConfig: {fileID: 0}
   economyTuning: {fileID: 0}
-  monetizationConfig: {fileID: 0}
+  optionalEconomyConfig: {fileID: 0}
   dataCatalog: {fileID: 11400000, guid: bc456afc175544d01af2602249004207, type: 2}
   audioManager: {fileID: 1959784352569018306}
   uiController: {fileID: 0}
   networkService: {fileID: 3142428896502396034}
   analyticsService: {fileID: 5868423781530824241}
-  monetizationService: {fileID: 7002777355385496308}
+  optionalEconomyService: {fileID: 7002777355385496308}
   manualBoostMultiplier: 2
   manualBoostDuration: 3
   maxOfflineHours: 8
@@ -600,7 +600,7 @@ GameObject:
   - component: {fileID: 926256277257804951}
   - component: {fileID: 7002777355385496308}
   m_Layer: 0
-  m_Name: MonetizationService
+  m_Name: OptionalEconomyService
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0

@@ -22,7 +22,7 @@
 ## 데이터/콘텐츠
 - `Assets/Data`에 ScriptableObject 기반 데이터:
   - 메뉴/업그레이드/매장 티어/손님 타입
-  - 설정: `GameDataCatalog`, `EconomyTuning`, `Service launchConfig`, `ApiConfig`
+  - 설정: `GameDataCatalog`, `EconomyTuning`, `OptionalEconomyConfig`, `ApiConfig`
 - 예시 콘텐츠:
   - 메뉴: Pork Belly, Beef Brisket, Soju, Bingsu 등
   - 업그레이드: Grill Upgrade, Ventilation, 레시피 업그레이드 등
@@ -30,8 +30,8 @@
 - `GameDataCatalog`가 데이터 묶음을 연결하고, `DefaultDataFactory`가 에셋 누락 시 기본 데이터를 생성합니다.
 
 ## 운영 모델
-- `Service launchConfig`에 보상형 이벤트 부스트, 전면 이벤트 보상, IAP 패키지 정의.
-- `Service launchService`는 로컬 안전 지급 플로우와 선택적 서버 검증(`POST /iap/verify`) 경로를 지원합니다.
+- `OptionalEconomyConfig`에 보상형 이벤트 부스트, 전면 이벤트 보상, 선택형 패키지를 정의합니다.
+- `OptionalEconomyService`는 로컬 안전 지급 플로우와 선택적 서버 검증(`POST /iap/verify`) 경로를 지원합니다.
 - 실제 스토어 영수증 검증(App Store / Play Store)은 운영 배포 단계의 연동 과제로 남겨두었습니다.
   - 백엔드에 `mock` / `structured` / `store` 검증 모드가 추가되어 운영 전환 경로를 제공.
 
@@ -47,7 +47,7 @@
   - 리더보드: `POST /leaderboard/submit`, `GET /leaderboard/top`
   - 친구: `POST /friends/invite`, `GET /friends/list`
   - 이벤트 수집: `POST /analytics/event`
-  - IAP 검증: `POST /iap/verify` (서버 권한형 보상 지급 + 거래 idempotency)
+  - 선택형 패키지 검증: `POST /iap/verify` (서버 권한형 보상 지급 + 거래 idempotency)
   - 준비상태 점검: `GET /readiness` (설정/DB probe)
   - 모니터링: `GET /metrics`, `GET /ops/alerts`
 

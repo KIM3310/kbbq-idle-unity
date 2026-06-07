@@ -40,10 +40,10 @@ public class PerfOverlayView : MonoBehaviour
         var reviewContract = "kbbq-idle-review-pack-v1";
         var storeTier = "Alley";
         var incomePerSec = 0d;
-        var monetizationMode = "Optional economy off / IAP off / Packs 0";
+        var optionalEconomyMode = "Optional economy off / Packs off / Packs 0";
         var reviewStep = "Check grill flow, queue pressure, then optional economy posture.";
         var focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay";
-        var reviewerSnapshot = "Tier Alley / Queue 0 / Economy off / IAP off / Packs 0";
+        var reviewerSnapshot = "Tier Alley / Queue 0 / Economy off / Packs off / Packs 0";
         var focusedOpsSnapshot = "Preset 1.0x / Queue 0 / Wait 0.0s / Served 0/min";
         var twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay";
         var reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay";
@@ -59,7 +59,7 @@ public class PerfOverlayView : MonoBehaviour
             reviewContract = reviewPack.contract;
             storeTier = reviewPack.storeTier;
             incomePerSec = reviewPack.incomePerSecond;
-            monetizationMode = reviewPack.monetizationMode;
+            optionalEconomyMode = reviewPack.optionalEconomyMode;
             reviewStep = reviewPack.reviewStep;
             focusedRoute = reviewPack.focusedRoute;
             reviewerSnapshot = reviewPack.reviewerSnapshot;
@@ -76,7 +76,7 @@ public class PerfOverlayView : MonoBehaviour
                            "\nServed/min " + servedPerMin.ToString("0") +
                            "\nAvg wait " + avgWait.ToString("0.0") + "s" +
                            "\nIncome/s " + FormatUtil.FormatCurrency(incomePerSec) +
-                           "\nEconomy " + monetizationMode +
+                           "\nEconomy " + optionalEconomyMode +
                            "\nPreset " + presetLabel +
                            "\nReview " + reviewStep +
                            "\nRoute " + focusedRoute +

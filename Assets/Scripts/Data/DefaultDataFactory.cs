@@ -91,9 +91,9 @@ public static class DefaultDataFactory
         return tuning;
     }
 
-    public static MonetizationConfig CreateMonetizationConfig()
+    public static OptionalEconomyConfig CreateOptionalEconomyConfig()
     {
-        var config = ScriptableObject.CreateInstance<MonetizationConfig>();
+        var config = ScriptableObject.CreateInstance<OptionalEconomyConfig>();
         config.enableAds = true;
         config.enableIap = true;
         config.rewardedMultiplier = 2f;

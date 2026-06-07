@@ -1,14 +1,14 @@
 using UnityEngine;
 
-public class MonetizationService : MonoBehaviour
+public class OptionalEconomyService : MonoBehaviour
 {
-    [SerializeField] private MonetizationConfig config;
+    [SerializeField] private OptionalEconomyConfig config;
 
     private GameManager gameManager;
 
-    public MonetizationConfig Config => config;
+    public OptionalEconomyConfig Config => config;
 
-    public void Bind(GameManager gameManager, MonetizationConfig config)
+    public void Bind(GameManager gameManager, OptionalEconomyConfig config)
     {
         this.gameManager = gameManager;
         this.config = config;

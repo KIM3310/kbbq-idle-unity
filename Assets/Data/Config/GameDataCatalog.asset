@@ -49,5 +49,5 @@ MonoBehaviour:
   - {fileID: 11400000, guid: 04bf5bdaf636145c9aa7fe30df413045, type: 2}
   - {fileID: 11400000, guid: 6c0593da2fa804768b70e2f4d49d7901, type: 2}
   economyTuning: {fileID: 11400000, guid: 2264849c82c3642b7882dd4e938098d0, type: 2}
-  monetizationConfig: {fileID: 11400000, guid: 7e47554d0d97a46dab4343f578e60a46, type: 2}
+  optionalEconomyConfig: {fileID: 11400000, guid: 7e47554d0d97a46dab4343f578e60a46, type: 2}
   apiConfig: {fileID: 11400000, guid: d4be608ea1ead4b438b4a88d8e83c906, type: 2}

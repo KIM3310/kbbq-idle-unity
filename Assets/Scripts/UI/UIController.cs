@@ -31,7 +31,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private PerfOverlayView perfOverlayView;
     [SerializeField] private TutorialView tutorialView;
     [SerializeField] private LeaderboardView leaderboardView;
-    [SerializeField] private MonetizationView monetizationView;
+    [SerializeField] private OptionalEconomyView optionalEconomyView;
     [SerializeField] private GrillStationView grillStationView;
 
     [Header("Responsive Layout")]
@@ -45,7 +45,7 @@ public class UIController : MonoBehaviour
     [SerializeField] private RectTransform perfOverlayRect;
     [SerializeField] private RectTransform tutorialOverlayRect;
     [SerializeField] private RectTransform leaderboardPanelRect;
-    [SerializeField] private RectTransform monetizationPanelRect;
+    [SerializeField] private RectTransform optionalEconomyPanelRect;
     [SerializeField] private RectTransform dailyMissionPanelRect;
     [SerializeField] private RectTransform prestigePanelRect;
     [SerializeField] private float panelMargin = 20f;
@@ -87,7 +87,7 @@ public class UIController : MonoBehaviour
         perfOverlayView?.Bind(manager);
         tutorialView?.Bind(manager);
         leaderboardView?.Bind(manager);
-        monetizationView?.Bind(manager);
+        optionalEconomyView?.Bind(manager);
         grillStationView?.Bind(manager);
         if (debugToggleButton != null && !Application.isEditor)
         {
@@ -445,9 +445,9 @@ public class UIController : MonoBehaviour
         {
             leaderboardPanelRect = leaderboardView.transform as RectTransform;
         }
-        if (monetizationPanelRect == null && monetizationView != null)
+        if (optionalEconomyPanelRect == null && optionalEconomyView != null)
         {
-            monetizationPanelRect = monetizationView.transform as RectTransform;
+            optionalEconomyPanelRect = optionalEconomyView.transform as RectTransform;
         }
         if (grillStationView == null && grillPanel != null)
         {
@@ -736,7 +736,7 @@ public class UIController : MonoBehaviour
         LayoutAuxiliaryPanels(landscape);
 
         SetCenteredPanel(leaderboardPanelRect, landscape ? 920f : 760f, landscape ? 700f : 1020f);
-        SetCenteredPanel(monetizationPanelRect, landscape ? 900f : 760f, landscape ? 620f : 980f);
+        SetCenteredPanel(optionalEconomyPanelRect, landscape ? 900f : 760f, landscape ? 620f : 980f);
 
         if (debugPanelRect != null)
         {

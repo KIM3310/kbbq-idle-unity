@@ -238,7 +238,7 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
     economy_contract = {
         "loop": "queue throughput drives income_per_second and upgrade pacing",
         "store_tiers": "level-based store tier progression changes income multiplier",
-        "optional_economy": "optional rewards and IAP remain optional, server-authoritative verification stays on backend",
+        "optional_economy": "optional rewards and pack grants stay optional, server-authoritative verification remains on backend",
     }
     reviewer_posture = {
         "runtime_source_of_truth": "/review-pack + Unity WebGL/Editor loop",
@@ -261,7 +261,7 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         "trust_boundary": [
             "Unity client stays playable without backend; networking remains opt-in for demo flows.",
             "Signed headers and nonce replay protection guard leaderboard, analytics, and feedback routes.",
-            "IAP verification remains server-authoritative and does not trust client currency grants.",
+            "Optional pack verification remains server-authoritative and does not trust client currency grants.",
         ],
         "review_sequence": [
             "Open /health and /meta to confirm ops posture and enabled surfaces.",
@@ -438,7 +438,7 @@ def _build_economy_balance_drill() -> dict[str, object]:
         "summary": {
             "guardian_triggers": len(tiers),
             "optional_economy_enabled": False,
-            "optional_economy_posture": "reviewer-safe optional IAP and rewards remain off by default",
+            "optional_economy_posture": "reviewer-safe optional packs and rewards remain off by default",
             "highest_offline_pressure_minutes": max(item["offline_pressure_minutes"] for item in tiers),
             "offline_pressure_delta_minutes": final_tier["offline_pressure_minutes"] - starter["offline_pressure_minutes"],
             "largest_upgrade_delta_pct": max(item["upgrade_delta_pct"] for item in tiers),

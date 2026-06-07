@@ -9,6 +9,6 @@ public class GameDataCatalog : ScriptableObject
     public List<StoreTier> storeTiers = new List<StoreTier>();
     public List<CustomerType> customerTypes = new List<CustomerType>();
     public EconomyTuning economyTuning;
-    public MonetizationConfig monetizationConfig;
+    public OptionalEconomyConfig optionalEconomyConfig;
     public ApiConfig apiConfig;
 }

@@ -44,7 +44,7 @@ public struct GameplayReviewPack
     public int queueCount;
     public float servedPerMinute;
     public float averageWaitSeconds;
-    public string monetizationMode;
+    public string optionalEconomyMode;
     public string reviewStep;
     public string focusedRoute;
     public string reviewerSnapshot;

@@ -7,7 +7,7 @@ This is an optional backend to demonstrate:
 - lightweight analytics event ingestion,
 - community feedback relay (`/community/feedback`) to Formspree,
 - simple friends list/invite flow,
-- IAP verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
+- optional pack verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
 - service readiness diagnostics (`/readiness`),
 - runtime service profile (`/meta`),
 - reviewer-facing gameplay/economy posture (`/review-pack`),
@@ -67,12 +67,12 @@ Networking is **disabled by default** in the Unity project. To enable it locally
 - HMAC verification uses the *raw request body* (to match Unity's `JsonUtility` output).
 - Signed headers are replay-protected via a nonce table with TTL.
 - Leaderboard body signature signs a **rounded integer score** to avoid cross-language float string mismatches.
-- IAP verify does not trust client currency values; it uses server catalog values and enforces transaction id uniqueness.
+- Optional pack verification does not trust client currency values; it uses server catalog values and enforces transaction id uniqueness.
 
 ## Env Flags (Production Hardening)
 - `KBBQ_ENV=prod|staging|test|dev`
 - `KBBQ_CORS_ORIGINS=https://your.domain` (comma-separated)
-- `KBBQ_IAP_RECEIPT_MODE=mock|structured|store`
+- `KBBQ_IAP_RECEIPT_MODE=mock|structured|store` (optional pack receipt mode)
 - `KBBQ_IAP_PRODUCT_IDS_JSON='{"starter":"com.yourgame.starter","premium":"com.yourgame.premium"}'`
 - `KBBQ_APPLE_SHARED_SECRET=...`
 - `KBBQ_GOOGLE_PACKAGE_NAME=com.yourgame.app`

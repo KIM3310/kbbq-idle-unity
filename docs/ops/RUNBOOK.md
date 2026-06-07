@@ -88,8 +88,8 @@ Unity opt-in:
   - `baseUrl=http://127.0.0.1:8000`
   - `hmacSecret=CHANGE_ME` (must match `KBBQ_HMAC_SECRET`)
 
-Optional IAP verify path:
-- Service launch purchase flow can call `POST /iap/verify` to confirm pack grants server-side.
+Optional pack verify path:
+- Optional pack flow can call `POST /iap/verify` to confirm grants server-side.
 - Default catalog (when not overridden): `starter=500`, `premium=4000`.
 
 Ops endpoints:

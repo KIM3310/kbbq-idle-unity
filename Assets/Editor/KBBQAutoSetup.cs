@@ -92,7 +92,7 @@ public static class KBBQAutoSetup
 
         var apiConfig = CreateApiConfig("Assets/Data/Config/ApiConfig.asset");
         var economyTuning = CreateEconomyTuning("Assets/Data/Config/EconomyTuning.asset");
-        var monetizationConfig = CreateMonetizationConfig("Assets/Data/Config/MonetizationConfig.asset");
+        var optionalEconomyConfig = CreateOptionalEconomyConfig("Assets/Data/Config/OptionalEconomyConfig.asset");
 
         var catalogPath = "Assets/Data/Config/GameDataCatalog.asset";
         var catalog = AssetDatabase.LoadAssetAtPath<GameDataCatalog>(catalogPath);
@@ -108,7 +108,7 @@ public static class KBBQAutoSetup
         catalog.customerTypes = customers;
         catalog.apiConfig = apiConfig;
         catalog.economyTuning = economyTuning;
-        catalog.monetizationConfig = monetizationConfig;
+        catalog.optionalEconomyConfig = optionalEconomyConfig;
         EditorUtility.SetDirty(catalog);
         return catalog;
     }
@@ -607,16 +607,16 @@ public static class KBBQAutoSetup
         }
         leaderboardPanel.SetActive(false);
 
-        var monetizationPanel = CreatePanel("MonetizationPanel", canvasGo.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(700, 720), Vector2.zero, new Color(0.97f, 0.92f, 0.84f, 0.98f));
-        var monetizationView = monetizationPanel.AddComponent<MonetizationView>();
-        var shopTitle = CreateText(resources, "ShopTitle", monetizationPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -30), new Vector2(400, 40), 24, TextDark, TextAnchor.MiddleCenter);
+        var optionalEconomyPanel = CreatePanel("OptionalEconomyPanel", canvasGo.transform, new Vector2(0.5f, 0.5f), new Vector2(0.5f, 0.5f), new Vector2(700, 720), Vector2.zero, new Color(0.97f, 0.92f, 0.84f, 0.98f));
+        var optionalEconomyView = optionalEconomyPanel.AddComponent<OptionalEconomyView>();
+        var shopTitle = CreateText(resources, "ShopTitle", optionalEconomyPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -30), new Vector2(400, 40), 24, TextDark, TextAnchor.MiddleCenter);
         shopTitle.GetComponent<Text>().text = "SHOP";
-        var shopStatus = CreateText(resources, "ShopStatus", monetizationPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -80), new Vector2(500, 30), 16, TextDark, TextAnchor.MiddleCenter);
+        var shopStatus = CreateText(resources, "ShopStatus", optionalEconomyPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -80), new Vector2(500, 30), 16, TextDark, TextAnchor.MiddleCenter);
         shopStatus.GetComponent<Text>().text = "보상/패키지 시뮬레이션";
 
         var rewardedGo = DefaultControls.CreateButton(resources);
         rewardedGo.name = "RewardedButton";
-        rewardedGo.transform.SetParent(monetizationPanel.transform, false);
+        rewardedGo.transform.SetParent(optionalEconomyPanel.transform, false);
         var rewardedRect = rewardedGo.GetComponent<RectTransform>();
         rewardedRect.anchorMin = new Vector2(0.5f, 0.75f);
         rewardedRect.anchorMax = new Vector2(0.5f, 0.75f);
@@ -636,7 +636,7 @@ public static class KBBQAutoSetup
 
         var interstitialGo = DefaultControls.CreateButton(resources);
         interstitialGo.name = "InterstitialButton";
-        interstitialGo.transform.SetParent(monetizationPanel.transform, false);
+        interstitialGo.transform.SetParent(optionalEconomyPanel.transform, false);
         var interstitialRect = interstitialGo.GetComponent<RectTransform>();
         interstitialRect.anchorMin = new Vector2(0.5f, 0.65f);
         interstitialRect.anchorMax = new Vector2(0.5f, 0.65f);
@@ -656,7 +656,7 @@ public static class KBBQAutoSetup
 
         var packButton1 = DefaultControls.CreateButton(resources);
         packButton1.name = "PackButton1";
-        packButton1.transform.SetParent(monetizationPanel.transform, false);
+        packButton1.transform.SetParent(optionalEconomyPanel.transform, false);
         var packRect1 = packButton1.GetComponent<RectTransform>();
         packRect1.anchorMin = new Vector2(0.5f, 0.45f);
         packRect1.anchorMax = new Vector2(0.5f, 0.45f);
@@ -676,7 +676,7 @@ public static class KBBQAutoSetup
 
         var packButton2 = DefaultControls.CreateButton(resources);
         packButton2.name = "PackButton2";
-        packButton2.transform.SetParent(monetizationPanel.transform, false);
+        packButton2.transform.SetParent(optionalEconomyPanel.transform, false);
         var packRect2 = packButton2.GetComponent<RectTransform>();
         packRect2.anchorMin = new Vector2(0.5f, 0.32f);
         packRect2.anchorMax = new Vector2(0.5f, 0.32f);
@@ -696,7 +696,7 @@ public static class KBBQAutoSetup
 
         var shopCloseGo = DefaultControls.CreateButton(resources);
         shopCloseGo.name = "ShopClose";
-        shopCloseGo.transform.SetParent(monetizationPanel.transform, false);
+        shopCloseGo.transform.SetParent(optionalEconomyPanel.transform, false);
         var shopCloseRect = shopCloseGo.GetComponent<RectTransform>();
         shopCloseRect.anchorMin = new Vector2(0.5f, 0.1f);
         shopCloseRect.anchorMax = new Vector2(0.5f, 0.1f);
@@ -713,7 +713,7 @@ public static class KBBQAutoSetup
         {
             shopCloseImage.color = new Color(0.55f, 0.22f, 0.16f);
         }
-        monetizationPanel.SetActive(false);
+        optionalEconomyPanel.SetActive(false);
 
         var tutorialOverlay = CreatePanel("TutorialOverlay", canvasGo.transform, Vector2.zero, Vector2.one, Vector2.zero, Vector2.zero, new Color(0f, 0f, 0f, 0.6f));
         var tutorialView = tutorialOverlay.AddComponent<TutorialView>();
@@ -758,18 +758,18 @@ public static class KBBQAutoSetup
         leaderboardSerialized.FindProperty("closeButton").objectReferenceValue = leaderboardCloseGo.GetComponent<Button>();
         leaderboardSerialized.ApplyModifiedPropertiesWithoutUndo();
 
-        var monetizationSerialized = new SerializedObject(monetizationView);
-        monetizationSerialized.FindProperty("statusText").objectReferenceValue = shopStatus.GetComponent<Text>();
-        monetizationSerialized.FindProperty("rewardedButton").objectReferenceValue = rewardedGo.GetComponent<Button>();
-        monetizationSerialized.FindProperty("interstitialButton").objectReferenceValue = interstitialGo.GetComponent<Button>();
-        monetizationSerialized.FindProperty("closeButton").objectReferenceValue = shopCloseGo.GetComponent<Button>();
-        monetizationSerialized.FindProperty("packButtons").arraySize = 2;
-        monetizationSerialized.FindProperty("packLabels").arraySize = 2;
-        monetizationSerialized.FindProperty("packButtons").GetArrayElementAtIndex(0).objectReferenceValue = packButton1.GetComponent<Button>();
-        monetizationSerialized.FindProperty("packButtons").GetArrayElementAtIndex(1).objectReferenceValue = packButton2.GetComponent<Button>();
-        monetizationSerialized.FindProperty("packLabels").GetArrayElementAtIndex(0).objectReferenceValue = packLabel1;
-        monetizationSerialized.FindProperty("packLabels").GetArrayElementAtIndex(1).objectReferenceValue = packLabel2;
-        monetizationSerialized.ApplyModifiedPropertiesWithoutUndo();
+        var optionalEconomySerialized = new SerializedObject(optionalEconomyView);
+        optionalEconomySerialized.FindProperty("statusText").objectReferenceValue = shopStatus.GetComponent<Text>();
+        optionalEconomySerialized.FindProperty("rewardedButton").objectReferenceValue = rewardedGo.GetComponent<Button>();
+        optionalEconomySerialized.FindProperty("interstitialButton").objectReferenceValue = interstitialGo.GetComponent<Button>();
+        optionalEconomySerialized.FindProperty("closeButton").objectReferenceValue = shopCloseGo.GetComponent<Button>();
+        optionalEconomySerialized.FindProperty("packButtons").arraySize = 2;
+        optionalEconomySerialized.FindProperty("packLabels").arraySize = 2;
+        optionalEconomySerialized.FindProperty("packButtons").GetArrayElementAtIndex(0).objectReferenceValue = packButton1.GetComponent<Button>();
+        optionalEconomySerialized.FindProperty("packButtons").GetArrayElementAtIndex(1).objectReferenceValue = packButton2.GetComponent<Button>();
+        optionalEconomySerialized.FindProperty("packLabels").GetArrayElementAtIndex(0).objectReferenceValue = packLabel1;
+        optionalEconomySerialized.FindProperty("packLabels").GetArrayElementAtIndex(1).objectReferenceValue = packLabel2;
+        optionalEconomySerialized.ApplyModifiedPropertiesWithoutUndo();
 
         var tutorialSerialized = new SerializedObject(tutorialView);
         tutorialSerialized.FindProperty("messageText").objectReferenceValue = tutorialMessage.GetComponent<Text>();
@@ -783,7 +783,7 @@ public static class KBBQAutoSetup
 
         if (shopButton != null)
         {
-            UnityEventTools.AddPersistentListener(shopButton.onClick, monetizationView.Open);
+            UnityEventTools.AddPersistentListener(shopButton.onClick, optionalEconomyView.Open);
         }
 
         var dailyInstance = (GameObject)PrefabUtility.InstantiatePrefab(dailyMissionPrefab);
@@ -826,7 +826,7 @@ public static class KBBQAutoSetup
         uiSerialized.FindProperty("perfOverlayView").objectReferenceValue = perfView;
         uiSerialized.FindProperty("tutorialView").objectReferenceValue = tutorialView;
         uiSerialized.FindProperty("leaderboardView").objectReferenceValue = leaderboardView;
-        uiSerialized.FindProperty("monetizationView").objectReferenceValue = monetizationView;
+        uiSerialized.FindProperty("optionalEconomyView").objectReferenceValue = optionalEconomyView;
         uiSerialized.ApplyModifiedPropertiesWithoutUndo();
 
         var queueControlSerialized = new SerializedObject(queueControlView);
@@ -888,12 +888,12 @@ public static class KBBQAutoSetup
         analyticsRoot.transform.SetParent(root.transform, false);
         var analyticsService = analyticsRoot.AddComponent<AnalyticsService>();
 
-        var monetizationRoot = new GameObject("MonetizationService");
-        monetizationRoot.transform.SetParent(root.transform, false);
-        var monetizationService = monetizationRoot.AddComponent<MonetizationService>();
-        var monetizationSerialized = new SerializedObject(monetizationService);
-        monetizationSerialized.FindProperty("config").objectReferenceValue = catalog != null ? catalog.monetizationConfig : null;
-        monetizationSerialized.ApplyModifiedPropertiesWithoutUndo();
+        var optionalEconomyRoot = new GameObject("OptionalEconomyService");
+        optionalEconomyRoot.transform.SetParent(root.transform, false);
+        var optionalEconomyService = optionalEconomyRoot.AddComponent<OptionalEconomyService>();
+        var optionalEconomySerialized = new SerializedObject(optionalEconomyService);
+        optionalEconomySerialized.FindProperty("config").objectReferenceValue = catalog != null ? catalog.optionalEconomyConfig : null;
+        optionalEconomySerialized.ApplyModifiedPropertiesWithoutUndo();
 
         var managerRoot = new GameObject("GameManager");
         managerRoot.transform.SetParent(root.transform, false);
@@ -903,7 +903,7 @@ public static class KBBQAutoSetup
         managerSerialized.FindProperty("audioManager").objectReferenceValue = audioManager;
         managerSerialized.FindProperty("networkService").objectReferenceValue = networkService;
         managerSerialized.FindProperty("analyticsService").objectReferenceValue = analyticsService;
-        managerSerialized.FindProperty("monetizationService").objectReferenceValue = monetizationService;
+        managerSerialized.FindProperty("optionalEconomyService").objectReferenceValue = optionalEconomyService;
         managerSerialized.FindProperty("dataCatalog").objectReferenceValue = catalog;
         managerSerialized.ApplyModifiedPropertiesWithoutUndo();
 
@@ -1174,12 +1174,12 @@ public static class KBBQAutoSetup
         return asset;
     }
 
-    private static MonetizationConfig CreateMonetizationConfig(string path)
+    private static OptionalEconomyConfig CreateOptionalEconomyConfig(string path)
     {
-        var asset = AssetDatabase.LoadAssetAtPath<MonetizationConfig>(path);
+        var asset = AssetDatabase.LoadAssetAtPath<OptionalEconomyConfig>(path);
         if (asset == null)
         {
-            asset = ScriptableObject.CreateInstance<MonetizationConfig>();
+            asset = ScriptableObject.CreateInstance<OptionalEconomyConfig>();
             AssetDatabase.CreateAsset(asset, path);
         }
 

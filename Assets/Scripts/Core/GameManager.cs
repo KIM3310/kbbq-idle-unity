@@ -20,7 +20,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private List<CustomerType> customerTypes = new List<CustomerType>();
     [SerializeField] private ApiConfig apiConfig;
     [SerializeField] private EconomyTuning economyTuning;
-    [SerializeField] private MonetizationConfig monetizationConfig;
+    [SerializeField] private OptionalEconomyConfig optionalEconomyConfig;
     [SerializeField] private GameDataCatalog dataCatalog;
 
     [Header("Managers")]
@@ -28,7 +28,7 @@ public class GameManager : MonoBehaviour
     [SerializeField] private UIController uiController;
     [SerializeField] private NetworkService networkService;
     [SerializeField] private AnalyticsService analyticsService;
-    [SerializeField] private MonetizationService monetizationService;
+    [SerializeField] private OptionalEconomyService optionalEconomyService;
 
     [Header("Manual Boost")]
     [SerializeField] private float manualBoostMultiplier = 2f;
@@ -209,13 +209,13 @@ public class GameManager : MonoBehaviour
     public float GetQueueSpawnMultiplier() => customerSystem != null ? customerSystem.SpawnRateMultiplier : 1f;
     public float GetQueueServiceMultiplier() => customerSystem != null ? customerSystem.ServiceRateMultiplier : 1f;
     public AudioManager GetAudioManager() => audioManager;
-    public MonetizationService GetMonetizationService() => monetizationService;
+    public OptionalEconomyService GetOptionalEconomyService() => optionalEconomyService;
     public NetworkService GetNetworkService() => networkService;
     public GameplayReviewPack GetGameplayReviewPack()
     {
         var metrics = GetQueueMetrics();
         var tier = GetCurrentStoreTier();
-        var config = monetizationService != null ? monetizationService.Config : monetizationConfig;
+        var config = optionalEconomyService != null ? optionalEconomyService.Config : optionalEconomyConfig;
         var adsEnabled = config != null && config.enableAds;
         var iapEnabled = config != null && config.enableIap;
         var packCount = config != null && config.packs != null ? config.packs.Count : 0;
@@ -232,10 +232,10 @@ public class GameManager : MonoBehaviour
             queueCount = metrics.queueCount,
             servedPerMinute = metrics.servedPerMinute,
             averageWaitSeconds = metrics.avgWaitSeconds,
-            monetizationMode = BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount),
+            optionalEconomyMode = BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount),
             reviewStep = "Check grill flow, queue pressure, then optional economy posture.",
             focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay",
-            reviewerSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Economy {BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount)}",
+            reviewerSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Economy {BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount)}",
             focusedOpsSnapshot = $"Preset {presetLabel} / Queue {metrics.queueCount} / Wait {metrics.avgWaitSeconds:0.0}s / Served {metrics.servedPerMinute:0}/min",
             twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay",
             reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay",
@@ -303,10 +303,10 @@ public class GameManager : MonoBehaviour
         RefreshUI();
     }
 
-    private string BuildMonetizationModeLabel(bool adsEnabled, bool iapEnabled, int packCount)
+    private string BuildOptionalEconomyModeLabel(bool adsEnabled, bool iapEnabled, int packCount)
     {
         var adsLabel = adsEnabled ? "Rewards on" : "Rewards off";
-        var iapLabel = iapEnabled ? "IAP on" : "IAP off";
+        var iapLabel = iapEnabled ? "Packs on" : "Packs off";
         return adsLabel + " / " + iapLabel + " / Packs " + packCount;
     }
 
@@ -1317,9 +1317,9 @@ public class GameManager : MonoBehaviour
                 economyTuning = dataCatalog.economyTuning;
             }
 
-            if (monetizationConfig == null)
+            if (optionalEconomyConfig == null)
             {
-                monetizationConfig = dataCatalog.monetizationConfig;
+                optionalEconomyConfig = dataCatalog.optionalEconomyConfig;
             }
         }
 
@@ -1353,9 +1353,9 @@ public class GameManager : MonoBehaviour
             economyTuning = DefaultDataFactory.CreateEconomyTuning();
         }
 
-        if (monetizationConfig == null)
+        if (optionalEconomyConfig == null)
         {
-            monetizationConfig = DefaultDataFactory.CreateMonetizationConfig();
+            optionalEconomyConfig = DefaultDataFactory.CreateOptionalEconomyConfig();
         }
     }
 
@@ -1378,9 +1378,9 @@ public class GameManager : MonoBehaviour
         InitializeKitchenFromSave();
         uiController?.Bind(this);
         tutorialSystem = new TutorialSystem(this, uiController, saveData.tutorialCompleted);
-        if (monetizationService != null)
+        if (optionalEconomyService != null)
         {
-            monetizationService.Bind(this, monetizationConfig);
+            optionalEconomyService.Bind(this, optionalEconomyConfig);
         }
         analyticsService?.BindNetwork(networkService);
         ApplyDebugSettingsFromSave();
