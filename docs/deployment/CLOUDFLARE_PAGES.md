@@ -21,7 +21,7 @@ This repo ships prebuilt WebGL assets in `docs/Build`, so no cloud build command
 3. Cloudflare Pages (GitHub-connected) auto-deploys from `main`.
 
 ## Pre-Deploy Gate
-Run policy/ad/deploy checks:
+Run policy/deploy checks:
 
 ```bash
 ./tools/release_ops.sh check

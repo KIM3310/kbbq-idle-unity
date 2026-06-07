@@ -76,7 +76,7 @@ public class PerfOverlayView : MonoBehaviour
                            "\nServed/min " + servedPerMin.ToString("0") +
                            "\nAvg wait " + avgWait.ToString("0.0") + "s" +
                            "\nIncome/s " + FormatUtil.FormatCurrency(incomePerSec) +
-                           "\nMonetize " + monetizationMode +
+                           "\nEconomy " + monetizationMode +
                            "\nPreset " + presetLabel +
                            "\nReview " + reviewStep +
                            "\nRoute " + focusedRoute +

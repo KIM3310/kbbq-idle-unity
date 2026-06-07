@@ -224,7 +224,7 @@ public class GameManager : MonoBehaviour
         return new GameplayReviewPack
         {
             contract = "kbbq-idle-review-pack-v1",
-            headline = "Gameplay loop and monetization posture are visible from the live overlay.",
+            headline = "Gameplay loop and optional economy posture are visible from the live overlay.",
             storeTier = tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley",
             playerLevel = GetPlayerLevel(),
             incomePerSecond = GetIncomePerSec(),
@@ -233,9 +233,9 @@ public class GameManager : MonoBehaviour
             servedPerMinute = metrics.servedPerMinute,
             averageWaitSeconds = metrics.avgWaitSeconds,
             monetizationMode = BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount),
-            reviewStep = "Check grill flow, queue pressure, then ad/IAP posture.",
+            reviewStep = "Check grill flow, queue pressure, then optional economy posture.",
             focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay",
-            reviewerSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Monetize {BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount)}",
+            reviewerSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Economy {BuildMonetizationModeLabel(adsEnabled, iapEnabled, packCount)}",
             focusedOpsSnapshot = $"Preset {presetLabel} / Queue {metrics.queueCount} / Wait {metrics.avgWaitSeconds:0.0}s / Served {metrics.servedPerMinute:0}/min",
             twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay",
             reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay",
@@ -305,7 +305,7 @@ public class GameManager : MonoBehaviour
 
     private string BuildMonetizationModeLabel(bool adsEnabled, bool iapEnabled, int packCount)
     {
-        var adsLabel = adsEnabled ? "Ads on" : "Ads off";
+        var adsLabel = adsEnabled ? "Rewards on" : "Rewards off";
         var iapLabel = iapEnabled ? "IAP on" : "IAP off";
         return adsLabel + " / " + iapLabel + " / Packs " + packCount;
     }

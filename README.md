@@ -23,7 +23,7 @@ Updated: **February 18, 2026**
 
 | Lens | Decision signal |
 |---|---|
-| Buyer | Casual WebGL game publishers, ad-supported mini-game operators, and portfolio reviewers looking for a playable loop rather than a mockup. |
+| Reviewer | Casual WebGL game reviewers, Unity prototype reviewers, and portfolio reviewers looking for a playable loop rather than a mockup. |
 | Product proof | The demo, workflow loop, and static proof surface show the current product direction without extra claims. |
 | Reviewer proof | Unity scene, docs front door, build preflight, deterministic economy harness, and reviewer pages make the runtime inspectable in minutes. |
 | Safety posture | Placeholder behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path. |
