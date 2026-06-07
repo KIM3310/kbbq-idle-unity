@@ -29,8 +29,8 @@
   - 매장 티어: Alley → Hongdae → Gangnam → Hanok → Global
 - `GameDataCatalog`가 데이터 묶음을 연결하고, `DefaultDataFactory`가 에셋 누락 시 기본 데이터를 생성합니다.
 
-## 수익화
-- `Service launchConfig`에 보상형 광고 부스트, 전면 광고 보상, IAP 패키지 정의.
+## 운영 모델
+- `Service launchConfig`에 보상형 이벤트 부스트, 전면 이벤트 보상, IAP 패키지 정의.
 - `Service launchService`는 로컬 안전 지급 플로우와 선택적 서버 검증(`POST /iap/verify`) 경로를 지원합니다.
 - 실제 스토어 영수증 검증(App Store / Play Store)은 운영 배포 단계의 연동 과제로 남겨두었습니다.
   - 백엔드에 `mock` / `structured` / `store` 검증 모드가 추가되어 운영 전환 경로를 제공.

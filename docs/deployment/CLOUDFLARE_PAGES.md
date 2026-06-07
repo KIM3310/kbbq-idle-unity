@@ -30,11 +30,9 @@ Run policy/ad/deploy checks:
 Expected result:
 - `PASS review gate`
 
-## AdSense Values
 Placeholders exist by default. For production values:
 
 ```bash
-./tools/release_ops.sh apply-adsense <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
 ```
 
 Then run:
@@ -44,7 +42,7 @@ Then run:
 ```
 
 Note:
-- Placeholder warnings are expected before real AdSense onboarding.
+- Placeholder warnings are expected before real external script onboarding.
 
 ## Runtime Entry
 - WebGL page: `docs/index.html`

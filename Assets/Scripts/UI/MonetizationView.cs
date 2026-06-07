@@ -101,14 +101,14 @@ public class MonetizationView : MonoBehaviour
     private void HandleRewarded()
     {
         var ok = service != null && service.ShowRewardedAd();
-        SetStatus(ok ? "보상형 광고 보상 지급" : "광고 비활성");
+        SetStatus(ok ? "보상형 이벤트 지급" : "보상 이벤트 비활성");
         gameManager?.GetAudioManager()?.PlayButton();
     }
 
     private void HandleInterstitial()
     {
         var ok = service != null && service.ShowInterstitialAd();
-        SetStatus(ok ? "전면 광고 보상 지급" : "광고 비활성");
+        SetStatus(ok ? "전면 이벤트 보상 지급" : "보상 이벤트 비활성");
         gameManager?.GetAudioManager()?.PlayButton();
     }
 

@@ -612,7 +612,7 @@ public static class KBBQAutoSetup
         var shopTitle = CreateText(resources, "ShopTitle", monetizationPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -30), new Vector2(400, 40), 24, TextDark, TextAnchor.MiddleCenter);
         shopTitle.GetComponent<Text>().text = "SHOP";
         var shopStatus = CreateText(resources, "ShopStatus", monetizationPanel.transform, new Vector2(0.5f, 1f), new Vector2(0.5f, 1f), new Vector2(0, -80), new Vector2(500, 30), 16, TextDark, TextAnchor.MiddleCenter);
-        shopStatus.GetComponent<Text>().text = "광고/패키지 시뮬레이션";
+        shopStatus.GetComponent<Text>().text = "보상/패키지 시뮬레이션";
 
         var rewardedGo = DefaultControls.CreateButton(resources);
         rewardedGo.name = "RewardedButton";
@@ -625,7 +625,7 @@ public static class KBBQAutoSetup
         var rewardedText = rewardedGo.GetComponentInChildren<Text>();
         if (rewardedText != null)
         {
-            rewardedText.text = "보상형 광고 (x2)";
+            rewardedText.text = "보상형 이벤트 (x2)";
             rewardedText.color = TextLight;
         }
         var rewardedImage = rewardedGo.GetComponent<Image>();
@@ -645,7 +645,7 @@ public static class KBBQAutoSetup
         var interstitialText = interstitialGo.GetComponentInChildren<Text>();
         if (interstitialText != null)
         {
-            interstitialText.text = "전면 광고 (+보상)";
+            interstitialText.text = "전면 이벤트 (+보상)";
             interstitialText.color = TextLight;
         }
         var interstitialImage = interstitialGo.GetComponent<Image>();

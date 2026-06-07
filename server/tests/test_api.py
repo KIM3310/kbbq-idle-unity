@@ -127,7 +127,7 @@ class TestApi(unittest.TestCase):
         self.assertEqual(balance_drill.status_code, 200)
         drill_payload = balance_drill.json()
         self.assertEqual(drill_payload.get("contract_version"), "kbbq-idle-balance-drill-v1")
-        self.assertFalse(drill_payload.get("summary", {}).get("monetization_enabled"))
+        self.assertFalse(drill_payload.get("summary", {}).get("optional_economy_enabled"))
         self.assertGreaterEqual(drill_payload.get("summary", {}).get("guardian_triggers"), 1)
         self.assertGreater(drill_payload.get("summary", {}).get("offline_pressure_delta_minutes"), 0)
         self.assertGreater(drill_payload.get("summary", {}).get("income_gain_pct"), 0)

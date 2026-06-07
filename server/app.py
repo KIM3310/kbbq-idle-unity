@@ -233,12 +233,12 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         "ops_token_configured": integrations["ops_token_configured"],
         "feedback_relay_configured": integrations["feedback_relay_configured"],
         "docs_exposed": integrations["docs_exposed"],
-        "focused_ops_snapshot": "rush preset -> queue pressure -> perf overlay -> monetization posture",
+        "focused_ops_snapshot": "rush preset -> queue pressure -> perf overlay -> optional economy posture",
     }
     economy_contract = {
         "loop": "queue throughput drives income_per_second and upgrade pacing",
         "store_tiers": "level-based store tier progression changes income multiplier",
-        "monetization": "rewarded ads and IAP remain optional, server-authoritative verification stays on backend",
+        "optional_economy": "optional rewards and IAP remain optional, server-authoritative verification stays on backend",
     }
     reviewer_posture = {
         "runtime_source_of_truth": "/review-pack + Unity WebGL/Editor loop",
@@ -272,9 +272,9 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         ],
         "two_minute_review": [
             "Open /health and /meta to confirm runtime posture, enabled surfaces, and next action.",
-            "Open /review-pack to pin gameplay loop, economy contract, and monetization posture.",
+            "Open /review-pack to pin gameplay loop, economy contract, and optional economy posture.",
             "Run the Unity WebGL build or Editor scene and validate the grill -> serve -> upgrade loop.",
-            "Read the live perf overlay before claiming delivery or monetization readiness.",
+            "Read the live perf overlay before claiming delivery or optional economy readiness.",
         ],
         "proof_assets": [
             {
@@ -300,7 +300,7 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
             {
                 "label": "Economy Balance Drill",
                 "path": "/ops/economy-balance-drill",
-                "why": "Summarizes guardian-mode triggers, offline pressure, and tier delta posture before monetization claims.",
+                "why": "Summarizes guardian-mode triggers, offline pressure, and tier delta posture before optional economy claims.",
             },
             {
                 "label": "Perf Overlay",
@@ -437,8 +437,8 @@ def _build_economy_balance_drill() -> dict[str, object]:
         "contract_version": "kbbq-idle-balance-drill-v1",
         "summary": {
             "guardian_triggers": len(tiers),
-            "monetization_enabled": False,
-            "monetization_posture": "reviewer-safe optional IAP and rewarded ads remain off by default",
+            "optional_economy_enabled": False,
+            "optional_economy_posture": "reviewer-safe optional IAP and rewards remain off by default",
             "highest_offline_pressure_minutes": max(item["offline_pressure_minutes"] for item in tiers),
             "offline_pressure_delta_minutes": final_tier["offline_pressure_minutes"] - starter["offline_pressure_minutes"],
             "largest_upgrade_delta_pct": max(item["upgrade_delta_pct"] for item in tiers),
@@ -446,13 +446,13 @@ def _build_economy_balance_drill() -> dict[str, object]:
                 ((final_tier["income_per_second"] - starter["income_per_second"]) / starter["income_per_second"]) * 100,
                 1,
             ),
-            "guardian_mode_posture": "queue guardrails stay gameplay-first and monetization-off during reviewer demos",
+            "guardian_mode_posture": "queue guardrails stay gameplay-first and optional economy-off during reviewer demos",
         },
         "tiers": tiers,
         "review_actions": [
-            "Treat guardian triggers as balance-review thresholds, not monetization prompts.",
+            "Treat guardian triggers as balance-review thresholds, not optional economy prompts.",
             "Review offline pressure before claiming idle progression is stable across long sessions.",
-            "Keep monetization-off posture visible during reviewer demos.",
+            "Keep optional economy-off posture visible during reviewer demos.",
         ],
         "links": _ops_links(),
     }

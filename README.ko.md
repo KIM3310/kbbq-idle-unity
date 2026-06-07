@@ -12,7 +12,7 @@ KBBQ Idle는 고기 굽기 루프 중심의 방치형/타이쿤 게임 프로젝
 - 지글 사운드 레이어 강화(루프 + crackle)
 - `돈/서빙수/누적손님/대기열` 지표 가독성 개선
 - WebGL 임베딩 기준 모바일/데스크톱 반응형 보정
-- 광고/정책 심사 대응용 정적 페이지를 `docs/`에 구성
+- 운영/정책 검토용 정적 페이지를 `docs/`에 구성
 
 ## 게임 플레이 루프
 1. 생고기 구매
@@ -54,10 +54,7 @@ KBBQ Idle는 고기 굽기 루프 중심의 방치형/타이쿤 게임 프로젝
 ./tools/release_ops.sh check
 ```
 
-실운영 AdSense 값 반영:
-
 ```bash
-./tools/release_ops.sh apply-adsense <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
 ```
 
 ## 품질 게이트

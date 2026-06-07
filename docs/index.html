@@ -9,9 +9,7 @@
     <meta property="og:description" content="Unity WebGL idle tycoon game about running a K-BBQ restaurant with economy, progression, offline earnings, and prestige.">
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="KBBQ Idle | Playable WebGL">
-    <meta name="twitter:description" content="Unity WebGL idle tycoon game about running a K-BBQ restaurant with economy, progression, offline earnings, and prestige."><meta name="google-adsense-account" content="ca-pub-4973160293737562" />
-    <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4973160293737562"
-     crossorigin="anonymous"></script>
+    <meta name="twitter:description" content="Unity WebGL idle tycoon game about running a K-BBQ restaurant with economy, progression, offline earnings, and prestige.">
     <title>KBBQ Idle | Playable WebGL</title>
     <meta name="description" content="Play KBBQ Idle on Cloudflare Pages with optional backend integrations and policy-ready site sections." />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -348,7 +346,6 @@
       #unityCanvas { width:100%; height:100%; display:none; image-rendering:pixelated; position:relative; z-index:2; }
       #status { font-size:12px; color:var(--accent-soft); }
       #preflight { font-size:11px; color:var(--muted); line-height:1.5; }
-      #adStatus { margin:8px 2px 0; font-size:11px; color:var(--muted); }
       .ad { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#1f1512; }
       .reviewer-dock {
         margin-top:12px;
@@ -454,7 +451,7 @@
             </article>
             <article class="mini-card">
               <strong>03 · Public posture</strong>
-              <p>Use compliance and policy pages before discussing ads or rollout.</p>
+              <p>Use compliance and policy pages before discussing rollout posture.</p>
             </article>
           </div>
         </section>
@@ -609,11 +606,8 @@
       </section>
 
       <section class="card">
-        <h2>Sponsored Slot</h2>
-        <div class="ad">
-          <ins class="adsbygoogle" style="display:block" data-ad-client="" data-ad-slot="" data-ad-format="auto" data-full-width-responsive="true"></ins>
-          <p id="adStatus">Ad slot stays disabled until a real publisher ID and slot are configured for the public build.</p>
-        </div>
+        <h2>Operations Readiness</h2>
+        <p>External slots stay disabled by default while reviewers inspect gameplay, build health, privacy, and release posture.</p>
       </section>
     </main>
 
@@ -655,8 +649,6 @@
       const copyReviewerStateBtn = document.getElementById('copyReviewerStateBtn');
       const recentBuildsNode = document.getElementById('recentBuilds');
       const copyBuildChecklistBtn = document.getElementById('copyBuildChecklistBtn');
-      const adNode = document.querySelector('.adsbygoogle');
-      const adStatusNode = document.getElementById('adStatus');
       const buildInfoNode = document.getElementById('buildInfo');
       const reviewerDockModeNode = document.getElementById('reviewerDockMode');
       const reviewerDockClaimNode = document.getElementById('reviewerDockClaim');
@@ -1314,63 +1306,6 @@
         document.body.appendChild(script);
       }
 
-      function setAdStatus(text) {
-        if (adStatusNode) {
-          adStatusNode.textContent = text;
-        }
-      }
-
-      function hasConfiguredAdClient(client) {
-        const raw = String(client || '').trim();
-        if (!/^ca-pub-\d{8,20}$/.test(raw)) return false;
-        return raw !== 'ca-pub-0000000000000000';
-      }
-
-      function hasConfiguredAdSlot(slot) {
-        const raw = String(slot || '').trim();
-        if (!/^\d{6,20}$/.test(raw)) return false;
-        return raw !== '1234567890';
-      }
-
-      function shouldLoadAds() {
-        const host = location.hostname;
-        const isLocal = host === 'localhost' || host === '127.0.0.1';
-        if (location.protocol !== 'https:' && !isLocal) {
-          setAdStatus('Ads disabled: HTTPS is required.');
-          return false;
-        }
-
-        return true;
-      }
-
-      function initializeAdsense() {
-        if (!adNode) return;
-        const client = adNode.getAttribute('data-ad-client') || '';
-        const slot = adNode.getAttribute('data-ad-slot') || '';
-        if (!hasConfiguredAdClient(client) || !hasConfiguredAdSlot(slot)) {
-          setAdStatus('Ad slot stays disabled until a real publisher ID and slot are configured for the public build.');
-          return;
-        }
-        if (!shouldLoadAds()) return;
-
-        const script = document.createElement('script');
-        script.async = true;
-        script.src = `https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=${encodeURIComponent(client)}`;
-        script.crossOrigin = 'anonymous';
-        script.onload = () => {
-          try {
-            (window.adsbygoogle = window.adsbygoogle || []).push({});
-            setAdStatus('Ads active.');
-          } catch (_err) {
-            setAdStatus('Ad script loaded, but ad fill is pending.');
-          }
-        };
-        script.onerror = () => {
-          setAdStatus('Ad script failed to load. Check network policy and AdSense settings.');
-        };
-        document.head.appendChild(script);
-      }
-
       checkBtn.addEventListener('click', () => {
         rememberBuildName(buildInput.value);
         void preflightCheck(buildInput.value);
@@ -1459,7 +1394,6 @@
       });
       setPlaceholderState('idle');
       void loadBuildManifest();
-      initializeAdsense();
     </script>
   
 <script defer src="./analytics.js"></script>

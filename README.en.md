@@ -10,10 +10,10 @@ A playable Unity WebGL project that proves shipping discipline through game loop
 
 | Lens | Definition |
 |---|---|
-| Buyer or user | Game reviewers, WebGL publishers, casual-game operators, and portfolio reviewers checking delivery craft. |
-| Commercial route | Monetize through web ads, small in-game upgrades, sponsorship placements, or a publisher-ready prototype pitch. |
+| Audience | Game reviewers, WebGL publishers, casual-game operators, and portfolio reviewers checking delivery craft. |
+| Review path | Validate the demo, README, architecture notes, and quality gate before deeper workflow review. |
 | Review signal | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
-| Safety boundary | Ad and analytics values must be configured only in production; gameplay data should stay separate from personal data. |
+| Safety boundary | gameplay data should stay separate from personal data. |
 | Fast proof | Run `tools/portfolio_quality_gate.sh` or the WebGL release check before publishing. |
 
 ## What Changed In This Build
@@ -24,7 +24,7 @@ A playable Unity WebGL project that proves shipping discipline through game loop
 - Stronger layered sizzling audio (loop + crackle)
 - Clearer UI metrics (`$ currency`, served/customers/queue)
 - Responsive layout pass for desktop + mobile WebGL
-- Policy-ready static pages under `docs/` for ad/review workflows
+- Policy-ready static pages under `docs/` for review workflows
 
 ## Gameplay Loop
 1. Buy raw meat.
@@ -66,10 +66,7 @@ Run deployment review checks:
 ./tools/release_ops.sh check
 ```
 
-Apply real AdSense values (production):
-
 ```bash
-./tools/release_ops.sh apply-adsense <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
 ```
 
 ## Quality Gate

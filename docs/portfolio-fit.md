@@ -7,7 +7,7 @@ Updated: 2026-05-30
 | Field | Decision |
 |---|---|
 | Status | Archived/supporting |
-| Why | Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal. |
+| Why | Consumer gameplay work distracts from the enterprise AI and infrastructure portfolio signal. |
 | Show instead | doeon-kim-portfolio and the B2B flagship repositories |
 | Still useful for | Keep as a creative side experiment only. |
 
@@ -15,4 +15,4 @@ Updated: 2026-05-30
 
 - Keep this repository available, but do not lead with it.
 - Use it only when a reviewer asks for this exact domain, stack, or product pattern.
-- Do not treat it as a current revenue pillar unless it is revived with fresh validation and a narrow buyer path.
+- Do not treat it as a current portfolio pillar unless it is revived with fresh validation and a narrow review path.

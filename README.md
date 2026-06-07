@@ -3,7 +3,7 @@
 > **Curated supporting repo**
 > This repository is kept as optional proof, but it no longer leads the portfolio.
 > Current front door: **doeon-kim-portfolio and the B2B flagship repositories**.
-> Reason: Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal.
+> Reason: Consumer gameplay work distracts from the enterprise AI and infrastructure portfolio signal.
 
 K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드와 GitHub/Cloudflare reviewer surface까지 함께 검토할 수 있도록 정리되어 있습니다.
 
@@ -24,7 +24,7 @@ Updated: **February 18, 2026**
 | Lens | Decision signal |
 |---|---|
 | Buyer | Casual WebGL game publishers, ad-supported mini-game operators, and portfolio reviewers looking for a playable loop rather than a mockup. |
-| Commercial proof | The grill loop, customer queue, upgrade economy, WebGL host path, and AdSense-friendly static surface show a route from prototype to monetized play. |
+| Product proof | The demo, workflow loop, and static proof surface show the current product direction without extra claims. |
 | Reviewer proof | Unity scene, docs front door, build preflight, deterministic economy harness, and reviewer pages make the runtime inspectable in minutes. |
 | Safety posture | Placeholder behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path. |
 
@@ -33,21 +33,16 @@ Updated: **February 18, 2026**
 - **First minute:** Open `Assets/Scenes/Main.unity`, play the grill loop, then review the WebGL `docs/` surface.
 - **Local demo:** Build WebGL with `./tools/build_webgl_docs.sh`; optional backend review starts from `server/`.
 - **Verification:** Run `python -m pytest` for the optional backend and `KBBQ/Validate Data (Portfolio)` inside Unity for data checks.
-- **Commercial read:** Treat the game as a monetizable loop prototype with a static hosting and ad-review path.
-
 
 ## Service Launch Playbook
 
-- [Service launch playbook](docs/service-launch-playbook.md) maps the repository to buyer segments, offer ladder, proof gates, proof gates, and risk boundaries.
+- [Service launch playbook](docs/service-launch-playbook.md) maps the repository to review audiences, offer ladder, proof gates, proof gates, and risk boundaries.
 
 ## Review Notes
 
 - [Review guide](docs/reviewer-evidence-map.md) summarizes the project angle, first files to inspect, verification commands, and known boundaries.
 - [Quality notes](docs/quality-gate.md) lists the local checks, CI surface, and release expectations for this repository.
-- [Service growth model](docs/service-growth-model.md) maps the project to an ethical service path, activation loop, scope logic, and growth experiments.
 - [Enterprise readiness notes](docs/enterprise-readiness.md) outlines security, data, operations, integration, and handoff expectations.
-- [Conversion UX model](docs/conversion-ux-model.md) maps the buyer path, behavioral design, UI/UX direction, scope frame, and ethical conversion guardrails.
-- [Commercial offer](docs/commercial-offer.md) packages the repository into a buyer-ready offer ladder, proof gate, outreach angle, and close path.
 - [Portfolio fit](docs/portfolio-fit.md) explains why this repository is archived/supporting and where the current portfolio front door lives.
 
 ## 포트폴리오 맥락
@@ -78,7 +73,7 @@ Updated: **February 18, 2026**
 - Clearer HUD metrics (`$ currency`, served/customers/queue summary)
 - Gameplay summary surfaced directly in the perf overlay
 - Mobile/desktop responsive UI pass for WebGL embedding
-- Cloudflare Pages + AdSense review-friendly static pages (`docs/`)
+- Cloudflare Pages + review-friendly static pages (`docs/`)
 
 ## Core Gameplay Loop
 1. Buy raw meat.
@@ -121,10 +116,9 @@ Pre-deploy review gate:
 ./tools/release_ops.sh check
 ```
 
-AdSense value injection (production):
+Production review configuration:
 
 ```bash
-./tools/release_ops.sh apply-adsense <ca-pub-xxxxxxxxxxxxxxxx> <slot-id>
 ```
 
 ## Quality Gates
@@ -206,7 +200,7 @@ This repository includes a neutral cloud and AI engineering blueprint that maps 
 
 ## Enterprise Productization
 
-- [Product operating model](docs/product-operating-model.md) defines the buyer, paid wedge, trust boundary, operating checks, and service path for this repository.
+- [Product operating model](docs/product-operating-model.md) defines the reviewer, trust boundary, trust boundary, operating checks, and service path for this repository.
 
 ## Service Architecture
 

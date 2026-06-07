@@ -10,16 +10,16 @@ This repository is archived as supporting material. It should not be positioned 
 |---|---|
 | Repository | `kbbq-idle-unity` |
 | Status | Archived supporting proof |
-| Lane | B2C game and ad service launch |
-| Primary reader or buyer | Casual game publishers, ad-supported mini-game operators, and playable portfolio reviewers. |
+| Lane | B2C Unity gameplay prototype |
+| Primary reader or reviewer | Casual game reviewers, Unity prototype reviewers, and playable portfolio reviewers. |
 | Current successor | doeon-kim-portfolio and the B2B flagship repositories |
 | Readiness posture | Historical or optional proof; not a current production-readiness claim. |
 
 ## Revival Requirements
 
 - Re-check dependencies, build path, secrets posture, and live demo status.
-- Reconfirm the buyer, data boundary, identity/access needs, monitoring, and support owner.
-- Replace broad consumer or experimental positioning with one narrow paid or reviewable use case.
+- Reconfirm the reviewer, data boundary, identity/access needs, monitoring, and support owner.
+- Replace broad consumer or experimental positioning with one narrow reviewable use case.
 - Keep the active flagship repositories as the main portfolio story unless this domain is explicitly requested.
 
 ## Proof Points
@@ -31,6 +31,6 @@ This repository is archived as supporting material. It should not be positioned 
 ## Open Risks
 
 - No copied assets
-- Ad compliance required
+- Platform policy review required
 - Retention must be measured before scaling
-- Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal.
+- Consumer gameplay work distracts from the enterprise AI and infrastructure portfolio signal.

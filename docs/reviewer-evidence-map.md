@@ -10,9 +10,9 @@ This repository is now curated as supporting material. Review it only after the 
 |---|---|
 | Repository | `kbbq-idle-unity` |
 | Status | Archived supporting repository |
-| Lane | B2C game and ad service launch |
-| Primary reader | Casual game publishers, ad-supported mini-game operators, and playable portfolio reviewers. |
-| Why it moved back | Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal. |
+| Lane | B2C gameplay prototype |
+| Primary reader | Casual game reviewers, Unity prototype reviewers, and playable portfolio reviewers. |
+| Why it moved back | Consumer gameplay work distracts from the enterprise AI and infrastructure portfolio signal. |
 | Current successor | doeon-kim-portfolio and the B2B flagship repositories |
 
 ## Open First
@@ -20,7 +20,7 @@ This repository is now curated as supporting material. Review it only after the 
 1. Start with the successor repositories named above.
 2. Use this repository only for optional domain breadth or historical product exploration.
 3. Check `docs/portfolio-fit.md` before presenting it externally.
-4. Keep the archived/supporting status visible in any resume, portfolio, or buyer conversation.
+4. Keep the archived/supporting status visible in any resume, portfolio, or reviewer conversation.
 
 ## Evidence
 
@@ -28,24 +28,24 @@ This repository is now curated as supporting material. Review it only after the 
 - WebGL docs path is clear
 - Backend tests pass if backend is used
 
-## Commercial Notes
+## Review Notes
 
 | Possible offer | Working scope assumption | Scope |
 |---|---|---|
-| Ad-supported WebGL game | Ads/IAP experiments | Scoped after review. |
-| Publisher prototype | Scope after buyer intake | Scoped after review. |
-| Playable portfolio/game-jam asset | Scope after buyer intake | Scoped after review. |
+| WebGL gameplay prototype | Optional economy experiments | Scoped after review. |
+| Publisher prototype | Scope after reviewer intake | Scoped after review. |
+| Playable portfolio/game-jam asset | Scope after reviewer intake | Scoped after review. |
 
 ## Boundaries
 
 - No copied assets
-- Ad compliance required
+- Platform policy review required
 - Retention must be measured before scaling
-- Game/ad service launch distracts from the enterprise AI and infrastructure portfolio signal.
+- Consumer gameplay work distracts from the enterprise AI and infrastructure portfolio signal.
 - Do not present this as a current flagship or maintained product surface.
 
 ## Useful Metrics
 
 - Session length
-- Upgrade loop conversion
-- Ad RPM readiness
+- Upgrade loop clarity
+- Session-quality readiness
