@@ -64,4 +64,5 @@
 *.pth binary
 *.safetensors binary
 *.sqlite binary
+*.wasm binary
 *.wav binary
