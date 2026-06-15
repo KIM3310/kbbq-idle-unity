@@ -14,7 +14,7 @@ Updated: **February 18, 2026**
 - 핵심 증거는 플레이 가능한 빌드, build preflight, reviewer surface, 그리고 배포 전 점검 문서가 한 세트로 이어지는지입니다.
 - 빠르게 보려면 reviewer surface -> core loop 설명 -> docs/Build preflight 순서로 보는 편이 좋습니다.
 
-## 커리어 시그널
+## 기술 리뷰 신호
 - **인터랙티브/런타임 엔지니어 관점:** 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 검토할 수 있습니다.
 - **플랫폼/클라우드 아키텍트 관점:** reviewer surface, 배포 문서, 정적 호스팅 경로가 명확하게 정리되어 있습니다.
 - **제품/필드 관점:** 바로 플레이 가능한 결과물이 있어서 슬라이드보다 설득력이 높습니다.
@@ -26,7 +26,7 @@ Updated: **February 18, 2026**
 | Reviewer | Casual WebGL game reviewers, Unity prototype reviewers, and portfolio reviewers looking for a playable loop rather than a mockup. |
 | Product proof | The demo, workflow loop, and static proof surface show the current product direction without extra claims. |
 | Reviewer proof | Unity scene, docs front door, build preflight, deterministic economy harness, and reviewer pages make the runtime inspectable in minutes. |
-| Safety posture | Placeholder behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path. |
+| Safety posture | Fallback behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path. |
 
 ## Reviewer Fast Path
 
@@ -61,7 +61,7 @@ Updated: **February 18, 2026**
 
 ## First Reviewer Move
 - 실제 게임 런타임을 보려면 `Assets/Scenes/Main.unity`를 열고 Play를 누르세요. 이 경로가 기준 런타임입니다.
-- `docs/`는 Cloudflare Pages용 정적 reviewer surface입니다. `docs/Build/`에 실제 WebGL 산출물이 없으면 placeholder가 보이는 것이 정상입니다.
+- `docs/`는 Cloudflare Pages용 정적 reviewer surface입니다. `docs/Build/`에 실제 WebGL 산출물이 없으면 fallback screen이 보이는 것이 정상입니다.
 - `server/`는 delivery/ops 증거를 위한 선택 경로이며, 기본 플레이 루프 리뷰의 필수 조건은 아닙니다.
 
 ## What Is In This Version
