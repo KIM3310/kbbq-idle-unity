@@ -50,7 +50,7 @@ class TestApi(unittest.TestCase):
         self.assertTrue(root_payload.get("ok"))
         self.assertEqual(root_payload.get("meta"), "/meta")
         self.assertEqual(root_payload.get("readiness"), "/readiness")
-        self.assertEqual(root_payload.get("review_pack"), "/review-pack")
+        self.assertEqual(root_payload.get("architecture_pack"), "/architecture-pack")
 
         r = self._request("GET", "/health")
         self.assertEqual(r.status_code, 200)
@@ -78,15 +78,15 @@ class TestApi(unittest.TestCase):
         self.assertTrue(meta_payload.get("capabilities", {}).get("guest_auth"))
         self.assertIn("next_action", meta_payload.get("diagnostics", {}))
         self.assertTrue(meta_payload.get("diagnostics", {}).get("webgl_delivery", {}).get("ready"))
-        self.assertEqual(meta_payload.get("review_pack_contract"), "kbbq-idle-review-pack-v1")
-        self.assertEqual(meta_payload.get("links", {}).get("review_pack"), "/review-pack")
+        self.assertEqual(meta_payload.get("architecture_pack_contract"), "kbbq-idle-architecture-pack-v1")
+        self.assertEqual(meta_payload.get("links", {}).get("architecture_pack"), "/architecture-pack")
         self.assertEqual(meta_payload.get("links", {}).get("economy_balance_drill"), "/ops/economy-balance-drill")
         self.assertEqual(meta_payload.get("links", {}).get("release_readiness"), "/ops/release-readiness")
 
-        review_pack = self._request("GET", "/review-pack")
-        self.assertEqual(review_pack.status_code, 200)
-        review_payload = review_pack.json()
-        self.assertEqual(review_payload.get("readiness_contract"), "kbbq-idle-review-pack-v1")
+        architecture_pack = self._request("GET", "/architecture-pack")
+        self.assertEqual(architecture_pack.status_code, 200)
+        review_payload = architecture_pack.json()
+        self.assertEqual(review_payload.get("readiness_contract"), "kbbq-idle-architecture-pack-v1")
         self.assertIn("economy_contract", review_payload)
         self.assertTrue(review_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
         self.assertEqual(review_payload.get("webgl_delivery", {}).get("status"), "verified-build-present")
@@ -95,15 +95,15 @@ class TestApi(unittest.TestCase):
             "verified-webgl-runtime",
         )
         self.assertEqual(
-            review_payload.get("reviewer_posture", {}).get("claim_tier"),
+            review_payload.get("architecture_posture", {}).get("claim_tier"),
             "runtime-backed-review-ready",
         )
         self.assertIn(
-            "reviewer aids",
-            review_payload.get("reviewer_posture", {}).get("claim_rule", ""),
+            "architecture aids",
+            review_payload.get("architecture_posture", {}).get("claim_rule", ""),
         )
         self.assertIn(
-            "claim live WebGL reviewer delivery",
+            "claim live WebGL architecture delivery",
             review_payload.get("webgl_delivery", {}).get("claim_rule", ""),
         )
         self.assertIn("Build/KBBQIdleWebGL.loader.js", review_payload.get("webgl_delivery", {}).get("required_assets", []))
@@ -113,7 +113,7 @@ class TestApi(unittest.TestCase):
         self.assertIn("/ops/release-readiness", review_payload.get("review_sequence", []))
         self.assertEqual(len(review_payload.get("two_minute_review", [])), 4)
         self.assertEqual(review_payload.get("proof_assets", [])[0]["path"], "/health")
-        self.assertEqual(review_payload.get("links", {}).get("review_pack"), "/review-pack")
+        self.assertEqual(review_payload.get("links", {}).get("architecture_pack"), "/architecture-pack")
 
         release_readiness = self._request("GET", "/ops/release-readiness")
         self.assertEqual(release_readiness.status_code, 200)
@@ -135,12 +135,12 @@ class TestApi(unittest.TestCase):
         self.assertEqual(drill_payload.get("links", {}).get("economy_balance_drill"), "/ops/economy-balance-drill")
         self.assertGreaterEqual(len(drill_payload.get("tiers", [])), 3)
 
-    def test_review_pack_marks_webgl_delivery_unready_when_artifacts_are_missing(self):
+    def test_architecture_pack_marks_webgl_delivery_unready_when_artifacts_are_missing(self):
         with tempfile.TemporaryDirectory(prefix="kbbq_missing_webgl_") as temp_docs:
             with patch.dict(os.environ, {"KBBQ_WEBGL_DOCS_ROOT": temp_docs}):
-                review_pack = self._request("GET", "/review-pack")
-                self.assertEqual(review_pack.status_code, 200)
-                review_payload = review_pack.json()
+                architecture_pack = self._request("GET", "/architecture-pack")
+                self.assertEqual(architecture_pack.status_code, 200)
+                review_payload = architecture_pack.json()
                 self.assertFalse(review_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
                 self.assertEqual(
                     review_payload.get("webgl_delivery", {}).get("status"),

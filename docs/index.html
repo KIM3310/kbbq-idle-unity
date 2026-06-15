@@ -347,7 +347,7 @@
       #status { font-size:12px; color:var(--accent-soft); }
       #preflight { font-size:11px; color:var(--muted); line-height:1.5; }
       .optional-zone { min-height:96px; border:1px dashed var(--line); border-radius:10px; padding:8px; background:#1f1512; }
-      .reviewer-dock {
+      .architecture-dock {
         margin-top:12px;
         border:1px solid rgba(255, 178, 90, .18);
         border-radius:12px;
@@ -356,33 +356,33 @@
         display:grid;
         gap:10px;
       }
-      .reviewer-dock-head {
+      .architecture-dock-head {
         display:flex;
         align-items:flex-start;
         justify-content:space-between;
         gap:10px;
         flex-wrap:wrap;
       }
-      .reviewer-dock-head strong {
+      .architecture-dock-head strong {
         color:var(--accent-soft);
         font-size:12px;
       }
-      .reviewer-dock-head p {
+      .architecture-dock-head p {
         margin:4px 0 0;
         font-size:11px;
       }
-      .reviewer-dock-grid {
+      .architecture-dock-grid {
         display:grid;
         grid-template-columns: repeat(3, minmax(0, 1fr));
         gap:10px;
       }
-      .reviewer-dock-card {
+      .architecture-dock-card {
         border:1px solid rgba(255,255,255,.08);
         border-radius:10px;
         background:rgba(255,255,255,.03);
         padding:10px;
       }
-      .reviewer-dock-card strong {
+      .architecture-dock-card strong {
         display:block;
         margin-bottom:6px;
         color:var(--accent-soft);
@@ -390,25 +390,25 @@
         letter-spacing:.35px;
         text-transform:uppercase;
       }
-      .reviewer-dock-card p {
+      .architecture-dock-card p {
         margin:0;
         font-size:11px;
         line-height:1.6;
       }
-      .reviewer-dock-actions {
+      .architecture-dock-actions {
         display:flex;
         justify-content:space-between;
         gap:10px;
         align-items:center;
         flex-wrap:wrap;
       }
-      .reviewer-dock-actions p {
+      .architecture-dock-actions p {
         margin:0;
         font-size:11px;
       }
       footer { max-width:1320px; margin:0 auto; padding:0 16px 30px; color:var(--muted); font-size:11px; }
       @media (max-width: 900px) {
-        .hero-grid, .mini-cards, .placeholder-grid, .reviewer-dock-grid { grid-template-columns: 1fr; }
+        .hero-grid, .mini-cards, .placeholder-grid, .architecture-dock-grid { grid-template-columns: 1fr; }
         .placeholder-grid { padding:12px; }
         .placeholder-summary { grid-template-columns: 1fr; }
         #unityContainer { aspect-ratio: 3 / 4; max-height: none; }
@@ -437,7 +437,7 @@
         <section class="card">
           <h1>KBBQ Idle WebGL</h1>
           <p>
-            Technical proof path for a playable idle game: confirm the build is healthy, show the core economy
+            Technical walkthrough for a playable idle game: confirm the build is healthy, show the core economy
             loop, then explain why the WebGL surface is safe to host publicly.
           </p>
           <div class="mini-cards">
@@ -457,7 +457,7 @@
         </section>
 
         <section class="card">
-          <h2>First reviewer path</h2>
+          <h2>First architecture path</h2>
           <ul>
             <li><strong>1 · Frame it:</strong> confirm whether the build needs attention or is ready for preflight.</li>
             <li><strong>2 · Verify:</strong> use Check Build Files before making any playable claim.</li>
@@ -480,34 +480,34 @@
           <button id="copyChecklistBtn">Copy Build Checklist</button>
           <button id="copyBuildChecklistBtn">Copy Review Route</button>
         </div>
-        <section class="reviewer-dock" aria-label="Reviewer handoff">
-          <div class="reviewer-dock-head">
+        <section class="architecture-dock" aria-label="Architecture handoff">
+          <div class="architecture-dock-head">
             <div>
-              <strong>Reviewer handoff</strong>
+              <strong>Architecture handoff</strong>
               <p>Use this to narrate the current state without overstating whether the build is actually live.</p>
             </div>
-            <button id="copyReviewerStateBtn" type="button">Copy Current State</button>
+            <button id="copyArchitectureStateBtn" type="button">Copy Current State</button>
           </div>
-          <div class="reviewer-dock-grid">
-            <article class="reviewer-dock-card">
+          <div class="architecture-dock-grid">
+            <article class="architecture-dock-card">
               <strong>Current mode</strong>
-              <p id="reviewerDockMode">Playable preflight</p>
+              <p id="architectureDockMode">Playable preflight</p>
             </article>
-            <article class="reviewer-dock-card">
+            <article class="architecture-dock-card">
               <strong>Playable claim</strong>
-              <p id="reviewerDockClaim">Ready for preflight and launch.</p>
+              <p id="architectureDockClaim">Ready for preflight and launch.</p>
             </article>
-            <article class="reviewer-dock-card">
+            <article class="architecture-dock-card">
               <strong>Next move</strong>
-              <p id="reviewerDockNext">Run Check Build Files before any playable claim.</p>
+              <p id="architectureDockNext">Run Check Build Files before any playable claim.</p>
             </article>
-            <article class="reviewer-dock-card">
+            <article class="architecture-dock-card">
               <strong>Evidence note</strong>
-              <p id="reviewerDockEvidence">Build verification and live launch are intentionally kept separate.</p>
+              <p id="architectureDockEvidence">Build verification and live launch are intentionally kept separate.</p>
             </article>
           </div>
-          <div class="reviewer-dock-actions">
-            <p id="reviewerDockStatus">Ready to summarize the current reviewer posture.</p>
+          <div class="architecture-dock-actions">
+            <p id="architectureDockStatus">Ready to summarize the current architecture posture.</p>
           </div>
         </section>
         <div id="status">Ready. Check the WebGL bundle, then launch the playable surface.</div>
@@ -521,14 +521,14 @@
                 Use this panel to verify the build bundle, explain the gameplay loop with the docs pages,
                 and keep rollout language tied to the actual launch result.
               </p>
-              <div class="placeholder-badges" aria-label="Reviewer guardrails">
+              <div class="placeholder-badges" aria-label="Architecture guardrails">
                 <div class="placeholder-badge"><strong>Base</strong> <span id="placeholderBuildName">KBBQIdleWebGL</span></div>
                 <div class="placeholder-badge"><strong>Mode</strong> <span id="placeholderModeLabel">Playable preflight</span></div>
                 <div class="placeholder-badge"><strong>Claim</strong> <span id="placeholderClaimLabel">Preflight before launch</span></div>
               </div>
-              <div class="placeholder-summary" aria-label="Reviewer snapshot">
+              <div class="placeholder-summary" aria-label="Architecture snapshot">
                 <article class="placeholder-summary-card">
-                  <strong>What reviewers can assess now</strong>
+                  <strong>What operators can assess now</strong>
                   <p id="placeholderSummaryNow">Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.</p>
                 </article>
                 <article class="placeholder-summary-card">
@@ -537,7 +537,7 @@
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>Next recommended move</strong>
-                  <p id="placeholderSummaryNext">Run Check Build Files, then Start Game and keep Help/About open for reviewer context.</p>
+                  <p id="placeholderSummaryNext">Run Check Build Files, then Start Game and keep Help/About open for architecture context.</p>
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>Evidence anchor</strong>
@@ -551,8 +551,8 @@
               </div>
             </section>
             <aside class="placeholder-list">
-              <h3>Reviewer evidence board</h3>
-              <div class="placeholder-signals" aria-label="Reviewer signals">
+              <h3>Architecture evidence board</h3>
+              <div class="placeholder-signals" aria-label="System signals">
                 <div id="signalDocs" class="placeholder-signal" data-state="ok">Docs route ready</div>
                 <div id="signalBuild" class="placeholder-signal" data-state="warn">Build not yet checked</div>
                 <div id="signalClaim" class="placeholder-signal" data-state="warn">Playable claim on hold</div>
@@ -567,7 +567,7 @@
               <h3 style="margin-top:14px;">What to verify before public rollout</h3>
               <ol>
                 <li><strong>Bundle present:</strong> loader, data, framework, and wasm files resolve from <code>docs/Build/</code>.</li>
-                <li><strong>Reviewer route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
+                <li><strong>Architecture route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
                 <li><strong>Public claims held back:</strong> do not call this page playable until preflight and launch both succeed.</li>
               </ol>
               <p class="placeholder-note">If build files need attention, this panel remains the primary review state instead of reading like a broken black box.</p>
@@ -578,9 +578,9 @@
       </section>
 
       <section class="card">
-        <h2>Reviewer Path</h2>
+        <h2>Architecture Path</h2>
         <ul>
-          <li><strong>1.</strong> Before the playable build is verified, keep the preflight panel visible and narrate the review route.</li>
+          <li><strong>1.</strong> Before the playable build is verified, keep the preflight panel visible and narrate the architecture route.</li>
           <li><strong>2.</strong> Run <em>Check Build Files</em> before claiming the WebGL surface is live.</li>
           <li><strong>3.</strong> Open <a href="./help.html">Help</a> and <a href="./about.html">About</a> to explain controls, loop, and deployment posture.</li>
           <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing service launch or public rollout.</li>
@@ -607,7 +607,7 @@
 
       <section class="card">
         <h2>Operations Readiness</h2>
-        <p>External slots stay disabled by default while reviewers inspect gameplay, build health, privacy, and release posture.</p>
+        <p>External slots stay disabled by default while operators inspect gameplay, build health, privacy, and release posture.</p>
       </section>
     </main>
 
@@ -646,21 +646,21 @@
       const startBtn = document.getElementById('startBtn');
       const fullscreenBtn = document.getElementById('fullscreenBtn');
       const copyChecklistBtn = document.getElementById('copyChecklistBtn');
-      const copyReviewerStateBtn = document.getElementById('copyReviewerStateBtn');
+      const copyArchitectureStateBtn = document.getElementById('copyArchitectureStateBtn');
       const recentBuildsNode = document.getElementById('recentBuilds');
       const copyBuildChecklistBtn = document.getElementById('copyBuildChecklistBtn');
       const buildInfoNode = document.getElementById('buildInfo');
-      const reviewerDockModeNode = document.getElementById('reviewerDockMode');
-      const reviewerDockClaimNode = document.getElementById('reviewerDockClaim');
-      const reviewerDockNextNode = document.getElementById('reviewerDockNext');
-      const reviewerDockEvidenceNode = document.getElementById('reviewerDockEvidence');
-      const reviewerDockStatusNode = document.getElementById('reviewerDockStatus');
+      const architectureDockModeNode = document.getElementById('architectureDockMode');
+      const architectureDockClaimNode = document.getElementById('architectureDockClaim');
+      const architectureDockNextNode = document.getElementById('architectureDockNext');
+      const architectureDockEvidenceNode = document.getElementById('architectureDockEvidence');
+      const architectureDockStatusNode = document.getElementById('architectureDockStatus');
       let unityInstance = null;
       const RECENT_BUILDS_KEY = 'kbbq_idle_recent_builds_v1';
       let currentLoadId = 0;
       let buildManifestCache = null;
       let buildManifestFetched = false;
-      let reviewerSnapshot = {
+      let architectureSnapshot = {
         buildBase: 'KBBQIdleWebGL',
         claim: 'Ready for preflight and launch.',
         evidence: 'Build verification and live launch are intentionally kept separate.',
@@ -690,13 +690,13 @@
         }
       }
 
-      function renderReviewerDock() {
-        if (reviewerDockModeNode) reviewerDockModeNode.textContent = reviewerSnapshot.mode;
-        if (reviewerDockClaimNode) reviewerDockClaimNode.textContent = reviewerSnapshot.claim;
-        if (reviewerDockNextNode) reviewerDockNextNode.textContent = reviewerSnapshot.next;
-        if (reviewerDockEvidenceNode) reviewerDockEvidenceNode.textContent = reviewerSnapshot.evidence;
-        if (reviewerDockStatusNode) {
-          reviewerDockStatusNode.textContent = `${reviewerSnapshot.claim} Base ${reviewerSnapshot.buildBase} is currently ${reviewerSnapshot.state}.`;
+      function renderArchitectureDock() {
+        if (architectureDockModeNode) architectureDockModeNode.textContent = architectureSnapshot.mode;
+        if (architectureDockClaimNode) architectureDockClaimNode.textContent = architectureSnapshot.claim;
+        if (architectureDockNextNode) architectureDockNextNode.textContent = architectureSnapshot.next;
+        if (architectureDockEvidenceNode) architectureDockEvidenceNode.textContent = architectureSnapshot.evidence;
+        if (architectureDockStatusNode) {
+          architectureDockStatusNode.textContent = `${architectureSnapshot.claim} Base ${architectureSnapshot.buildBase} is currently ${architectureSnapshot.state}.`;
         }
       }
 
@@ -739,7 +739,7 @@
             claim: 'Ready for preflight and launch.',
             now: 'Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.',
             proof: 'Playable status depends on preflight plus a clean WebGL launch.',
-            next: 'Run Check Build Files, then Start Game and keep Help/About open for reviewer context.',
+            next: 'Run Check Build Files, then Start Game and keep Help/About open for architecture context.',
             evidence: 'The evidence board stays honest by separating docs review from launch verification.',
             buildSignal: ['warn', 'Build not yet checked'],
             claimSignal: ['warn', 'Preflight before launch'],
@@ -757,7 +757,7 @@
           ready: {
             modeLabel: 'Verified bundle found',
             claim: 'Almost ready, but launch still needs to succeed.',
-            now: 'The primary bundle appears present, so reviewers can move from docs review to real launch.',
+            now: 'The primary bundle appears present, so operators can move from docs review to real launch.',
             proof: 'Unity initialization is still the final gate before calling the page playable.',
             next: 'Click Start Game and confirm the loop, then keep Help/Compliance open for rollout context.',
             evidence: 'Preflight resolved loader/data/framework/wasm references for the chosen build name.',
@@ -767,7 +767,7 @@
           missing: {
             modeLabel: 'Build recheck state',
             claim: 'Recheck build files before launch.',
-            now: 'Reviewers can still assess navigation, product framing, controls copy, and public guardrails.',
+            now: 'Operators can still assess navigation, product framing, controls copy, and public guardrails.',
             proof: 'Playable status waits for confirmed WebGL files and a successful launch.',
             next: 'Keep the preflight panel visible, use Help as the walkthrough, and refresh docs/Build before rollout.',
             evidence: options.error ? `Last check: ${options.error}` : 'The evidence board documents what needs attention instead of hiding it behind an empty panel.',
@@ -803,7 +803,7 @@
         if (placeholderSummaryProofNode) placeholderSummaryProofNode.textContent = next.proof;
         if (placeholderSummaryNextNode) placeholderSummaryNextNode.textContent = next.next;
         if (placeholderSummaryEvidenceNode) placeholderSummaryEvidenceNode.textContent = next.evidence;
-        reviewerSnapshot = {
+        architectureSnapshot = {
           buildBase: base,
           claim: next.claim,
           evidence: next.evidence,
@@ -811,7 +811,7 @@
           next: next.next,
           state: mode,
         };
-        renderReviewerDock();
+        renderArchitectureDock();
         setSignal(signalDocsNode, 'ok', 'Docs route ready');
         setSignal(signalBuildNode, next.buildSignal[0], next.buildSignal[1]);
         setSignal(signalClaimNode, next.claimSignal[0], next.claimSignal[1]);
@@ -850,7 +850,7 @@
           ready: {
             eyebrow: 'Build verified',
             title: 'Core build files were found. You can now launch the real WebGL surface.',
-            copy: 'Next reviewer move: start the build, confirm the loop, then use Help and Compliance to explain the release posture.',
+            copy: 'Next architecture move: start the build, confirm the loop, then use Help and Compliance to explain the release posture.',
             hidden: false,
           },
           missing: {
@@ -1328,19 +1328,19 @@
           void copyBuildChecklist();
         });
       }
-      if (copyReviewerStateBtn) {
-        copyReviewerStateBtn.addEventListener('click', async () => {
+      if (copyArchitectureStateBtn) {
+        copyArchitectureStateBtn.addEventListener('click', async () => {
           const payload = [
-            'KBBQ Idle reviewer state',
-            `- Build base: ${reviewerSnapshot.buildBase}`,
-            `- Mode: ${reviewerSnapshot.mode}`,
-            `- Playable claim: ${reviewerSnapshot.claim}`,
-            `- Next move: ${reviewerSnapshot.next}`,
-            `- Evidence note: ${reviewerSnapshot.evidence}`,
+            'KBBQ Idle architecture state',
+            `- Build base: ${architectureSnapshot.buildBase}`,
+            `- Mode: ${architectureSnapshot.mode}`,
+            `- Playable claim: ${architectureSnapshot.claim}`,
+            `- Next move: ${architectureSnapshot.next}`,
+            `- Evidence note: ${architectureSnapshot.evidence}`,
           ].join('\\n');
           const ok = await copyTextValue(payload);
-          if (reviewerDockStatusNode) {
-            reviewerDockStatusNode.textContent = ok ? 'Current reviewer state copied.' : 'Failed to copy current reviewer state.';
+          if (architectureDockStatusNode) {
+            architectureDockStatusNode.textContent = ok ? 'Current architecture state copied.' : 'Failed to copy current architecture state.';
           }
         });
       }
@@ -1359,14 +1359,14 @@
       });
       copyBuildChecklistBtn.addEventListener('click', async () => {
         const payload = [
-          'KBBQ Idle reviewer route',
+          'KBBQ Idle architecture route',
           '- ./index.html -> build preflight and playable surface',
           '- ./help.html -> controls, support path, and troubleshooting',
           '- ./about.html -> gameplay loop and deployment posture',
           '- ./compliance.html -> public rollout and service launch guardrails',
         ].join('\\n');
         const ok = await copyTextValue(payload);
-        setStatus(ok ? 'Review route copied.' : 'Failed to copy review route.');
+        setStatus(ok ? 'Architecture route copied.' : 'Failed to copy architecture route.');
       });
       document.addEventListener('keydown', async (event) => {
         if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;

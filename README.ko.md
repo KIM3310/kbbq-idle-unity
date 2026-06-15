@@ -80,7 +80,7 @@ tools/portfolio_quality_gate.sh
 - 메인 README: `README.md`
 - 영문 README: `README.en.md`
 - Cloudflare 배포 문서: `docs/deployment/CLOUDFLARE_PAGES.md`
-- 기술 요약: `docs/review/PROJECT_SUMMARY.ko.md`, `docs/review/PROJECT_SUMMARY.en.md`
+- 기술 요약: `docs/architecture/PROJECT_SUMMARY.ko.md`, `docs/architecture/PROJECT_SUMMARY.en.md`
 
 ## 라이선스
 MIT (`LICENSE`)

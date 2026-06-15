@@ -37,17 +37,17 @@ public class PerfOverlayView : MonoBehaviour
         var avgWait = 0f;
         var servedPerMin = 0f;
         var presetLabel = "1.0x";
-        var reviewContract = "kbbq-idle-review-pack-v1";
+        var reviewContract = "kbbq-idle-architecture-pack-v1";
         var storeTier = "Alley";
         var incomePerSec = 0d;
         var optionalEconomyMode = "Optional economy off / Packs off / Packs 0";
         var reviewStep = "Check grill flow, queue pressure, then optional economy posture.";
-        var focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay";
-        var reviewerSnapshot = "Tier Alley / Queue 0 / Economy off / Packs off / Packs 0";
+        var focusedRoute = "Architecture Pack -> preset 2.0x rush -> grill loop -> perf overlay";
+        var architectureSnapshot = "Tier Alley / Queue 0 / Economy off / Packs off / Packs 0";
         var focusedOpsSnapshot = "Preset 1.0x / Queue 0 / Wait 0.0s / Served 0/min";
-        var twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay";
-        var reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay";
-        var proofAssets = "Health, Meta, Review Pack, Perf Overlay";
+        var twoMinuteReview = "Health/meta -> architecture-pack -> grill loop -> perf overlay";
+        var reviewRoutes = "Health, Meta, Architecture Pack, Rush Preset, Perf Overlay";
+        var proofAssets = "Health, Meta, Architecture Pack, Perf Overlay";
         if (gameManager != null)
         {
             var metrics = gameManager.GetQueueMetrics();
@@ -62,7 +62,7 @@ public class PerfOverlayView : MonoBehaviour
             optionalEconomyMode = reviewPack.optionalEconomyMode;
             reviewStep = reviewPack.reviewStep;
             focusedRoute = reviewPack.focusedRoute;
-            reviewerSnapshot = reviewPack.reviewerSnapshot;
+            architectureSnapshot = reviewPack.architectureSnapshot;
             focusedOpsSnapshot = reviewPack.focusedOpsSnapshot;
             twoMinuteReview = reviewPack.twoMinuteReview;
             reviewRoutes = reviewPack.reviewRoutes;
@@ -80,7 +80,7 @@ public class PerfOverlayView : MonoBehaviour
                            "\nPreset " + presetLabel +
                            "\nReview " + reviewStep +
                            "\nRoute " + focusedRoute +
-                           "\nSnapshot " + reviewerSnapshot +
+                           "\nSnapshot " + architectureSnapshot +
                            "\nOps " + focusedOpsSnapshot +
                            "\n2m " + twoMinuteReview +
                            "\nPaths " + reviewRoutes +

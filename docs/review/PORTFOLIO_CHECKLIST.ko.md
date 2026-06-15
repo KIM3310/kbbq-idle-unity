@@ -1,6 +1,6 @@
 # KBBQ Idle 포트폴리오 체크리스트
 
-이 문서는 코드 리뷰어/면접관에게 프로젝트 완성도를 빠르게 보여주기 위한 최소 검증 순서입니다.
+이 문서는 코드 리뷰어/기술 검토자에게 프로젝트 완성도를 빠르게 보여주기 위한 최소 검증 순서입니다.
 
 ## 1) 품질 게이트 실행
 ```bash
@@ -24,7 +24,7 @@ STRICT_PORTFOLIO_GATE=1 tools/portfolio_quality_gate.sh
 4. Optional Economy 패널에서 보상 이벤트/패키지 적용 플로우 확인
 5. Leaderboard 패널에서 새로고침(네트워크 off: mock, on: live) 확인
 
-## 3) 기술 포인트 설명(면접 답변용)
+## 3) 기술 포인트 설명(기술 설명 답변용)
 - 세이브 무결성: `SaveSystem`의 SHA-256 체크섬 + 백업 슬롯 복구
 - 런타임 안정화: Queue Guardian/Auto Rush, 프레임 히치 기반 보호
 - 네트워크 보안: HMAC 서명 헤더, nonce 재사용 방지, 토큰 해시 저장

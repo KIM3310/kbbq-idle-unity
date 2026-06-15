@@ -35,14 +35,14 @@ jobs:
       - name: Test (server)
         run: python -m pytest server/tests -q
 
-      - name: Generate backend review-pack proof artifact
-        run: python server/scripts/exercise_review_pack.py --output artifacts/kbbq-review-pack.json
+      - name: Generate backend architecture-pack proof artifact
+        run: python server/scripts/exercise_architecture_pack.py --output artifacts/kbbq-architecture-pack.json
 
-      - name: Upload backend review-pack artifact
+      - name: Upload backend architecture-pack artifact
         uses: actions/upload-artifact@v7
         with:
-          name: kbbq-review-pack-proof
-          path: artifacts/kbbq-review-pack.json
+          name: kbbq-architecture-pack-proof
+          path: artifacts/kbbq-architecture-pack.json
 
   review-gate:
     runs-on: ubuntu-latest

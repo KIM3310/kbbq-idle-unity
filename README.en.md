@@ -4,17 +4,17 @@ KBBQ Idle is an idle/tycoon game project focused on a grill-management gameplay 
 
 Updated: **February 18, 2026**
 
-## Product and Review Surface
+## Product and System Surface
 
 A playable Unity WebGL project that proves shipping discipline through game loop, build pipeline, and release checks.
 
 | Lens | Definition |
 |---|---|
-| Audience | Game reviewers, WebGL publishers, casual-game operators, and portfolio reviewers checking delivery craft. |
-| Review path | Validate the demo, README, architecture notes, and quality gate before deeper workflow review. |
-| Review signal | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
+| Audience | Game technical readers, WebGL publishers, casual-game operators, and portfolio technical readers checking delivery craft. |
+| Architecture path | Validate the demo, README, architecture notes, and quality gate before deeper workflow architecture. |
+| System signal | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
 | Safety boundary | gameplay data should stay separate from personal data. |
-| Fast proof | Run `tools/portfolio_quality_gate.sh` or the WebGL release check before publishing. |
+| Fast path | Run `tools/portfolio_quality_gate.sh` or the WebGL release check before publishing. |
 
 ## What Changed In This Build
 - 4 grill slots for active cooking flow
@@ -24,7 +24,7 @@ A playable Unity WebGL project that proves shipping discipline through game loop
 - Stronger layered sizzling audio (loop + crackle)
 - Clearer UI metrics (`$ currency`, served/customers/queue)
 - Responsive layout pass for desktop + mobile WebGL
-- Policy-ready static pages under `docs/` for review workflows
+- Policy-ready static pages under `docs/` for architecture workflows
 
 ## Gameplay Loop
 1. Buy raw meat.
@@ -60,7 +60,7 @@ Use these settings:
 - Build command: `(none)`
 - Build output directory: `docs`
 
-Run deployment review checks:
+Run deployment architecture checks:
 
 ```bash
 ./tools/release_ops.sh check
@@ -89,7 +89,7 @@ It executes Unity checks, backend tests, and deterministic simulator tests.
 - Korean README: `README.ko.md`
 - Main README: `README.md`
 - Cloudflare deployment note: `docs/deployment/CLOUDFLARE_PAGES.md`
-- Technical summaries: `docs/review/PROJECT_SUMMARY.en.md`, `docs/review/PROJECT_SUMMARY.ko.md`
+- Technical summaries: `docs/architecture/PROJECT_SUMMARY.en.md`, `docs/architecture/PROJECT_SUMMARY.ko.md`
 
 ## License
 MIT (`LICENSE`)

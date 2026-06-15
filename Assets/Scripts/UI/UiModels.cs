@@ -47,7 +47,7 @@ public struct GameplayReviewPack
     public string optionalEconomyMode;
     public string reviewStep;
     public string focusedRoute;
-    public string reviewerSnapshot;
+    public string architectureSnapshot;
     public string focusedOpsSnapshot;
     public string twoMinuteReview;
     public string reviewRoutes;

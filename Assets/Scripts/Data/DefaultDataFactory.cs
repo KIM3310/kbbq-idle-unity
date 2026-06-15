@@ -67,7 +67,7 @@ public static class DefaultDataFactory
     {
         var config = ScriptableObject.CreateInstance<ApiConfig>();
         // Keep networking disabled by default in the portfolio build.
-        // Reviewers can opt-in by setting a real base URL + secret.
+        // Operators can opt-in by setting a real base URL + secret.
         config.baseUrl = "";
         config.region = "KR";
         config.hmacSecret = "CHANGE_ME";

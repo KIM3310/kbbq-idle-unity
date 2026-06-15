@@ -223,7 +223,7 @@ public class GameManager : MonoBehaviour
 
         return new GameplayReviewPack
         {
-            contract = "kbbq-idle-review-pack-v1",
+            contract = "kbbq-idle-architecture-pack-v1",
             headline = "Gameplay loop and optional economy posture are visible from the live overlay.",
             storeTier = tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley",
             playerLevel = GetPlayerLevel(),
@@ -234,12 +234,12 @@ public class GameManager : MonoBehaviour
             averageWaitSeconds = metrics.avgWaitSeconds,
             optionalEconomyMode = BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount),
             reviewStep = "Check grill flow, queue pressure, then optional economy posture.",
-            focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay",
-            reviewerSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Economy {BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount)}",
+            focusedRoute = "Architecture Pack -> preset 2.0x rush -> grill loop -> perf overlay",
+            architectureSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Economy {BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount)}",
             focusedOpsSnapshot = $"Preset {presetLabel} / Queue {metrics.queueCount} / Wait {metrics.avgWaitSeconds:0.0}s / Served {metrics.servedPerMinute:0}/min",
-            twoMinuteReview = "Health/meta -> review-pack -> grill loop -> perf overlay",
-            reviewRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay",
-            proofAssets = "Health, Meta, Review Pack, Perf Overlay",
+            twoMinuteReview = "Health/meta -> architecture-pack -> grill loop -> perf overlay",
+            reviewRoutes = "Health, Meta, Architecture Pack, Rush Preset, Perf Overlay",
+            proofAssets = "Health, Meta, Architecture Pack, Perf Overlay",
         };
     }
     private string BuildPresetLabel(int index)

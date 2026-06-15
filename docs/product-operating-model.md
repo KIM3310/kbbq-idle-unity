@@ -1,28 +1,28 @@
 # Product Operating Model
 
 Repository: `kbbq-idle-unity`
-Last reviewed: 2026-06-03 KST
+Last updated: 2026-06-03 KST
 
 ## Enterprise Product Position
 
 Unity game prototype packaged as a playable product surface with service launch and retention experiments.
 
-This repository is packaged as a concrete system surface, not a loose code sample. The enterprise value is a narrow proof that can be inspected, run, tested, and converted into a reviewed implementation motion.
+This repository is packaged as a concrete system surface, not a loose code sample. The enterprise value is a narrow proof that can be inspected, run, tested, and converted into a scoped implementation motion.
 
 ## Audience And Service Path
 
 | Area | Position |
 | --- | --- |
-| Target reviewer | product teams and niche end users |
-| Service wedge | reviewable app path, team package, or operations pilot |
-| Review signal | architecture clarity, local verification, trust boundaries, and repeatable operator workflow |
+| Target users | product teams and niche end users |
+| Service wedge | inspectable app path, team package, or operations pilot |
+| System signal | architecture clarity, local verification, trust boundaries, and repeatable operator workflow |
 | Delivery shape | Fixed-scope pilot, integration sprint, and handoff-ready operating pack |
 | Expansion path | Add customer-specific adapters, policy controls, observability, and support SLAs after the pilot proves value |
 
 ## Enterprise Trust Boundary
 
 - Keep credentials out of the repository and require environment-based configuration for live integrations.
-- Treat generated screenshots, fixtures, and sample data as non-customer proof assets unless explicitly reviewed.
+- Treat generated screenshots, fixtures, and sample data as non-customer proof assets unless explicitly approved.
 - Keep CI, repository-surface validation, architecture manifest checks, and secret scanning green before presenting the repo externally.
 - Use the architecture blueprint as the source of truth for cloud, AI, data, and operational boundaries.
 - Document any unsupported production assumption before a customer or evaluator sees the demo.
@@ -47,4 +47,4 @@ This repository is packaged as a concrete system surface, not a loose code sampl
 
 ## Service Next Step
 
-Turn the repo into a reviewer-facing adoption path by pairing the proof surface with one discovery question, one measurable success metric, and one bounded follow-up path. The smallest viable package should be easy to verify and bounded enough to deliver without custom platform work.
+Turn the repo into a architecture-facing adoption path by pairing the proof surface with one discovery question, one measurable success metric, and one bounded follow-up path. The smallest viable package should be easy to verify and bounded enough to deliver without custom platform work.

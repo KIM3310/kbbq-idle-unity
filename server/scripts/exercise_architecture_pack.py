@@ -15,9 +15,9 @@ if str(ROOT) not in sys.path:
 
 
 def build_runtime_proof() -> dict[str, object]:
-    os.environ.setdefault("KBBQ_DB_PATH", str(Path(tempfile.gettempdir()) / "kbbq_review_pack.sqlite"))
-    os.environ.setdefault("KBBQ_HMAC_SECRET", "review-pack-secret")
-    os.environ.setdefault("KBBQ_TOKEN_SALT", "review-pack-salt")
+    os.environ.setdefault("KBBQ_DB_PATH", str(Path(tempfile.gettempdir()) / "kbbq_architecture_pack.sqlite"))
+    os.environ.setdefault("KBBQ_HMAC_SECRET", "architecture-pack-secret")
+    os.environ.setdefault("KBBQ_TOKEN_SALT", "architecture-pack-salt")
     os.environ.setdefault("KBBQ_MAX_CLOCK_SKEW_SECONDS", "9999")
 
     from server.app import app
@@ -25,20 +25,20 @@ def build_runtime_proof() -> dict[str, object]:
     with TestClient(app) as client:
         health = client.get("/health")
         meta = client.get("/meta")
-        review_pack = client.get("/review-pack")
+        architecture_pack = client.get("/architecture-pack")
         readiness = client.get("/readiness")
 
-    for response in (health, meta, review_pack, readiness):
+    for response in (health, meta, architecture_pack, readiness):
         response.raise_for_status()
 
-    review_pack_payload = review_pack.json()
+    architecture_pack_payload = architecture_pack.json()
     return {
         "service": "kbbq-idle-backend",
         "health": health.json().get("diagnostics", {}),
-        "meta_contract": meta.json().get("review_pack_contract"),
-        "review_pack_contract": review_pack_payload.get("readiness_contract"),
-        "proof_bundle": review_pack_payload.get("proof_bundle", {}),
-        "review_routes": review_pack_payload.get("links", {}),
+        "meta_contract": meta.json().get("architecture_pack_contract"),
+        "architecture_pack_contract": architecture_pack_payload.get("readiness_contract"),
+        "proof_bundle": architecture_pack_payload.get("proof_bundle", {}),
+        "review_routes": architecture_pack_payload.get("links", {}),
         "readiness": readiness.json(),
     }
 

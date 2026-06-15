@@ -37,7 +37,7 @@ def _is_truthy(value: str) -> bool:
 EXPOSE_DOCS = _is_truthy(os.getenv("KBBQ_EXPOSE_DOCS", "0"))
 APP_STARTED_AT = int(time.time())
 RATE_BUCKETS: dict[str, list[float]] = {}
-REVIEW_PACK_CONTRACT = "kbbq-idle-review-pack-v1"
+REVIEW_PACK_CONTRACT = "kbbq-idle-architecture-pack-v1"
 DEFAULT_CORS_ORIGINS = [
     "http://localhost:3000",
     "http://127.0.0.1:3000",
@@ -57,7 +57,7 @@ KBBQ_CORS_ORIGINS = _read_csv_env("KBBQ_CORS_ORIGINS", DEFAULT_CORS_ORIGINS)
 app = FastAPI(
     title="KBBQ Idle Backend",
     version="0.1",
-    # Reviewers don't need a public Swagger UI by default.
+    # Operators don't need a public Swagger UI by default.
     docs_url="/docs" if EXPOSE_DOCS else None,
     redoc_url=None,
     openapi_url="/openapi.json" if EXPOSE_DOCS else None,
@@ -78,7 +78,7 @@ def root():
         "health": "/health",
         "meta": "/meta",
         "readiness": "/readiness",
-        "review_pack": "/review-pack",
+        "architecture_pack": "/architecture-pack",
         "metrics": "/metrics",
         "docs": "/docs" if EXPOSE_DOCS else None,
     }
@@ -111,7 +111,7 @@ def _ops_links() -> dict[str, object]:
         "health": "/health",
         "meta": "/meta",
         "readiness": "/readiness",
-        "review_pack": "/review-pack",
+        "architecture_pack": "/architecture-pack",
         "release_readiness": "/ops/release-readiness",
         "economy_balance_drill": "/ops/economy-balance-drill",
         "metrics": "/metrics",
@@ -156,12 +156,12 @@ def _build_webgl_delivery_report() -> dict[str, object]:
         "required_assets": [str(path.relative_to(docs_root)) for path in required_assets],
         "missing_assets": missing_assets,
         "claim_rule": (
-            "Required reviewer assets are present, so you can claim live WebGL reviewer delivery."
+            "Required architecture assets are present, so you can claim live WebGL architecture delivery."
             if ready
-            else "Do not claim live WebGL delivery from docs alone until ./tools/build_webgl_docs.sh produces the required reviewer assets."
+            else "Do not claim live WebGL delivery from docs alone until ./tools/build_webgl_docs.sh produces the required architecture assets."
         ),
         "next_action": (
-            "WebGL build artifacts are present for reviewer delivery."
+            "WebGL build artifacts are present for architecture delivery."
             if ready
             else "Run ./tools/build_webgl_docs.sh before claiming WebGL delivery readiness."
         ),
@@ -223,7 +223,7 @@ def _next_action(report: dict[str, object]) -> str:
     return "No action required."
 
 
-def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
+def _build_architecture_pack(report: dict[str, object]) -> dict[str, object]:
     integrations = _integration_state()
     webgl_delivery = _build_webgl_delivery_report()
     proof_bundle = {
@@ -240,12 +240,12 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         "store_tiers": "level-based store tier progression changes income multiplier",
         "optional_economy": "optional rewards and pack grants stay optional, server-authoritative verification remains on backend",
     }
-    reviewer_posture = {
-        "runtime_source_of_truth": "/review-pack + Unity WebGL/Editor loop",
+    architecture_posture = {
+        "runtime_source_of_truth": "/architecture-pack + Unity WebGL/Editor loop",
         "docs_only_surfaces": ["docs/index.html", "docs/help.html", "docs/about.html", "docs/compliance.html"],
         "claim_tier": "runtime-backed-review-ready" if webgl_delivery["ready"] else "docs-first-placeholder",
         "claim_rule": (
-            "Use docs surfaces as reviewer aids, then repeat playable/runtime claims only after build preflight and live Unity launch both succeed."
+            "Use docs surfaces as architecture aids, then repeat playable/runtime claims only after build preflight and live Unity launch both succeed."
         ),
     }
     return {
@@ -253,11 +253,11 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         "service": "kbbq-idle-backend",
         "generated_at": report["ts"],
         "readiness_contract": REVIEW_PACK_CONTRACT,
-        "headline": "Idle tycoon slice exposes gameplay, economy, and WebGL delivery proof in one reviewer surface.",
+        "headline": "Idle tycoon slice exposes gameplay, economy, and WebGL delivery proof in one architecture surface.",
         "proof_bundle": proof_bundle,
         "webgl_delivery": webgl_delivery,
         "economy_contract": economy_contract,
-        "reviewer_posture": reviewer_posture,
+        "architecture_posture": architecture_posture,
         "trust_boundary": [
             "Unity client stays playable without backend; networking remains opt-in for demo flows.",
             "Signed headers and nonce replay protection guard leaderboard, analytics, and feedback routes.",
@@ -265,14 +265,14 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
         ],
         "review_sequence": [
             "Open /health and /meta to confirm ops posture and enabled surfaces.",
-            "Open /review-pack to inspect gameplay loop, economy contract, and delivery posture.",
+            "Open /architecture-pack to inspect gameplay loop, economy contract, and delivery posture.",
             "/ops/release-readiness",
             "/ops/economy-balance-drill",
             "Run the Unity WebGL build or Editor scene to validate the grill -> serve -> upgrade loop.",
         ],
         "two_minute_review": [
             "Open /health and /meta to confirm runtime posture, enabled surfaces, and next action.",
-            "Open /review-pack to pin gameplay loop, economy contract, and optional economy posture.",
+            "Open /architecture-pack to pin gameplay loop, economy contract, and optional economy posture.",
             "Run the Unity WebGL build or Editor scene and validate the grill -> serve -> upgrade loop.",
             "Read the live perf overlay before claiming delivery or optional economy readiness.",
         ],
@@ -288,14 +288,14 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
                 "why": "Pins enabled capabilities and runtime delivery posture before a demo.",
             },
             {
-                "label": "Review Pack",
-                "path": "/review-pack",
+                "label": "Architecture Pack",
+                "path": "/architecture-pack",
                 "why": "Packages gameplay loop, economy contract, and trust boundary in one payload.",
             },
             {
                 "label": "Release Readiness",
                 "path": "/ops/release-readiness",
-                "why": "Summarizes WebGL delivery, integration gates, and reviewer claim posture before rollout.",
+                "why": "Summarizes WebGL delivery, integration gates, and architecture claim posture before rollout.",
             },
             {
                 "label": "Economy Balance Drill",
@@ -305,7 +305,7 @@ def _build_review_pack(report: dict[str, object]) -> dict[str, object]:
             {
                 "label": "Perf Overlay",
                 "path": "Assets/Scripts/UI/PerfOverlayView.cs",
-                "why": "Shows the live gameplay review pack directly inside the Unity surface.",
+                "why": "Shows the live gameplay architecture pack directly inside the Unity surface.",
             },
         ],
         "watchouts": [
@@ -331,7 +331,7 @@ def _build_release_readiness(report: dict[str, object]) -> dict[str, object]:
             "ops_token_configured": integrations["ops_token_configured"],
             "feedback_relay_configured": integrations["feedback_relay_configured"],
         },
-        "reviewer_claim": (
+        "architecture_claim": (
             "Playable and review-ready" if report["ready"] and webgl_delivery["ready"] else "Reviewable with explicit blockers"
         ),
         "blockers": [
@@ -398,7 +398,7 @@ def meta():
             "webgl_delivery": webgl_delivery,
             "next_action": _next_action(report),
         },
-        "review_pack_contract": REVIEW_PACK_CONTRACT,
+        "architecture_pack_contract": REVIEW_PACK_CONTRACT,
         "links": _ops_links(),
         "ops_contract": _ops_contract(),
     }
@@ -438,7 +438,7 @@ def _build_economy_balance_drill() -> dict[str, object]:
         "summary": {
             "guardian_triggers": len(tiers),
             "optional_economy_enabled": False,
-            "optional_economy_posture": "reviewer-safe optional packs and rewards remain off by default",
+            "optional_economy_posture": "public-safe optional packs and rewards remain off by default",
             "highest_offline_pressure_minutes": max(item["offline_pressure_minutes"] for item in tiers),
             "offline_pressure_delta_minutes": final_tier["offline_pressure_minutes"] - starter["offline_pressure_minutes"],
             "largest_upgrade_delta_pct": max(item["upgrade_delta_pct"] for item in tiers),
@@ -446,13 +446,13 @@ def _build_economy_balance_drill() -> dict[str, object]:
                 ((final_tier["income_per_second"] - starter["income_per_second"]) / starter["income_per_second"]) * 100,
                 1,
             ),
-            "guardian_mode_posture": "queue guardrails stay gameplay-first and optional economy-off during reviewer demos",
+            "guardian_mode_posture": "queue guardrails stay gameplay-first and optional economy-off during architecture demos",
         },
         "tiers": tiers,
         "review_actions": [
             "Treat guardian triggers as balance-review thresholds, not optional economy prompts.",
             "Review offline pressure before claiming idle progression is stable across long sessions.",
-            "Keep optional economy-off posture visible during reviewer demos.",
+            "Keep optional economy-off posture visible during architecture demos.",
         ],
         "links": _ops_links(),
     }
@@ -500,10 +500,10 @@ def readiness():
     return _build_readiness_report()
 
 
-@app.get("/review-pack")
-def review_pack():
+@app.get("/architecture-pack")
+def architecture_pack():
     report = _build_readiness_report()
-    return _build_review_pack(report)
+    return _build_architecture_pack(report)
 
 
 @app.get("/ops/release-readiness")

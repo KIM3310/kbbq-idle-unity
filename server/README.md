@@ -10,11 +10,11 @@ This is an optional backend to demonstrate:
 - optional pack verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
 - service readiness diagnostics (`/readiness`),
 - runtime service profile (`/meta`),
-- reviewer-facing gameplay/economy posture (`/review-pack`),
+- architecture-facing gameplay/economy posture (`/architecture-pack`),
 - ops/monitoring endpoints (`/metrics`, `/ops/alerts`),
 - SQLite persistence.
 
-It is intentionally small and self-contained so reviewers can run it quickly.
+It is intentionally small and self-contained so technical readers can run it quickly.
 
 ## Quickstart (Python)
 ```bash
@@ -37,9 +37,9 @@ Runtime profile:
 curl -s http://127.0.0.1:8000/meta | jq .
 ```
 
-Review pack:
+Architecture pack:
 ```bash
-curl -s http://127.0.0.1:8000/review-pack | jq .
+curl -s http://127.0.0.1:8000/architecture-pack | jq .
 ```
 
 Optional (enable Swagger UI for local debugging):
@@ -99,4 +99,4 @@ Production/staging templates:
   - `links`
   - `ops_contract`
 - `/meta` exposes runtime posture, enabled capabilities, and the same action-oriented diagnostics surface.
-- `/review-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one reviewer-friendly payload.
+- `/architecture-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one technical reader-friendly payload.
