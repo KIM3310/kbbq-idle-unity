@@ -51,8 +51,8 @@
   - 준비상태 점검: `GET /readiness` (설정/DB probe)
   - 모니터링: `GET /metrics`, `GET /ops/alerts`
 
-## 포트폴리오용 보강(품질 신호)
-- **데이터 검증**: `KBBQ/Validate Data (Portfolio)`로 중복 ID, 튜닝 값, 네트워크 기본값 안전성 등을 검증합니다.
+## 프로젝트 보강(품질 신호)
+- **데이터 검증**: `KBBQ/Validate Data`로 중복 ID, 튜닝 값, 네트워크 기본값 안전성 등을 검증합니다.
 - **Unity 테스트**: EditMode 테스트로 수식 불변성/세이브 무결성 가드레일을 검증합니다.
 - **WebGL 파이프라인**: `KBBQ/Build WebGL (docs)`로 `docs/`에 WebGL 빌드를 생성해 GitHub Pages로 배포할 수 있습니다(빌드 산출물은 레포 경량화를 위해 로컬에서 생성).
 - `Assets/Editor/KBBQAutoSetup.cs`에서 **KBBQ/Run Auto Setup** 메뉴로 폴더/데이터/프리팹/씬을 자동 생성할 수 있습니다.
@@ -60,5 +60,5 @@
 
 ## 비고
 - 문서는 `README.md`(및 `README.en.md` / `README.ko.md`)에 정리했습니다.
-- 포트폴리오용으로 테스트/검증을 점진적으로 추가하는 중입니다.
-- 통합 품질 게이트: `tools/portfolio_quality_gate.sh`.
+- 테스트와 검증 범위를 점진적으로 넓히는 중입니다.
+- 통합 품질 게이트: `tools/runtime_quality_gate.sh`.

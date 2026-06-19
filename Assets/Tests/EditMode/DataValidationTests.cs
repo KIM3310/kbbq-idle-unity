@@ -7,7 +7,7 @@ public class DataValidationTests
     public void ProjectData_HasNoValidationErrors()
     {
         var report = KBBQDataValidator.Validate();
-        Assert.IsFalse(report.HasErrors, "Validation errors found. Open Console or run KBBQ/Validate Data (Portfolio).");
+        Assert.IsFalse(report.HasErrors, "Validation errors found. Open Console or run KBBQ/Validate Data.");
     }
 }
 #endif

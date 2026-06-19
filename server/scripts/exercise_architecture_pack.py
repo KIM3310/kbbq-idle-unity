@@ -38,7 +38,7 @@ def build_runtime_proof() -> dict[str, object]:
         "meta_contract": meta.json().get("architecture_pack_contract"),
         "architecture_pack_contract": architecture_pack_payload.get("readiness_contract"),
         "proof_bundle": architecture_pack_payload.get("proof_bundle", {}),
-        "review_routes": architecture_pack_payload.get("links", {}),
+        "architecture_routes": architecture_pack_payload.get("links", {}),
         "readiness": readiness.json(),
     }
 

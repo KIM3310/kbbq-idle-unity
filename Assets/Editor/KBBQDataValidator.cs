@@ -15,7 +15,7 @@ public static class KBBQDataValidator
         public bool HasErrors => errors > 0;
     }
 
-    [UnityEditor.MenuItem("KBBQ/Validate Data (Portfolio)")]
+    [UnityEditor.MenuItem("KBBQ/Validate Data")]
     public static void ValidateMenu()
     {
         var report = Validate();
@@ -105,7 +105,7 @@ public static class KBBQDataValidator
             if (up.effectValue <= 0f) Warn($"Upgrade '{up.id}' has effectValue <= 0");
         }
 
-        // Api config (portfolio defaults)
+        // Api config (runtime defaults)
         var apiConfigs = LoadAllAssets<ApiConfig>();
         foreach (var api in apiConfigs)
         {

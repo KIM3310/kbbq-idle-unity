@@ -54,9 +54,9 @@ Run all local checks (EditMode + PlayMode + data validation):
 tools/ci_unity_checks.sh
 ```
 
-Run the full portfolio quality gate (sim + server + Unity):
+Run the full runtime quality gate (sim + server + Unity):
 ```bash
-tools/portfolio_quality_gate.sh
+tools/runtime_quality_gate.sh
 ```
 
 Use a custom Unity binary (optional):

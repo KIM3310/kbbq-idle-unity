@@ -51,8 +51,8 @@
   - readiness: `GET /readiness` (config + DB probe checks)
   - monitoring: `GET /metrics`, `GET /ops/alerts`
 
-## Portfolio hardening (quality signals)
-- **Data validation**: `KBBQ/Validate Data (Portfolio)` checks duplicate IDs, tuning sanity, and safe network defaults.
+## Runtime hardening (quality signals)
+- **Data validation**: `KBBQ/Validate Data` checks duplicate IDs, tuning sanity, and safe network defaults.
 - **Unity tests**: EditMode tests cover math invariants + save integrity guards.
 - **WebGL pipeline**: `KBBQ/Build WebGL (docs)` generates build output into `docs/` for GitHub Pages (build artifacts generated locally to keep the repo lightweight).
 - `Assets/Editor/KBBQAutoSetup.cs` can auto-create folders, data assets, prefabs, and `Main.unity` via menu **KBBQ/Run Auto Setup**.
@@ -60,5 +60,5 @@
 
 ## Gaps / notes
 - Main documentation is in `README.md` (with `README.en.md` / `README.ko.md`).
-- Tests are added/extended as part of the portfolio hardening work.
-- One-command local validation gate: `tools/portfolio_quality_gate.sh`.
+- Tests are added and extended as part of the runtime hardening work.
+- One-command local validation gate: `tools/runtime_quality_gate.sh`.

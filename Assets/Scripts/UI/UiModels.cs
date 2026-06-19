@@ -33,7 +33,7 @@ public struct GrillSlotUiState
     public bool burned;
 }
 
-public struct GameplayReviewPack
+public struct GameplayArchitecturePack
 {
     public string contract;
     public string headline;
@@ -45,11 +45,11 @@ public struct GameplayReviewPack
     public float servedPerMinute;
     public float averageWaitSeconds;
     public string optionalEconomyMode;
-    public string reviewStep;
+    public string architectureStep;
     public string focusedRoute;
     public string architectureSnapshot;
     public string focusedOpsSnapshot;
-    public string twoMinuteReview;
-    public string reviewRoutes;
+    public string twoMinuteArchitecture;
+    public string architectureRoutes;
     public string proofAssets;
 }

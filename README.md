@@ -1,38 +1,38 @@
 # KBBQ Idle WebGL (Unity 2022.3 LTS)
 
 > **Curated supporting repo**
-> This repository is kept as optional proof, but it no longer leads the portfolio.
-> Current front door: **doeon-kim-portfolio and the B2B flagship repositories**.
-> Reason: Consumer gameplay work distracts from the enterprise AI and infrastructure portfolio signal.
+> This repository is kept as optional product proof beside the B2B flagship repositories.
+> Current technical entry points: **doeon-kim-portfolio and the B2B flagship repositories**.
+> Reason: Consumer gameplay work is useful as runtime evidence, but it is not the main enterprise AI story.
 
-K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드와 GitHub/Cloudflare technical reader surface까지 함께 검토할 수 있도록 정리되어 있습니다.
+K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드, 정적 배포 표면, 선택형 FastAPI 백엔드까지 함께 확인할 수 있도록 정리되어 있습니다.
 
 Updated: **February 18, 2026**
 
-## 포트폴리오 포지셔닝
-- 이 저장소는 “웹에 올린 Unity 빌드”보다, 실제 플레이 루프와 배포 검증을 같이 보여주는 게임 런타임 포트폴리오에 가깝습니다.
-- 핵심 증거는 플레이 가능한 빌드, build preflight, technical reader surface, 그리고 배포 전 점검 문서가 한 세트로 이어지는지입니다.
-- 빠르게 보려면 technical reader surface -> core loop 설명 -> docs/Build preflight 순서로 보는 편이 좋습니다.
+## 기술 포지셔닝
+- 이 저장소는 “웹에 올린 Unity 빌드”보다, 실제 플레이 루프와 배포 검증을 같이 보여주는 게임 런타임 샘플에 가깝습니다.
+- 핵심 증거는 플레이 가능한 빌드, build preflight, 정적 배포 표면, 그리고 배포 전 점검 문서가 한 세트로 이어지는지입니다.
+- 빠르게 보려면 WebGL surface -> core loop 설명 -> docs/Build preflight 순서로 보는 편이 좋습니다.
 
-## 기술 리뷰 신호
-- **인터랙티브/런타임 엔지니어 관점:** 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 검토할 수 있습니다.
-- **플랫폼/클라우드 아키텍트 관점:** technical reader surface, 배포 문서, 정적 호스팅 경로가 명확하게 정리되어 있습니다.
-- **제품/필드 관점:** 바로 플레이 가능한 결과물이 있어서 슬라이드보다 설득력이 높습니다.
+## 기술 스택 신호
+- **Unity 2022.3 LTS:** 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 확인할 수 있습니다.
+- **Static hosting:** 배포 문서, 정적 호스팅 경로, fallback UI가 명확하게 정리되어 있습니다.
+- **FastAPI optional backend:** 리더보드, analytics, release readiness 경로를 선택적으로 붙일 수 있습니다.
 
 ## Product and System Surface
 
 | Lens | Decision signal |
 |---|---|
-| Technical reader | Casual WebGL game technical readers, Unity prototype technical readers, and portfolio technical readers looking for a playable loop rather than a mockup. |
+| Technical stack | Unity WebGL runtime, static hosting, optional FastAPI backend, and deterministic economy harness. |
 | Product proof | The demo, workflow loop, and static proof surface show the current product direction without extra claims. |
-| Technical reader proof | Unity scene, docs front door, build preflight, deterministic economy harness, and technical reader pages make the runtime inspectable in minutes. |
+| Architecture proof | Unity scene, docs front door, build preflight, deterministic economy harness, and runtime pages make the system inspectable in minutes. |
 | Safety posture | Fallback behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable architecture path. |
 
 ## System Fast Path
 
-- **First minute:** Open `Assets/Scenes/Main.unity`, play the grill loop, then architecture the WebGL `docs/` surface.
+- **First minute:** Open `Assets/Scenes/Main.unity`, play the grill loop, then inspect the WebGL `docs/` surface.
 - **Local demo:** Build WebGL with `./tools/build_webgl_docs.sh`; optional backend architecture starts from `server/`.
-- **Verification:** Run `python -m pytest` for the optional backend and `KBBQ/Validate Data (Portfolio)` inside Unity for data checks.
+- **Verification:** Run `python -m pytest` for the optional backend and `KBBQ/Validate Data` inside Unity for data checks.
 
 ## Service Launch Playbook
 
@@ -43,11 +43,11 @@ Updated: **February 18, 2026**
 - [Architecture guide](docs/architecture-evidence-map.md) summarizes the project angle, first files to inspect, runtime commands, and known boundaries.
 - [Quality notes](docs/quality-gate.md) lists the local checks, CI surface, and release expectations for this repository.
 - [Enterprise readiness notes](docs/enterprise-readiness.md) outlines security, data, operations, integration, and handoff expectations.
-- [Portfolio fit](docs/portfolio-fit.md) explains why this repository is archived/supporting and where the current portfolio front door lives.
+- [Repository positioning](docs/repository-positioning.md) explains why this repository is archived/supporting and where the current technical entry points live.
 
-## 포트폴리오 맥락
+## 프로젝트 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군
-- **이 레포의 역할:** 실제 플레이 루프와 배포 검증을 같이 보여주는 인터랙티브 런타임 포트폴리오입니다.
+- **이 레포의 역할:** 실제 플레이 루프와 배포 검증을 같이 보여주는 인터랙티브 런타임 샘플입니다.
 - **연결해서 볼 레포:** `SteadyTap`, `ecotide`, `the-savior`
 
 ## Start Here
@@ -57,12 +57,12 @@ Updated: **February 18, 2026**
 - Deterministic economy test harness: `sim/`
 - Build/release helpers: `tools/`
 
-루트에는 리뷰 문서와 운영 자산이 함께 있지만, 실제 게임 작업은 `Assets/`에서 시작하고 배포 검증은 `docs/` 또는 `server/`에서 이어집니다.
+루트에는 설계 문서와 운영 자산이 함께 있지만, 실제 게임 작업은 `Assets/`에서 시작하고 배포 검증은 `docs/` 또는 `server/`에서 이어집니다.
 
-## First Technical reader Move
+## First Architecture Move
 - 실제 게임 런타임을 보려면 `Assets/Scenes/Main.unity`를 열고 Play를 누르세요. 이 경로가 기준 런타임입니다.
-- `docs/`는 Cloudflare Pages용 정적 technical reader surface입니다. `docs/Build/`에 실제 WebGL 산출물이 없으면 fallback screen이 보이는 것이 정상입니다.
-- `server/`는 delivery/ops 증거를 위한 선택 경로이며, 기본 플레이 루프 리뷰의 필수 조건은 아닙니다.
+- `docs/`는 Cloudflare Pages용 정적 런타임 surface입니다. `docs/Build/`에 실제 WebGL 산출물이 없으면 fallback screen이 보이는 것이 정상입니다.
+- `server/`는 delivery/ops 증거를 위한 선택 경로이며, 기본 플레이 루프 확인의 필수 조건은 아닙니다.
 
 ## What Is In This Version
 - 4-slot grill gameplay loop (`load -> flip -> collect -> serve`)
@@ -90,7 +90,7 @@ Updated: **February 18, 2026**
 
 Optional editor helpers:
 - `KBBQ/Run Auto Setup`
-- `KBBQ/Validate Data (Portfolio)`
+- `KBBQ/Validate Data`
 
 ## WebGL Build
 Build to `docs/`:
@@ -125,7 +125,7 @@ Production architecture configuration:
 Full local gate:
 
 ```bash
-tools/portfolio_quality_gate.sh
+tools/runtime_quality_gate.sh
 ```
 
 This validates:
@@ -148,7 +148,7 @@ This validates:
 - `docs/deployment/CLOUDFLARE_PAGES.md`: WebGL publishing notes for Pages
 - `server/README.md`: backend-only setup and API notes
 
-## Technical reader Surface
+## Architecture Surface
 - Unity perf overlay now exposes `kbbq-idle-architecture-pack-v1` with live tier, queue, income, and service launch posture.
 - Optional backend exposes `GET /health`, `GET /meta`, `GET /readiness`, `GET /architecture-pack`, and `GET /ops/release-readiness` for delivery and ops architecture.
 - Recommended architecture order: inspect backend posture, play the grill loop in Unity/WebGL, then verify service launch remains optional.
@@ -183,7 +183,7 @@ python3 -m venv .venv
 source .venv/bin/activate
 python -m pip install -U pip
 python -m pip install -e ".[dev]"
-tools/portfolio_quality_gate.sh
+tools/runtime_quality_gate.sh
 ```
 
 ## Repository Hygiene
@@ -200,7 +200,7 @@ This repository includes a neutral cloud and AI engineering blueprint that maps 
 
 ## Enterprise Productization
 
-- [Product operating model](docs/product-operating-model.md) defines the technical reader, trust boundary, trust boundary, operating checks, and service path for this repository.
+- [Product operating model](docs/product-operating-model.md) defines the runtime boundary, trust boundary, operating checks, and service path for this repository.
 
 ## System Architecture
 

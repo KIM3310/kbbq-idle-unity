@@ -10,11 +10,11 @@ A playable Unity WebGL project that proves shipping discipline through game loop
 
 | Lens | Definition |
 |---|---|
-| Audience | Game technical readers, WebGL publishers, casual-game operators, and portfolio technical readers checking delivery craft. |
+| Technical stack | Unity 2022.3 LTS, WebGL publishing, static hosting, optional FastAPI backend, and deterministic economy tests. |
 | Architecture path | Validate the demo, README, architecture notes, and quality gate before deeper workflow architecture. |
 | System signal | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
 | Safety boundary | gameplay data should stay separate from personal data. |
-| Fast path | Run `tools/portfolio_quality_gate.sh` or the WebGL release check before publishing. |
+| Fast path | Run `tools/runtime_quality_gate.sh` or the WebGL release check before publishing. |
 
 ## What Changed In This Build
 - 4 grill slots for active cooking flow
@@ -41,7 +41,7 @@ A playable Unity WebGL project that proves shipping discipline through game loop
 
 Optional editor commands:
 - `KBBQ/Run Auto Setup`
-- `KBBQ/Validate Data (Portfolio)`
+- `KBBQ/Validate Data`
 
 ## WebGL Build
 Generate WebGL output to `docs/`:
@@ -73,7 +73,7 @@ Run deployment architecture checks:
 Run full local validation:
 
 ```bash
-tools/portfolio_quality_gate.sh
+tools/runtime_quality_gate.sh
 ```
 
 It executes Unity checks, backend tests, and deterministic simulator tests.

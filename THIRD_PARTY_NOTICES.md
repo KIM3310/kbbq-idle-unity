@@ -1,6 +1,6 @@
 # Third-Party Notices
 
-This repository is intended to be a lightweight portfolio snapshot containing mostly original code and Unity YAML assets (scene/prefabs/ScriptableObjects).
+This repository is intended to be a lightweight project snapshot containing mostly original code and Unity YAML assets (scene/prefabs/ScriptableObjects).
 
 ## Unity
 - Built with Unity Editor `2022.3.x` LTS (Unity is not distributed with this repository).

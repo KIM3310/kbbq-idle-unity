@@ -23,7 +23,7 @@ public class LeaderboardClient : ApiClientBase
         // Deterministic signing across languages/cultures:
         // - Python may stringify floats differently (e.g., 1.0 vs "1")
         // - Some locales use "," as a decimal separator
-        // For portfolio/demo purposes, we sign a rounded integer score.
+        // For runtime demo purposes, we sign a rounded integer score.
         var scoreInt = (long)Math.Round(score);
         var signaturePayload = (playerId ?? string.Empty)
                                + "|"

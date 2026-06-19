@@ -14,7 +14,7 @@ This is an optional backend to demonstrate:
 - ops/monitoring endpoints (`/metrics`, `/ops/alerts`),
 - SQLite persistence.
 
-It is intentionally small and self-contained so technical readers can run it quickly.
+It is intentionally small and self-contained so the backend path can be run quickly.
 
 ## Quickstart (Python)
 ```bash
@@ -99,4 +99,4 @@ Production/staging templates:
   - `links`
   - `ops_contract`
 - `/meta` exposes runtime posture, enabled capabilities, and the same action-oriented diagnostics surface.
-- `/architecture-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one technical reader-friendly payload.
+- `/architecture-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one architecture-friendly payload.

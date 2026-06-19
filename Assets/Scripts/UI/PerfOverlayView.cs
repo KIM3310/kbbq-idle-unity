@@ -37,40 +37,40 @@ public class PerfOverlayView : MonoBehaviour
         var avgWait = 0f;
         var servedPerMin = 0f;
         var presetLabel = "1.0x";
-        var reviewContract = "kbbq-idle-architecture-pack-v1";
+        var architectureContract = "kbbq-idle-architecture-pack-v1";
         var storeTier = "Alley";
         var incomePerSec = 0d;
         var optionalEconomyMode = "Optional economy off / Packs off / Packs 0";
-        var reviewStep = "Check grill flow, queue pressure, then optional economy posture.";
+        var architectureStep = "Check grill flow, queue pressure, then optional economy posture.";
         var focusedRoute = "Architecture Pack -> preset 2.0x rush -> grill loop -> perf overlay";
         var architectureSnapshot = "Tier Alley / Queue 0 / Economy off / Packs off / Packs 0";
         var focusedOpsSnapshot = "Preset 1.0x / Queue 0 / Wait 0.0s / Served 0/min";
-        var twoMinuteReview = "Health/meta -> architecture-pack -> grill loop -> perf overlay";
-        var reviewRoutes = "Health, Meta, Architecture Pack, Rush Preset, Perf Overlay";
+        var twoMinuteArchitecture = "Health/meta -> architecture-pack -> grill loop -> perf overlay";
+        var architectureRoutes = "Health, Meta, Architecture Pack, Rush Preset, Perf Overlay";
         var proofAssets = "Health, Meta, Architecture Pack, Perf Overlay";
         if (gameManager != null)
         {
             var metrics = gameManager.GetQueueMetrics();
-            var reviewPack = gameManager.GetGameplayReviewPack();
+            var architecturePack = gameManager.GetGameplayArchitecturePack();
             queueCount = metrics.queueCount;
             avgWait = metrics.avgWaitSeconds;
             servedPerMin = metrics.servedPerMinute;
             presetLabel = GetPresetLabel(gameManager.GetDebugPresetIndex());
-            reviewContract = reviewPack.contract;
-            storeTier = reviewPack.storeTier;
-            incomePerSec = reviewPack.incomePerSecond;
-            optionalEconomyMode = reviewPack.optionalEconomyMode;
-            reviewStep = reviewPack.reviewStep;
-            focusedRoute = reviewPack.focusedRoute;
-            architectureSnapshot = reviewPack.architectureSnapshot;
-            focusedOpsSnapshot = reviewPack.focusedOpsSnapshot;
-            twoMinuteReview = reviewPack.twoMinuteReview;
-            reviewRoutes = reviewPack.reviewRoutes;
-            proofAssets = reviewPack.proofAssets;
+            architectureContract = architecturePack.contract;
+            storeTier = architecturePack.storeTier;
+            incomePerSec = architecturePack.incomePerSecond;
+            optionalEconomyMode = architecturePack.optionalEconomyMode;
+            architectureStep = architecturePack.architectureStep;
+            focusedRoute = architecturePack.focusedRoute;
+            architectureSnapshot = architecturePack.architectureSnapshot;
+            focusedOpsSnapshot = architecturePack.focusedOpsSnapshot;
+            twoMinuteArchitecture = architecturePack.twoMinuteArchitecture;
+            architectureRoutes = architecturePack.architectureRoutes;
+            proofAssets = architecturePack.proofAssets;
         }
 
         overlayText.text = "FPS " + fps.ToString("0") +
-                           "\nContract " + reviewContract +
+                           "\nContract " + architectureContract +
                            "\nTier " + storeTier +
                            "\nQueue " + queueCount +
                            "\nServed/min " + servedPerMin.ToString("0") +
@@ -78,12 +78,12 @@ public class PerfOverlayView : MonoBehaviour
                            "\nIncome/s " + FormatUtil.FormatCurrency(incomePerSec) +
                            "\nEconomy " + optionalEconomyMode +
                            "\nPreset " + presetLabel +
-                           "\nReview " + reviewStep +
+                           "\nCheck " + architectureStep +
                            "\nRoute " + focusedRoute +
                            "\nSnapshot " + architectureSnapshot +
                            "\nOps " + focusedOpsSnapshot +
-                           "\n2m " + twoMinuteReview +
-                           "\nPaths " + reviewRoutes +
+                           "\n2m " + twoMinuteArchitecture +
+                           "\nPaths " + architectureRoutes +
                            "\nProof " + proofAssets;
     }
 

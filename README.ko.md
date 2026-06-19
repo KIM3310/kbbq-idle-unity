@@ -29,7 +29,7 @@ KBBQ Idle는 고기 굽기 루프 중심의 방치형/타이쿤 게임 프로젝
 
 선택 실행:
 - `KBBQ/Run Auto Setup`
-- `KBBQ/Validate Data (Portfolio)`
+- `KBBQ/Validate Data`
 
 ## WebGL 빌드
 `docs/`로 빌드:
@@ -61,7 +61,7 @@ KBBQ Idle는 고기 굽기 루프 중심의 방치형/타이쿤 게임 프로젝
 전체 로컬 검증:
 
 ```bash
-tools/portfolio_quality_gate.sh
+tools/runtime_quality_gate.sh
 ```
 
 검증 항목:

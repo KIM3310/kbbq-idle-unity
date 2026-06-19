@@ -66,7 +66,7 @@ public static class DefaultDataFactory
     public static ApiConfig CreateApiConfig()
     {
         var config = ScriptableObject.CreateInstance<ApiConfig>();
-        // Keep networking disabled by default in the portfolio build.
+        // Keep networking disabled by default in the runtime build.
         // Operators can opt-in by setting a real base URL + secret.
         config.baseUrl = "";
         config.region = "KR";

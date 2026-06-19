@@ -478,7 +478,7 @@
           <button id="startBtn">Start Game</button>
           <button id="fullscreenBtn">Fullscreen</button>
           <button id="copyChecklistBtn">Copy Build Checklist</button>
-          <button id="copyBuildChecklistBtn">Copy Review Route</button>
+          <button id="copyBuildChecklistBtn">Copy Architecture Route</button>
         </div>
         <section class="architecture-dock" aria-label="Architecture handoff">
           <div class="architecture-dock-head">
@@ -570,7 +570,7 @@
                 <li><strong>Architecture route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
                 <li><strong>Public claims held back:</strong> do not call this page playable until preflight and launch both succeed.</li>
               </ol>
-              <p class="placeholder-note">If build files need attention, this panel remains the primary review state instead of reading like a broken black box.</p>
+              <p class="placeholder-note">If build files need attention, this panel remains the primary inspection state instead of reading like a broken black box.</p>
             </aside>
           </div>
           <canvas id="unityCanvas" width="960" height="600"></canvas>
@@ -740,7 +740,7 @@
             now: 'Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.',
             proof: 'Playable status depends on preflight plus a clean WebGL launch.',
             next: 'Run Check Build Files, then Start Game and keep Help/About open for architecture context.',
-            evidence: 'The evidence board stays honest by separating docs review from launch verification.',
+            evidence: 'The evidence board stays honest by separating docs inspection from launch verification.',
             buildSignal: ['warn', 'Build not yet checked'],
             claimSignal: ['warn', 'Preflight before launch'],
           },
@@ -757,7 +757,7 @@
           ready: {
             modeLabel: 'Verified bundle found',
             claim: 'Almost ready, but launch still needs to succeed.',
-            now: 'The primary bundle appears present, so operators can move from docs review to real launch.',
+            now: 'The primary bundle appears present, so operators can move from docs inspection to real launch.',
             proof: 'Unity initialization is still the final gate before calling the page playable.',
             next: 'Click Start Game and confirm the loop, then keep Help/Compliance open for rollout context.',
             evidence: 'Preflight resolved loader/data/framework/wasm references for the chosen build name.',
@@ -789,7 +789,7 @@
             claim: 'Playable claim earned for this session.',
             now: 'Unity is now the primary surface.',
             proof: 'Use docs pages as supporting evidence only.',
-            next: 'Review the playable loop and note any launch issues.',
+            next: 'Check the playable loop and note any launch issues.',
             evidence: 'Canvas replaced placeholder after successful initialization.',
             buildSignal: ['ok', 'Build running'],
             claimSignal: ['ok', 'Playable claim earned'],
@@ -843,7 +843,7 @@
           },
           checking: {
             eyebrow: 'Preflight running',
-            title: 'Checking whether the WebGL bundle is review-ready.',
+            title: 'Checking whether the WebGL bundle is architecture-ready.',
             copy: 'This validates that the required docs/Build files exist before anyone calls the page playable.',
             hidden: false,
           },
@@ -856,7 +856,7 @@
           missing: {
             eyebrow: 'Build needs recheck',
             title: 'Keep the preflight panel as the primary state until the bundle verifies cleanly.',
-            copy: 'Use Help, About, and Compliance to review controls, progression, and rollout guardrails while build files are refreshed.',
+            copy: 'Use Help, About, and Compliance to inspect controls, progression, and rollout guardrails while build files are refreshed.',
             hidden: false,
           },
           loading: {
