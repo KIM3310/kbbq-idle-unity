@@ -217,7 +217,7 @@ This repository includes a neutral cloud and AI engineering blueprint that maps 
 - Public entry: free WebGL build on Pages/itch.io
 - Paid boundary: cosmetic packs, ad-free mode, event boosts, and supporter bundle
 - Canonical URL: https://kbbq-idle-unity.pages.dev/
-- Lead capture: mailto:ehdjs1351@gmail.com?subject=KBBQ%20Idle%20Unity%20private%20workspace&body=I%20am%20interested%20in%20cosmetic%20packs%2C%20ad-free%20mode%2C%20event%20boosts%2C%20and%20supporter%20bundle%20for%20KBBQ%20Idle%20Unity.
+- Lead capture: https://github.com/KIM3310/kbbq-idle-unity/issues/new?template=service-inquiry.yml&title=Private+workspace+inquiry%3A+KBBQ+Idle+Unity
 - Machine-readable offer: [docs/service-offer.json](docs/service-offer.json)
 - Search growth implementation: [docs/search-growth-implementation.md](docs/search-growth-implementation.md)
 - Revenue architecture: [docs/revenue-architecture.md](docs/revenue-architecture.md)
