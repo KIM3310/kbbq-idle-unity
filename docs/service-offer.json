@@ -1,0 +1,73 @@
+{
+  "name": "KBBQ Idle Unity",
+  "slug": "kbbq-idle-unity",
+  "canonical_url": "https://kbbq-idle-unity.pages.dev/",
+  "repository_url": "https://github.com/KIM3310/kbbq-idle-unity",
+  "architecture_url": "https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/system-architecture.md",
+  "revenue_architecture_url": "https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/revenue-architecture.md",
+  "lead_capture_url": "mailto:ehdjs1351@gmail.com?subject=KBBQ%20Idle%20Unity%20private%20workspace&body=I%20am%20interested%20in%20cosmetic%20packs%2C%20ad-free%20mode%2C%20event%20boosts%2C%20and%20supporter%20bundle%20for%20KBBQ%20Idle%20Unity.",
+  "productized_offer": "Korean BBQ idle game with progression, leaderboard, events, and collectible content",
+  "first_paid_sku": "cosmetic packs, ad-free mode, event boosts, and supporter bundle",
+  "free_lead_magnet": "free WebGL build on Pages/itch.io",
+  "search_positioning": {
+    "primary_query": "KBBQ Idle Unity Korean BBQ game",
+    "secondary_queries": [
+      "KBBQ Idle Unity demo",
+      "KBBQ Idle Unity system architecture",
+      "KBBQ Idle Unity game tool",
+      "Korean BBQ idle game with progression, leaderboard, events, and collectible content service"
+    ],
+    "audience_intent": "Find a runnable demo, inspect the system architecture, and decide whether a private workspace or implementation package is useful."
+  },
+  "monetization_boundary": {
+    "free": "free WebGL build on Pages/itch.io",
+    "paid": "cosmetic packs, ad-free mode, event boosts, and supporter bundle",
+    "metering_hooks": [
+      "workspace_id",
+      "plan",
+      "quota_day",
+      "export_count",
+      "lead_source"
+    ],
+    "cost_guardrails": [
+      "static first",
+      "edge functions",
+      "customer API keys",
+      "cached AI outputs",
+      "synthetic public data"
+    ]
+  },
+  "structured_data": {
+    "@context": "https://schema.org",
+    "@type": "SoftwareApplication",
+    "name": "KBBQ Idle Unity",
+    "applicationCategory": "GameApplication",
+    "operatingSystem": "Web, serverless, and local development environments",
+    "url": "https://kbbq-idle-unity.pages.dev/",
+    "codeRepository": "https://github.com/KIM3310/kbbq-idle-unity",
+    "description": "KBBQ Idle Unity: Korean BBQ idle game with progression, leaderboard, events, and collectible content. Free entry point: free WebGL build on Pages/itch.io. Paid path: cosmetic packs, ad-free mode, event boosts, and.",
+    "creator": {
+      "@type": "Person",
+      "name": "KIM3310",
+      "url": "https://github.com/KIM3310"
+    },
+    "offers": [
+      {
+        "@type": "Offer",
+        "name": "free WebGL build on Pages/itch.io",
+        "price": "0",
+        "priceCurrency": "USD",
+        "availability": "https://schema.org/InStock",
+        "url": "https://kbbq-idle-unity.pages.dev/"
+      },
+      {
+        "@type": "Offer",
+        "name": "cosmetic packs, ad-free mode, event boosts, and supporter bundle",
+        "availability": "https://schema.org/LimitedAvailability",
+        "url": "https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/revenue-architecture.md"
+      }
+    ],
+    "isAccessibleForFree": true,
+    "keywords": "kbbq-idle-unity, KBBQ, Idle, Unity, Korean, BBQ, idle, game, progression, leaderboard, events, collectible, content, cosmetic, packs, ad-free, mode, event, boosts, supporter, bundle, WebGL, build, Pages"
+  }
+}

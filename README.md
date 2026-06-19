@@ -209,3 +209,17 @@ This repository includes a neutral cloud and AI engineering blueprint that maps 
 ## Service Architecture
 
 - [Service architecture](docs/service-architecture.md) defines the cloud resources, account information, cost controls, and production guardrails needed to turn this repo into a scoped service without publishing public financial assumptions.
+
+<!-- search-growth-readme:start -->
+
+## Search And Service Surface
+
+- Public entry: free WebGL build on Pages/itch.io
+- Paid boundary: cosmetic packs, ad-free mode, event boosts, and supporter bundle
+- Canonical URL: https://kbbq-idle-unity.pages.dev/
+- Lead capture: mailto:ehdjs1351@gmail.com?subject=KBBQ%20Idle%20Unity%20private%20workspace&body=I%20am%20interested%20in%20cosmetic%20packs%2C%20ad-free%20mode%2C%20event%20boosts%2C%20and%20supporter%20bundle%20for%20KBBQ%20Idle%20Unity.
+- Machine-readable offer: [docs/service-offer.json](docs/service-offer.json)
+- Search growth implementation: [docs/search-growth-implementation.md](docs/search-growth-implementation.md)
+- Revenue architecture: [docs/revenue-architecture.md](docs/revenue-architecture.md)
+
+<!-- search-growth-readme:end -->
