@@ -66,7 +66,7 @@ class TestApi(unittest.TestCase):
         self.assertTrue(payload.get("diagnostics", {}).get("webgl_delivery", {}).get("ready"))
         self.assertEqual(
             payload.get("diagnostics", {}).get("webgl_delivery", {}).get("status"),
-            "verified-build-present",
+            "webgl-build-present",
         )
         self.assertIn("next_action", payload.get("diagnostics", {}))
 
@@ -89,10 +89,10 @@ class TestApi(unittest.TestCase):
         self.assertEqual(architecture_payload.get("readiness_contract"), "kbbq-idle-architecture-pack-v1")
         self.assertIn("economy_contract", architecture_payload)
         self.assertTrue(architecture_payload.get("proof_bundle", {}).get("webgl_delivery_ready"))
-        self.assertEqual(architecture_payload.get("webgl_delivery", {}).get("status"), "verified-build-present")
+        self.assertEqual(architecture_payload.get("webgl_delivery", {}).get("status"), "webgl-build-present")
         self.assertEqual(
             architecture_payload.get("webgl_delivery", {}).get("claim_posture"),
-            "verified-webgl-runtime",
+            "webgl-runtime-present",
         )
         self.assertEqual(
             architecture_payload.get("architecture_posture", {}).get("claim_tier"),

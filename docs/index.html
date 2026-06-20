@@ -576,7 +576,7 @@
             </article>
             <article class="architecture-dock-card">
               <strong>Evidence note</strong>
-              <p id="architectureDockEvidence">Build verification and live launch are intentionally kept separate.</p>
+              <p id="architectureDockEvidence">Build checks and live launch are intentionally kept separate.</p>
             </article>
           </div>
           <div class="architecture-dock-actions">
@@ -588,10 +588,10 @@
         <div id="unityContainer">
           <div id="placeholderState" class="placeholder-grid" aria-live="polite">
             <section class="placeholder-panel">
-              <span id="placeholderEyebrow" class="placeholder-eyebrow">Playable preflight · build ready to verify</span>
-              <h3 id="placeholderTitle" class="placeholder-title">Run preflight, then launch the verified WebGL build.</h3>
+              <span id="placeholderEyebrow" class="placeholder-eyebrow">Playable preflight · build ready to check</span>
+              <h3 id="placeholderTitle" class="placeholder-title">Run preflight, then launch the WebGL build.</h3>
               <p id="placeholderCopy" class="placeholder-copy">
-                Use this panel to verify the build bundle, explain the gameplay loop with the docs pages,
+                Use this panel to check the build bundle, explain the gameplay loop with the docs pages,
                 and keep rollout language tied to the actual launch result.
               </p>
               <div class="placeholder-badges" aria-label="Architecture guardrails">
@@ -632,12 +632,12 @@
               </div>
               <ul class="placeholder-filelist" aria-label="Build file status">
                 <li><code>Build/build-manifest.json</code><span id="fileManifestStatus">Waiting for page check</span></li>
-                <li><code>Build/KBBQIdleWebGL.loader.js</code><span id="fileLoaderStatus">Verify before launch</span></li>
-                <li><code>Build/KBBQIdleWebGL.data*</code><span id="fileDataStatus">Verify before launch</span></li>
-                <li><code>Build/KBBQIdleWebGL.framework.js*</code><span id="fileFrameworkStatus">Verify before launch</span></li>
-                <li><code>Build/KBBQIdleWebGL.wasm*</code><span id="fileWasmStatus">Verify before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.loader.js</code><span id="fileLoaderStatus">Check before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.data*</code><span id="fileDataStatus">Check before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.framework.js*</code><span id="fileFrameworkStatus">Check before launch</span></li>
+                <li><code>Build/KBBQIdleWebGL.wasm*</code><span id="fileWasmStatus">Check before launch</span></li>
               </ul>
-              <h3 style="margin-top:14px;">What to verify before public rollout</h3>
+              <h3 style="margin-top:14px;">What to confirm before public rollout</h3>
               <ol>
                 <li><strong>Bundle present:</strong> loader, data, framework, and wasm files resolve from <code>docs/Build/</code>.</li>
                 <li><strong>Architecture route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
@@ -653,7 +653,7 @@
       <section class="card">
         <h2>Architecture Path</h2>
         <ul>
-          <li><strong>1.</strong> Before the playable build is verified, keep the preflight panel visible and narrate the architecture route.</li>
+          <li><strong>1.</strong> Before the playable build is ready, keep the preflight panel visible and narrate the architecture route.</li>
           <li><strong>2.</strong> Run <em>Check Build Files</em> before claiming the WebGL surface is live.</li>
           <li><strong>3.</strong> Open <a href="./help.html">Help</a> and <a href="./about.html">About</a> to explain controls, loop, and deployment posture.</li>
           <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing service launch or public rollout.</li>
@@ -753,7 +753,7 @@
       let architectureSnapshot = {
         buildBase: 'KBBQIdleWebGL',
         claim: 'Ready for preflight and launch.',
-        evidence: 'Build verification and live launch are intentionally kept separate.',
+        evidence: 'Build checks and live launch are intentionally kept separate.',
         mode: 'Playable preflight',
         next: 'Run Check Build Files before any playable claim.',
         state: 'idle',
@@ -830,7 +830,7 @@
             now: 'Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.',
             proof: 'Playable status depends on preflight plus a clean WebGL launch.',
             next: 'Run Check Build Files, then Start Game and keep Help/About open for architecture context.',
-            evidence: 'The evidence board stays honest by separating docs inspection from launch verification.',
+            evidence: 'The evidence board stays honest by separating docs inspection from live launch.',
             buildSignal: ['warn', 'Build not yet checked'],
             claimSignal: ['warn', 'Preflight before launch'],
           },
@@ -845,13 +845,13 @@
             claimSignal: ['warn', 'Preflight before launch'],
           },
           ready: {
-            modeLabel: 'Verified bundle found',
+            modeLabel: 'Bundle found',
             claim: 'Almost ready, but launch still needs to succeed.',
             now: 'The primary bundle appears present, so operators can move from docs inspection to real launch.',
             proof: 'Unity initialization is still the final gate before calling the page playable.',
             next: 'Click Start Game and confirm the loop, then keep Help/Compliance open for rollout context.',
             evidence: 'Preflight resolved loader/data/framework/wasm references for the chosen build name.',
-            buildSignal: ['ok', 'Build files verified'],
+            buildSignal: ['ok', 'Build files ready'],
             claimSignal: ['warn', 'Launch still required'],
           },
           missing: {
@@ -871,7 +871,7 @@
             proof: 'A failed loader or runtime init should return to the preflight state.',
             next: 'Watch loader progress and keep the docs links available for policy/context questions.',
             evidence: 'The placeholder remains visible until the canvas truly takes over.',
-            buildSignal: ['ok', 'Build files verified'],
+            buildSignal: ['ok', 'Build files ready'],
             claimSignal: ['warn', 'Waiting for live canvas'],
           },
           playing: {
@@ -926,26 +926,26 @@
         }
         const states = {
           idle: {
-            eyebrow: 'Playable preflight · build ready to verify',
-            title: 'Run preflight, then launch the verified WebGL build.',
-            copy: 'Use this panel to verify the build bundle, explain the loop with the docs pages, and keep rollout language tied to the actual launch result.',
+            eyebrow: 'Playable preflight · build ready to check',
+            title: 'Run preflight, then launch the WebGL build.',
+            copy: 'Use this panel to check the build bundle, explain the loop with the docs pages, and keep rollout language tied to the actual launch result.',
             hidden: false,
           },
           checking: {
             eyebrow: 'Preflight running',
             title: 'Checking whether the WebGL bundle is architecture-ready.',
-            copy: 'This validates that the required docs/Build files exist before anyone calls the page playable.',
+            copy: 'This confirms that the required docs/Build files exist before anyone calls the page playable.',
             hidden: false,
           },
           ready: {
-            eyebrow: 'Build verified',
+            eyebrow: 'Build ready',
             title: 'Core build files were found. You can now launch the real WebGL surface.',
             copy: 'Next architecture move: start the build, confirm the loop, then use Help and Compliance to explain the release posture.',
             hidden: false,
           },
           missing: {
             eyebrow: 'Build needs recheck',
-            title: 'Keep the preflight panel as the primary state until the bundle verifies cleanly.',
+            title: 'Keep the preflight panel as the primary state until the bundle checks cleanly.',
             copy: 'Use Help, About, and Compliance to inspect controls, progression, and rollout guardrails while build files are refreshed.',
             hidden: false,
           },

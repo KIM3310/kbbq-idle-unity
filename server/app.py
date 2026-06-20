@@ -150,8 +150,8 @@ def _build_webgl_delivery_report() -> dict[str, object]:
     ready = not missing_assets
     return {
         "ready": ready,
-        "status": "verified-build-present" if ready else "placeholder-or-missing-build",
-        "claim_posture": "verified-webgl-runtime" if ready else "docs-placeholder-only",
+        "status": "webgl-build-present" if ready else "placeholder-or-missing-build",
+        "claim_posture": "webgl-runtime-present" if ready else "docs-placeholder-only",
         "docs_root": str(docs_root),
         "required_assets": [str(path.relative_to(docs_root)) for path in required_assets],
         "missing_assets": missing_assets,

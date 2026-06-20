@@ -102,7 +102,7 @@
         <h2>Quick Start</h2>
         <ul>
           <li>Open Play page and confirm build name (default: <code>KBBQIdleWebGL</code>).</li>
-          <li>Click <code>Check Build Files</code> and verify data/framework/wasm are all detected.</li>
+          <li>Click <code>Check Build Files</code> and confirm data/framework/wasm are all detected.</li>
           <li>Click <code>Start Game</code>.</li>
           <li>Press <code>F</code> or click <code>Fullscreen</code> for immersive mode.</li>
         </ul>
@@ -117,7 +117,7 @@
           </article>
           <article class="callout">
             <strong>Evidence board</strong>
-            <p>The placeholder now lists manifest/core-file status and architecture signals so you can explain what has been verified without pretending Unity is already live.</p>
+            <p>The placeholder now lists manifest/core-file status and architecture signals so you can explain which assets are present without pretending Unity is already live.</p>
           </article>
           <article class="callout">
             <strong>Claim boundary</strong>
@@ -139,7 +139,7 @@
       <section class="card">
         <h2>Common Problems</h2>
         <ul>
-          <li><strong>"Build check failed"</strong>: verify that <code>docs/Build</code> contains <code>.data</code>, <code>.framework.js</code>, <code>.wasm</code>, and loader files.</li>
+          <li><strong>"Build check failed"</strong>: confirm that <code>docs/Build</code> contains <code>.data</code>, <code>.framework.js</code>, <code>.wasm</code>, and loader files.</li>
           <li><strong>Architecture placeholder still visible</strong>: this is expected until preflight succeeds and the Unity loader starts cleanly; use the evidence board to show exactly what has or has not been confirmed yet.</li>
           <li><strong>Black screen after load</strong>: hard refresh to clear stale cached build files.</li>
           <li><strong>No optional slot shown</strong>: external slots stay disabled until explicit runtime values are configured.</li>
@@ -150,10 +150,10 @@
       <section class="card">
         <h2>Architecture Evidence Order</h2>
         <ul>
-          <li><strong>1.</strong> Read the placeholder badges/signals to see whether the page is in docs-first, checking, verified, or missing-build mode.</li>
+          <li><strong>1.</strong> Read the placeholder badges/signals to see whether the page is in docs-first, checking, ready, or missing-build mode.</li>
           <li><strong>2.</strong> Use the file list to confirm which exact build assets were found for the current base name.</li>
           <li><strong>3.</strong> If the build is still absent, continue the inspection with About and Compliance instead of narrating a fictional live session.</li>
-          <li><strong>4.</strong> If the build is verified, launch Unity and treat successful canvas takeover as the final playable proof.</li>
+          <li><strong>4.</strong> If the build is ready, launch Unity and treat successful canvas takeover as the final playable proof.</li>
         </ul>
       </section>
 
@@ -161,7 +161,7 @@
         <h2>Before Public Rollout</h2>
         <ul>
           <li>Confirm the Play page no longer relies on the placeholder because <code>Check Build Files</code> and <code>Start Game</code> both succeed.</li>
-          <li>Verify Help, About, and Compliance still match the shipped build and service launch posture.</li>
+          <li>Confirm Help, About, and Compliance still match the shipped build and service launch posture.</li>
           <li>Keep public copy honest: if the bundle is absent, describe the docs surface as an architecture walkthrough, not a live build.</li>
         </ul>
       </section>
