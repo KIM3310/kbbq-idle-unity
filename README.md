@@ -179,12 +179,10 @@ MIT (`LICENSE`)
 
 ## Local Verification
 ```bash
-python3 -m venv .venv
-source .venv/bin/activate
-python -m pip install -U pip
-python -m pip install -e ".[dev]"
-tools/runtime_quality_gate.sh
+make verify
 ```
+
+Requires Python 3.11+. If your default `python3` is older, run `make PYTHON=/path/to/python3.11 verify`.
 
 ## Repository Hygiene
 - Keep runtime artifacts out of commits (`.codex_runs/`, cache folders, temporary venvs).
