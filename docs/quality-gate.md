@@ -15,8 +15,8 @@ These notes keep the repository available as supporting proof while preventing i
 
 ## Presentation Boundary
 
-- Do not lead with this repository in architecture, product, or consulting conversations.
-- Keep it behind the active B2B/enterprise project index unless the architecture surface asks for this exact domain.
+- Do not lead with this repository in product or consulting conversations.
+- Keep it behind the active B2B/enterprise project index unless a reviewer asks for this exact domain.
 - Treat any growth idea here as optional or experimental, not the main technical thesis.
 - Refresh dependencies, demos, validation, and support ownership before reviving it.
 

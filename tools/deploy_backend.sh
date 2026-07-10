@@ -23,7 +23,7 @@ cd "$ROOT_DIR"
 docker compose up -d --build
 
 echo "[DEPLOY] waiting for /health ..."
-for i in {1..30}; do
+for _ in {1..30}; do
   if curl -sS --max-time 3 "$BASE_URL/health" >/dev/null; then
     break
   fi

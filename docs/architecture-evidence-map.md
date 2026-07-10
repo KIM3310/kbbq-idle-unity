@@ -1,4 +1,4 @@
-# Architecture Guide - KBBQ Idle WebGL (Unity 2022.3 LTS)
+# Review Guide - KBBQ Idle WebGL (Unity 2022.3 LTS)
 
 Updated: 2026-05-30
 
@@ -32,14 +32,14 @@ This repository is now curated as supporting material. Use it only after the fla
 
 | Possible next step | Working scope assumption | Scope |
 |---|---|---|
-| WebGL gameplay prototype | Optional economy experiments | Scoped after architecture. |
-| Publisher prototype | Scope after product intake | Scoped after architecture. |
-| Playable game-jam asset | Scope after product intake | Scoped after architecture. |
+| WebGL gameplay prototype | Optional economy experiments | Scoped after review. |
+| Publisher prototype | Scope after product intake | Scoped after review. |
+| Playable game-jam asset | Scope after product intake | Scoped after review. |
 
 ## Boundaries
 
 - No copied assets
-- Platform policy architecture required
+- Platform policy review required
 - Retention must be measured before scaling
 - Consumer gameplay work distracts from the enterprise AI and infrastructure story.
 - Do not present this as a current flagship or maintained product surface.

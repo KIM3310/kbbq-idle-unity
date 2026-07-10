@@ -94,7 +94,7 @@
         <h1>Help & Troubleshooting</h1>
         <p>
           Use this guide when the game does not start, saves look wrong, or deployment setup is unclear.
-          If the Play page is still showing its architecture placeholder, treat that as an honest missing-build state rather than a broken launch.
+          If the Play page is still showing its reviewer placeholder, treat that as an honest missing-build state rather than a broken launch.
         </p>
       </section>
 
@@ -109,15 +109,15 @@
       </section>
 
       <section class="card">
-        <h2>What the Architecture Placeholder Means</h2>
+        <h2>What the Reviewer Placeholder Means</h2>
         <div class="callout-grid">
           <article class="callout">
             <strong>Docs-first, not broken</strong>
-            <p>If the large Play panel still shows the placeholder, treat it as an honest waiting room for inspection rather than a fake or failed game surface.</p>
+            <p>If the large Play panel still shows the placeholder, treat it as an honest waiting room for review rather than a fake or failed game surface.</p>
           </article>
           <article class="callout">
             <strong>Evidence board</strong>
-            <p>The placeholder now lists manifest/core-file status and architecture signals so you can explain which assets are present without pretending Unity is already live.</p>
+            <p>The placeholder now lists manifest/core-file status and review signals so you can explain which assets are present without pretending Unity is already live.</p>
           </article>
           <article class="callout">
             <strong>Claim boundary</strong>
@@ -140,7 +140,7 @@
         <h2>Common Problems</h2>
         <ul>
           <li><strong>"Build check failed"</strong>: confirm that <code>docs/Build</code> contains <code>.data</code>, <code>.framework.js</code>, <code>.wasm</code>, and loader files.</li>
-          <li><strong>Architecture placeholder still visible</strong>: this is expected until preflight succeeds and the Unity loader starts cleanly; use the evidence board to show exactly what has or has not been confirmed yet.</li>
+          <li><strong>Reviewer placeholder still visible</strong>: this is expected until preflight succeeds and the Unity loader starts cleanly; use the evidence board to show exactly what has or has not been confirmed yet.</li>
           <li><strong>Black screen after load</strong>: hard refresh to clear stale cached build files.</li>
           <li><strong>No optional slot shown</strong>: external slots stay disabled until explicit runtime values are configured.</li>
           <li><strong>Save issue</strong>: clear browser site data and restart session if local save is corrupted.</li>
@@ -148,11 +148,11 @@
       </section>
 
       <section class="card">
-        <h2>Architecture Evidence Order</h2>
+        <h2>Reviewer Evidence Order</h2>
         <ul>
           <li><strong>1.</strong> Read the placeholder badges/signals to see whether the page is in docs-first, checking, ready, or missing-build mode.</li>
           <li><strong>2.</strong> Use the file list to confirm which exact build assets were found for the current base name.</li>
-          <li><strong>3.</strong> If the build is still absent, continue the inspection with About and Compliance instead of narrating a fictional live session.</li>
+          <li><strong>3.</strong> If the build is still absent, continue the review with About and Compliance instead of narrating a fictional live session.</li>
           <li><strong>4.</strong> If the build is ready, launch Unity and treat successful canvas takeover as the final playable proof.</li>
         </ul>
       </section>
@@ -162,7 +162,7 @@
         <ul>
           <li>Confirm the Play page no longer relies on the placeholder because <code>Check Build Files</code> and <code>Start Game</code> both succeed.</li>
           <li>Confirm Help, About, and Compliance still match the shipped build and service launch posture.</li>
-          <li>Keep public copy honest: if the bundle is absent, describe the docs surface as an architecture walkthrough, not a live build.</li>
+          <li>Keep public copy honest: if the bundle is absent, describe the docs surface as a reviewer walkthrough, not a live build.</li>
         </ul>
       </section>
 

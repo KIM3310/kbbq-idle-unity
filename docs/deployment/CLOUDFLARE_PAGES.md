@@ -28,7 +28,7 @@ Run policy/deploy checks:
 ```
 
 Expected result:
-- `PASS architecture gate`
+- `PASS review gate`
 
 Placeholders exist by default. For production values:
 

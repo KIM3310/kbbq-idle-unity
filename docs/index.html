@@ -530,7 +530,7 @@
         </section>
 
         <section class="card">
-          <h2>First architecture path</h2>
+          <h2>First review path</h2>
           <ul>
             <li><strong>1 · Frame it:</strong> confirm whether the build needs attention or is ready for preflight.</li>
             <li><strong>2 · Verify:</strong> use Check Build Files before making any playable claim.</li>
@@ -551,12 +551,12 @@
           <button id="startBtn">Start Game</button>
           <button id="fullscreenBtn">Fullscreen</button>
           <button id="copyChecklistBtn">Copy Build Checklist</button>
-          <button id="copyBuildChecklistBtn">Copy Architecture Route</button>
+          <button id="copyBuildChecklistBtn">Copy Review Route</button>
         </div>
-        <section class="architecture-dock" aria-label="Architecture handoff">
+        <section class="architecture-dock" aria-label="Reviewer handoff">
           <div class="architecture-dock-head">
             <div>
-              <strong>Architecture handoff</strong>
+              <strong>Reviewer handoff</strong>
               <p>Use this to narrate the current state without overstating whether the build is actually live.</p>
             </div>
             <button id="copyArchitectureStateBtn" type="button">Copy Current State</button>
@@ -580,7 +580,7 @@
             </article>
           </div>
           <div class="architecture-dock-actions">
-            <p id="architectureDockStatus">Ready to summarize the current architecture posture.</p>
+            <p id="architectureDockStatus">Ready to summarize the current review posture.</p>
           </div>
         </section>
         <div id="status">Ready. Check the WebGL bundle, then launch the playable surface.</div>
@@ -594,14 +594,14 @@
                 Use this panel to check the build bundle, explain the gameplay loop with the docs pages,
                 and keep rollout language tied to the actual launch result.
               </p>
-              <div class="placeholder-badges" aria-label="Architecture guardrails">
+              <div class="placeholder-badges" aria-label="Review guardrails">
                 <div class="placeholder-badge"><strong>Base</strong> <span id="placeholderBuildName">KBBQIdleWebGL</span></div>
                 <div class="placeholder-badge"><strong>Mode</strong> <span id="placeholderModeLabel">Playable preflight</span></div>
                 <div class="placeholder-badge"><strong>Claim</strong> <span id="placeholderClaimLabel">Preflight before launch</span></div>
               </div>
-              <div class="placeholder-summary" aria-label="Architecture snapshot">
+              <div class="placeholder-summary" aria-label="Review snapshot">
                 <article class="placeholder-summary-card">
-                  <strong>What operators can assess now</strong>
+                  <strong>What reviewers can assess now</strong>
                   <p id="placeholderSummaryNow">Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.</p>
                 </article>
                 <article class="placeholder-summary-card">
@@ -610,7 +610,7 @@
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>Next recommended move</strong>
-                  <p id="placeholderSummaryNext">Run Check Build Files, then Start Game and keep Help/About open for architecture context.</p>
+                  <p id="placeholderSummaryNext">Run Check Build Files, then Start Game and keep Help/About open for review context.</p>
                 </article>
                 <article class="placeholder-summary-card">
                   <strong>Evidence anchor</strong>
@@ -624,8 +624,8 @@
               </div>
             </section>
             <aside class="placeholder-list">
-              <h3>Architecture evidence board</h3>
-              <div class="placeholder-signals" aria-label="System signals">
+              <h3>Reviewer evidence board</h3>
+              <div class="placeholder-signals" aria-label="Review signals">
                 <div id="signalDocs" class="placeholder-signal" data-state="ok">Docs route ready</div>
                 <div id="signalBuild" class="placeholder-signal" data-state="warn">Build not yet checked</div>
                 <div id="signalClaim" class="placeholder-signal" data-state="warn">Playable claim on hold</div>
@@ -640,10 +640,10 @@
               <h3 style="margin-top:14px;">What to confirm before public rollout</h3>
               <ol>
                 <li><strong>Bundle present:</strong> loader, data, framework, and wasm files resolve from <code>docs/Build/</code>.</li>
-                <li><strong>Architecture route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
+                <li><strong>Review route ready:</strong> Help, About, and Compliance explain controls, loop, and hosting posture.</li>
                 <li><strong>Public claims held back:</strong> do not call this page playable until preflight and launch both succeed.</li>
               </ol>
-              <p class="placeholder-note">If build files need attention, this panel remains the primary inspection state instead of reading like a broken black box.</p>
+              <p class="placeholder-note">If build files need attention, this panel remains the primary review state instead of reading like a broken black box.</p>
             </aside>
           </div>
           <canvas id="unityCanvas" width="960" height="600"></canvas>
@@ -651,9 +651,9 @@
       </section>
 
       <section class="card">
-        <h2>Architecture Path</h2>
+        <h2>Review Path</h2>
         <ul>
-          <li><strong>1.</strong> Before the playable build is ready, keep the preflight panel visible and narrate the architecture route.</li>
+          <li><strong>1.</strong> Before the playable build is ready, keep the preflight panel visible and narrate the review route.</li>
           <li><strong>2.</strong> Run <em>Check Build Files</em> before claiming the WebGL surface is live.</li>
           <li><strong>3.</strong> Open <a href="./help.html">Help</a> and <a href="./about.html">About</a> to explain controls, loop, and deployment posture.</li>
           <li><strong>4.</strong> Use <a href="./compliance.html">Compliance</a> before discussing service launch or public rollout.</li>
@@ -829,8 +829,8 @@
             claim: 'Ready for preflight and launch.',
             now: 'Docs route, controls copy, economy explanation, and release posture are ready while the bundle is checked.',
             proof: 'Playable status depends on preflight plus a clean WebGL launch.',
-            next: 'Run Check Build Files, then Start Game and keep Help/About open for architecture context.',
-            evidence: 'The evidence board stays honest by separating docs inspection from live launch.',
+            next: 'Run Check Build Files, then Start Game and keep Help/About open for review context.',
+            evidence: 'The evidence board stays honest by separating docs review from live launch.',
             buildSignal: ['warn', 'Build not yet checked'],
             claimSignal: ['warn', 'Preflight before launch'],
           },
@@ -847,7 +847,7 @@
           ready: {
             modeLabel: 'Bundle found',
             claim: 'Almost ready, but launch still needs to succeed.',
-            now: 'The primary bundle appears present, so operators can move from docs inspection to real launch.',
+            now: 'The primary bundle appears present, so reviewers can move from docs review to real launch.',
             proof: 'Unity initialization is still the final gate before calling the page playable.',
             next: 'Click Start Game and confirm the loop, then keep Help/Compliance open for rollout context.',
             evidence: 'Preflight resolved loader/data/framework/wasm references for the chosen build name.',
@@ -857,7 +857,7 @@
           missing: {
             modeLabel: 'Build recheck state',
             claim: 'Recheck build files before launch.',
-            now: 'Operators can still assess navigation, product framing, controls copy, and public guardrails.',
+            now: 'Reviewers can still assess navigation, product framing, controls copy, and public guardrails.',
             proof: 'Playable status waits for confirmed WebGL files and a successful launch.',
             next: 'Keep the preflight panel visible, use Help as the walkthrough, and refresh docs/Build before rollout.',
             evidence: options.error ? `Last check: ${options.error}` : 'The evidence board documents what needs attention instead of hiding it behind an empty panel.',
@@ -879,7 +879,7 @@
             claim: 'Playable claim earned for this session.',
             now: 'Unity is now the primary surface.',
             proof: 'Use docs pages as supporting evidence only.',
-            next: 'Check the playable loop and note any launch issues.',
+            next: 'Review the playable loop and note any launch issues.',
             evidence: 'Canvas replaced placeholder after successful initialization.',
             buildSignal: ['ok', 'Build running'],
             claimSignal: ['ok', 'Playable claim earned'],
@@ -933,20 +933,20 @@
           },
           checking: {
             eyebrow: 'Preflight running',
-            title: 'Checking whether the WebGL bundle is architecture-ready.',
+            title: 'Checking whether the WebGL bundle is ready for review.',
             copy: 'This confirms that the required docs/Build files exist before anyone calls the page playable.',
             hidden: false,
           },
           ready: {
             eyebrow: 'Build ready',
             title: 'Core build files were found. You can now launch the real WebGL surface.',
-            copy: 'Next architecture move: start the build, confirm the loop, then use Help and Compliance to explain the release posture.',
+            copy: 'Next reviewer move: start the build, confirm the loop, then use Help and Compliance to explain the release posture.',
             hidden: false,
           },
           missing: {
             eyebrow: 'Build needs recheck',
             title: 'Keep the preflight panel as the primary state until the bundle checks cleanly.',
-            copy: 'Use Help, About, and Compliance to inspect controls, progression, and rollout guardrails while build files are refreshed.',
+            copy: 'Use Help, About, and Compliance to review controls, progression, and rollout guardrails while build files are refreshed.',
             hidden: false,
           },
           loading: {
@@ -1421,7 +1421,7 @@
       if (copyArchitectureStateBtn) {
         copyArchitectureStateBtn.addEventListener('click', async () => {
           const payload = [
-            'KBBQ Idle architecture state',
+            'KBBQ Idle reviewer state',
             `- Build base: ${architectureSnapshot.buildBase}`,
             `- Mode: ${architectureSnapshot.mode}`,
             `- Playable claim: ${architectureSnapshot.claim}`,
@@ -1430,7 +1430,7 @@
           ].join('\\n');
           const ok = await copyTextValue(payload);
           if (architectureDockStatusNode) {
-            architectureDockStatusNode.textContent = ok ? 'Current architecture state copied.' : 'Failed to copy current architecture state.';
+            architectureDockStatusNode.textContent = ok ? 'Current reviewer state copied.' : 'Failed to copy current reviewer state.';
           }
         });
       }
@@ -1449,14 +1449,14 @@
       });
       copyBuildChecklistBtn.addEventListener('click', async () => {
         const payload = [
-          'KBBQ Idle architecture route',
+          'KBBQ Idle review route',
           '- ./index.html -> build preflight and playable surface',
           '- ./help.html -> controls, support path, and troubleshooting',
           '- ./about.html -> gameplay loop and deployment posture',
           '- ./compliance.html -> public rollout and service launch guardrails',
         ].join('\\n');
         const ok = await copyTextValue(payload);
-        setStatus(ok ? 'Architecture route copied.' : 'Failed to copy architecture route.');
+        setStatus(ok ? 'Review route copied.' : 'Failed to copy review route.');
       });
       document.addEventListener('keydown', async (event) => {
         if (event.target && (event.target.tagName === 'INPUT' || event.target.tagName === 'TEXTAREA')) return;

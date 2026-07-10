@@ -25,7 +25,7 @@ if [ ! -x "$VENV_DIR/bin/python" ]; then
 fi
 
 echo "[RUNTIME] Installing backend test dependencies..."
-"$VENV_DIR/bin/pip" install -q -e "$ROOT_DIR[dev]"
+"$VENV_DIR/bin/pip" install -q -e "${ROOT_DIR}[dev]"
 
 echo "[RUNTIME] Running backend tests..."
 "$VENV_DIR/bin/python" -m pytest "$ROOT_DIR/server/tests" -q

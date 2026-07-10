@@ -4,17 +4,17 @@ KBBQ Idle is an idle/tycoon game project focused on a grill-management gameplay 
 
 Updated: **February 18, 2026**
 
-## Product and System Surface
+## System Overview
 
 A playable Unity WebGL project that proves shipping discipline through game loop, build pipeline, and release checks.
 
-| Lens | Definition |
+| Area | Details |
 |---|---|
 | Technical stack | Unity 2022.3 LTS, WebGL publishing, static hosting, optional FastAPI backend, and deterministic economy tests. |
-| Architecture path | Validate the demo, README, architecture notes, and quality gate before deeper workflow architecture. |
-| System signal | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
-| Safety boundary | gameplay data should stay separate from personal data. |
-| Fast path | Run `tools/runtime_quality_gate.sh` or the WebGL release check before publishing. |
+| Technical path | Validate the demo, README, architecture notes, and quality gate before deeper workflow review. |
+| System scope | Playable WebGL surface, Unity validation scripts, release checks, gameplay loop, responsive UI, and policy-ready static pages. |
+| Operating boundary | gameplay data should stay separate from personal data. |
+| Evaluation path | Run `tools/runtime_quality_gate.sh` or the WebGL release check before publishing. |
 
 ## What Changed In This Build
 - 4 grill slots for active cooking flow
@@ -24,7 +24,7 @@ A playable Unity WebGL project that proves shipping discipline through game loop
 - Stronger layered sizzling audio (loop + crackle)
 - Clearer UI metrics (`$ currency`, served/customers/queue)
 - Responsive layout pass for desktop + mobile WebGL
-- Policy-ready static pages under `docs/` for architecture workflows
+- Policy-ready static pages under `docs/` for review workflows
 
 ## Gameplay Loop
 1. Buy raw meat.
@@ -60,7 +60,7 @@ Use these settings:
 - Build command: `(none)`
 - Build output directory: `docs`
 
-Run deployment architecture checks:
+Run deployment review checks:
 
 ```bash
 ./tools/release_ops.sh check

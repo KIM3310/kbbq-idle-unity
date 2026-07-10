@@ -42,12 +42,12 @@ public class PerfOverlayView : MonoBehaviour
         var incomePerSec = 0d;
         var optionalEconomyMode = "Optional economy off / Packs off / Packs 0";
         var architectureStep = "Check grill flow, queue pressure, then optional economy posture.";
-        var focusedRoute = "Architecture Pack -> preset 2.0x rush -> grill loop -> perf overlay";
+        var focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay";
         var architectureSnapshot = "Tier Alley / Queue 0 / Economy off / Packs off / Packs 0";
         var focusedOpsSnapshot = "Preset 1.0x / Queue 0 / Wait 0.0s / Served 0/min";
         var twoMinuteArchitecture = "Health/meta -> architecture-pack -> grill loop -> perf overlay";
-        var architectureRoutes = "Health, Meta, Architecture Pack, Rush Preset, Perf Overlay";
-        var proofAssets = "Health, Meta, Architecture Pack, Perf Overlay";
+        var architectureRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay";
+        var proofAssets = "Health, Meta, Review Pack, Perf Overlay";
         if (gameManager != null)
         {
             var metrics = gameManager.GetQueueMetrics();
@@ -78,7 +78,7 @@ public class PerfOverlayView : MonoBehaviour
                            "\nIncome/s " + FormatUtil.FormatCurrency(incomePerSec) +
                            "\nEconomy " + optionalEconomyMode +
                            "\nPreset " + presetLabel +
-                           "\nCheck " + architectureStep +
+                           "\nReview " + architectureStep +
                            "\nRoute " + focusedRoute +
                            "\nSnapshot " + architectureSnapshot +
                            "\nOps " + focusedOpsSnapshot +

@@ -35,10 +35,10 @@ jobs:
       - name: Test (server)
         run: python -m pytest server/tests -q
 
-      - name: Generate backend architecture-pack proof artifact
+      - name: Generate backend review proof artifact
         run: python server/scripts/exercise_architecture_pack.py --output artifacts/kbbq-architecture-pack.json
 
-      - name: Upload backend architecture-pack artifact
+      - name: Upload backend review proof artifact
         uses: actions/upload-artifact@v7
         with:
           name: kbbq-architecture-pack-proof

@@ -99,11 +99,11 @@ class TestApi(unittest.TestCase):
             "runtime-backed-architecture-ready",
         )
         self.assertIn(
-            "architecture aids",
+            "review aids",
             architecture_payload.get("architecture_posture", {}).get("claim_rule", ""),
         )
         self.assertIn(
-            "claim live WebGL architecture delivery",
+            "claim live WebGL review delivery",
             architecture_payload.get("webgl_delivery", {}).get("claim_rule", ""),
         )
         self.assertIn("Build/KBBQIdleWebGL.loader.js", architecture_payload.get("webgl_delivery", {}).get("required_assets", []))

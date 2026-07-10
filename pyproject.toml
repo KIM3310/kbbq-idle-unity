@@ -5,13 +5,14 @@ build-backend = "setuptools.build_meta"
 [project]
 name = "kbbq-idle-backend"
 version = "0.1.0"
-description = "Optional backend service for KBBQ Idle WebGL architecture, telemetry, and ops surfaces."
+description = "Optional backend service for KBBQ Idle WebGL review, telemetry, and ops surfaces."
 readme = "server/README.md"
 requires-python = ">=3.11"
 authors = [{name = "Doeon Kim"}]
 license = { text = "MIT" }
 dependencies = [
-  "fastapi==0.138.0",
+  "fastapi==0.133.0",
+  "starlette>=1.3.1",
   "uvicorn[standard]==0.30.6",
   "pydantic==2.12.5",
   "python-dotenv==1.2.2",

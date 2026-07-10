@@ -10,7 +10,7 @@ This is an optional backend to demonstrate:
 - optional pack verification (`/iap/verify`) with server-authoritative grants and tx idempotency,
 - service readiness diagnostics (`/readiness`),
 - runtime service profile (`/meta`),
-- architecture-facing gameplay/economy posture (`/architecture-pack`),
+- reviewer-facing gameplay/economy posture (`/architecture-pack`),
 - ops/monitoring endpoints (`/metrics`, `/ops/alerts`),
 - SQLite persistence.
 
@@ -37,7 +37,7 @@ Runtime profile:
 curl -s http://127.0.0.1:8000/meta | jq .
 ```
 
-Architecture pack:
+Review payload:
 ```bash
 curl -s http://127.0.0.1:8000/architecture-pack | jq .
 ```
@@ -99,4 +99,4 @@ Production/staging templates:
   - `links`
   - `ops_contract`
 - `/meta` exposes runtime posture, enabled capabilities, and the same action-oriented diagnostics surface.
-- `/architecture-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one architecture-friendly payload.
+- `/architecture-pack` compresses gameplay loop proof, economy contract, WebGL delivery posture, and trust boundaries into one review-friendly payload.

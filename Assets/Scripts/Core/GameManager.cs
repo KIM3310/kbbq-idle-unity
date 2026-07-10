@@ -234,12 +234,12 @@ public class GameManager : MonoBehaviour
             averageWaitSeconds = metrics.avgWaitSeconds,
             optionalEconomyMode = BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount),
             architectureStep = "Check grill flow, queue pressure, then optional economy posture.",
-            focusedRoute = "Architecture Pack -> preset 2.0x rush -> grill loop -> perf overlay",
+            focusedRoute = "Review Pack -> preset 2.0x rush -> grill loop -> perf overlay",
             architectureSnapshot = $"Tier {(tier != null && !string.IsNullOrEmpty(tier.displayName) ? tier.displayName : "Alley")} / Queue {metrics.queueCount} / Economy {BuildOptionalEconomyModeLabel(adsEnabled, iapEnabled, packCount)}",
             focusedOpsSnapshot = $"Preset {presetLabel} / Queue {metrics.queueCount} / Wait {metrics.avgWaitSeconds:0.0}s / Served {metrics.servedPerMinute:0}/min",
             twoMinuteArchitecture = "Health/meta -> architecture-pack -> grill loop -> perf overlay",
-            architectureRoutes = "Health, Meta, Architecture Pack, Rush Preset, Perf Overlay",
-            proofAssets = "Health, Meta, Architecture Pack, Perf Overlay",
+            architectureRoutes = "Health, Meta, Review Pack, Rush Preset, Perf Overlay",
+            proofAssets = "Health, Meta, Review Pack, Perf Overlay",
         };
     }
     private string BuildPresetLabel(int index)

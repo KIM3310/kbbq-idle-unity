@@ -156,12 +156,12 @@ def _build_webgl_delivery_report() -> dict[str, object]:
         "required_assets": [str(path.relative_to(docs_root)) for path in required_assets],
         "missing_assets": missing_assets,
         "claim_rule": (
-            "Required architecture assets are present, so you can claim live WebGL architecture delivery."
+            "Required review assets are present, so you can claim live WebGL review delivery."
             if ready
-            else "Do not claim live WebGL delivery from docs alone until ./tools/build_webgl_docs.sh produces the required architecture assets."
+            else "Do not claim live WebGL delivery from docs alone until ./tools/build_webgl_docs.sh produces the required review assets."
         ),
         "next_action": (
-            "WebGL build artifacts are present for architecture delivery."
+            "WebGL build artifacts are present for review delivery."
             if ready
             else "Run ./tools/build_webgl_docs.sh before claiming WebGL delivery readiness."
         ),
@@ -245,7 +245,7 @@ def _build_architecture_pack(report: dict[str, object]) -> dict[str, object]:
         "docs_only_surfaces": ["docs/index.html", "docs/help.html", "docs/about.html", "docs/compliance.html"],
         "claim_tier": "runtime-backed-architecture-ready" if webgl_delivery["ready"] else "docs-first-placeholder",
         "claim_rule": (
-            "Use docs surfaces as architecture aids, then repeat playable/runtime claims only after build preflight and live Unity launch both succeed."
+            "Use docs surfaces as review aids, then repeat playable/runtime claims only after build preflight and live Unity launch both succeed."
         ),
     }
     return {
@@ -253,7 +253,7 @@ def _build_architecture_pack(report: dict[str, object]) -> dict[str, object]:
         "service": "kbbq-idle-backend",
         "generated_at": report["ts"],
         "readiness_contract": ARCHITECTURE_PACK_CONTRACT,
-        "headline": "Idle tycoon slice exposes gameplay, economy, and WebGL delivery proof in one architecture surface.",
+        "headline": "Idle tycoon slice exposes gameplay, economy, and WebGL delivery proof in one review surface.",
         "proof_bundle": proof_bundle,
         "webgl_delivery": webgl_delivery,
         "economy_contract": economy_contract,
@@ -288,14 +288,14 @@ def _build_architecture_pack(report: dict[str, object]) -> dict[str, object]:
                 "why": "Pins enabled capabilities and runtime delivery posture before a demo.",
             },
             {
-                "label": "Architecture Pack",
+                "label": "Review Pack",
                 "path": "/architecture-pack",
                 "why": "Packages gameplay loop, economy contract, and trust boundary in one payload.",
             },
             {
                 "label": "Release Readiness",
                 "path": "/ops/release-readiness",
-                "why": "Summarizes WebGL delivery, integration gates, and architecture claim posture before rollout.",
+                "why": "Summarizes WebGL delivery, integration gates, and review claim posture before rollout.",
             },
             {
                 "label": "Economy Balance Drill",
@@ -305,12 +305,12 @@ def _build_architecture_pack(report: dict[str, object]) -> dict[str, object]:
             {
                 "label": "Perf Overlay",
                 "path": "Assets/Scripts/UI/PerfOverlayView.cs",
-                "why": "Shows the live gameplay architecture pack directly inside the Unity surface.",
+                "why": "Shows the live gameplay review pack directly inside the Unity surface.",
             },
         ],
         "watchouts": [
             "Set KBBQ_HMAC_SECRET and KBBQ_TOKEN_SALT before any shared demo or public deployment.",
-            "Add KBBQ_FORMSPREE_ENDPOINT only when the feedback relay is required for a live demo.",
+            "Add KBBQ_FORMSPREE_ENDPOINT only when the feedback relay is required for a live review.",
             "Expose Swagger docs only for local debugging via KBBQ_EXPOSE_DOCS=1.",
         ],
         "links": _ops_links(),
@@ -332,7 +332,7 @@ def _build_release_readiness(report: dict[str, object]) -> dict[str, object]:
             "feedback_relay_configured": integrations["feedback_relay_configured"],
         },
         "architecture_claim": (
-            "Playable and architecture-ready" if report["ready"] and webgl_delivery["ready"] else "Inspectable with explicit blockers"
+            "Playable and review-ready" if report["ready"] and webgl_delivery["ready"] else "Reviewable with explicit blockers"
         ),
         "blockers": [
             *[str(item) for item in report.get("warnings", [])],
@@ -446,13 +446,13 @@ def _build_economy_balance_drill() -> dict[str, object]:
                 ((final_tier["income_per_second"] - starter["income_per_second"]) / starter["income_per_second"]) * 100,
                 1,
             ),
-            "guardian_mode_posture": "queue guardrails stay gameplay-first and optional economy-off during architecture demos",
+            "guardian_mode_posture": "queue guardrails stay gameplay-first and optional economy-off during reviewer demos",
         },
         "tiers": tiers,
         "architecture_actions": [
-            "Treat guardian triggers as balance-check thresholds, not optional economy prompts.",
-            "Check offline pressure before claiming idle progression is stable across long sessions.",
-            "Keep optional economy-off posture visible during architecture demos.",
+            "Treat guardian triggers as balance-review thresholds, not optional economy prompts.",
+            "Review offline pressure before claiming idle progression is stable across long sessions.",
+            "Keep optional economy-off posture visible during reviewer demos.",
         ],
         "links": _ops_links(),
     }
@@ -576,7 +576,7 @@ def ops_alerts(request: Request):
             {
                 "level": "warning",
                 "code": "nonce_backlog",
-                "message": f"Nonce table is large ({nonce_count}). Check KBBQ_NONCE_TTL_SECONDS.",
+                "message": f"Nonce table is large ({nonce_count}). Review KBBQ_NONCE_TTL_SECONDS.",
             }
         )
 
