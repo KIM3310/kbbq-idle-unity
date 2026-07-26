@@ -214,6 +214,7 @@ Requires Python 3.11+. If your default `python3` is older, run `make PYTHON=/pat
 - Paid boundary: cosmetic packs, ad-free mode, event boosts, and supporter bundle
 - Canonical URL: https://kbbq-idle-unity.pages.dev/
 - Lead capture: https://github.com/KIM3310/kbbq-idle-unity/issues/new?template=service-inquiry.yml&title=Private+workspace+inquiry%3A+KBBQ+Idle+Unity
+- Commercial route: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers
 - Machine-readable offer: [docs/service-offer.json](docs/service-offer.json)
 - Search growth implementation: [docs/search-growth-implementation.md](docs/search-growth-implementation.md)
 - Revenue architecture: [docs/revenue-architecture.md](docs/revenue-architecture.md)

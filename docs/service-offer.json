@@ -69,5 +69,29 @@
     ],
     "isAccessibleForFree": true,
     "keywords": "kbbq-idle-unity, KBBQ, Idle, Unity, Korean, BBQ, idle, game, progression, leaderboard, events, collectible, content, cosmetic, packs, ad-free, mode, event, boosts, supporter, bundle, WebGL, build, Pages"
+  },
+  "commerce": {
+    "gateway_url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers",
+    "lane_id": "consumer-learning-supporter-lane",
+    "lane_name": "Consumer Learning Supporter Lane",
+    "billing_mode": "supporter",
+    "price_unit": "supporter bundle from USD 5/month or one-time theme and report packs from USD 20",
+    "fulfillment_kind": "supporter access, export or theme pack, classroom setup notes, and content publishing",
+    "risk_bucket": "consumer-guarded",
+    "checkout": {
+      "provider": "lemon-squeezy",
+      "status": "account-onboarding-required",
+      "fallback_url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers"
+    },
+    "sponsorship": {
+      "provider": "github-sponsors",
+      "eligible": true,
+      "status": "account-onboarding-required"
+    },
+    "advertising": {
+      "provider": null,
+      "eligible": false,
+      "status": "not-applicable"
+    }
   }
 }
