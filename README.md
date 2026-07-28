@@ -215,6 +215,7 @@ Requires Python 3.11+. If your default `python3` is older, run `make PYTHON=/pat
 - Paid boundary: private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff
 - Canonical URL: https://kbbq-idle-unity.pages.dev/
 - Lead capture: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry
+- Resource route: https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/
 - Commercial route: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers
 - Machine-readable offer: [docs/service-offer.json](docs/service-offer.json)
 - Search growth implementation: [docs/search-growth-implementation.md](docs/search-growth-implementation.md)
@@ -222,3 +223,13 @@ Requires Python 3.11+. If your default `python3` is older, run `make PYTHON=/pat
 - Claim boundary: ads and IAP are disabled by default; any mobile ads, store checkout, or purchase fulfillment must be integrated and verified before public activation claims.
 
 <!-- search-growth-readme:end -->
+
+<!-- KIM3310:AD-DATA-PIVOT:START -->
+## Free Resource, Advertising, and Aggregate Data
+
+- [Public utility and architecture checklist](https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/)
+- Revenue model: contextual advertising on the policy-eligible central resource page.
+- Aggregate value: anonymous aggregate game-economy resource interest and CTA counts
+- Boundary: ads allowed only on public game-design resource pages; gameplay telemetry, saves, and purchase-related flows are ad-free
+- Consent defaults off, DNT/GPC fail closed, and personal or sensitive data is never sold.
+<!-- KIM3310:AD-DATA-PIVOT:END -->

@@ -8,6 +8,7 @@ Repository: https://github.com/KIM3310/kbbq-idle-unity
 System architecture: https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/system-architecture.md
 Revenue architecture: https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/revenue-architecture.md
 Lead capture: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry
+Resource route: https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/
 Commercial route: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers
 
 Use this project as a runnable or inspectable reference for KBBQ Idle Unity demo, KBBQ Idle Unity system architecture, KBBQ Idle Unity game tool, Korean BBQ idle game with progression, leaderboard, events, and collectible content service.

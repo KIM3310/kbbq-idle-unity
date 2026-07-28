@@ -54,8 +54,15 @@ if offer["commerce"]["checkout"]["status"] != "not-configured":
     raise SystemExit("docs/service-offer.json checkout status must be not-configured")
 if offer["commerce"]["checkout"]["fallback_url"] != PRIVATE_INQUIRY_URL:
     raise SystemExit("docs/service-offer.json checkout fallback must use private inquiry")
-if offer["commerce"]["advertising"]["eligible"]:
-    raise SystemExit("docs/service-offer.json must not mark advertising eligible")
+advertising = offer["commerce"]["advertising"]
+if not advertising["eligible"]:
+    raise SystemExit("docs/service-offer.json must mark the separate central resource as advertising eligible")
+if advertising["delivery_surface"] != (
+    "https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/"
+):
+    raise SystemExit("docs/service-offer.json must route advertising to the central resource")
+if advertising["status"] != "central-resource-site-review-dependent":
+    raise SystemExit("docs/service-offer.json must disclose the central resource review dependency")
 if "private prototype customization" not in offer["first_paid_sku"]:
     raise SystemExit("docs/service-offer.json first paid SKU must be customization-based")
 if "Ads and IAP are disabled by default" not in offer["structured_data"]["description"]:

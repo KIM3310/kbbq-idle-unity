@@ -1,0 +1,52 @@
+{
+  "generated_at": "2026-07-28",
+  "owner": "KIM3310",
+  "repo": "kbbq-idle-unity",
+  "positioning": "Free idle-game economy tuning sheet for Unity prototype balancing.",
+  "audience": "indie game developers and Unity learners",
+  "public_resource": {
+    "url": "https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/",
+    "live_demo": "https://kbbq-idle-unity.pages.dev",
+    "readiness_checklist": [
+      "Architecture Summary",
+      "Runtime And Data Flow",
+      "Cloud Or Local Deployment Boundary",
+      "Deployment patterns",
+      "Control boundaries"
+    ]
+  },
+  "ad_supported_revenue": {
+    "participates": true,
+    "delivery_surface": "central policy-eligible public resource page",
+    "boundary": "ads allowed only on public game-design resource pages; gameplay telemetry, saves, and purchase-related flows are ad-free",
+    "provider": "google-adsense",
+    "publisher_id": "ca-pub-4973160293737562",
+    "status": "code-ready-site-review-dependent"
+  },
+  "aggregate_data": {
+    "data_asset": "anonymous aggregate game-economy resource interest and CTA counts",
+    "sensitivity_class": "consumer-guarded",
+    "allowed_events": [
+      "resource_view",
+      "resource_cta_click",
+      "architecture_doc_open",
+      "privacy_support_open"
+    ],
+    "prohibited_fields": [
+      "raw_input",
+      "url",
+      "referrer",
+      "title",
+      "user_id",
+      "session_id",
+      "ip_address",
+      "device_id",
+      "payment_detail"
+    ],
+    "consent_default": "off",
+    "dnt_gpc": "fail-closed",
+    "sale_boundary": "forbid sale of personal, sensitive, raw, event-level, or re-identifiable data",
+    "event_store": "Cloudflare D1 daily aggregate counters",
+    "public_data_mart": "Firebase Firestore kim3310-free-tools"
+  }
+}
