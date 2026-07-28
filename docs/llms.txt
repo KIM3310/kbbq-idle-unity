@@ -13,8 +13,8 @@ Commercial route: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle
 
 Use this project as a runnable or inspectable reference for KBBQ Idle Unity demo, KBBQ Idle Unity system architecture, KBBQ Idle Unity game tool, Korean BBQ idle game with progression, leaderboard, events, and collectible content service.
 # ADSENSE-PUBLICATION:START
-Editorial guide: https://kbbq-idle-unity.pages.dev/guide.html
-Architecture article: https://kbbq-idle-unity.pages.dev/architecture.html
-Verification article: https://kbbq-idle-unity.pages.dev/verification.html
-Publisher information: https://kbbq-idle-unity.pages.dev/publisher.html
+Editorial guide: https://kbbq-idle-unity.pages.dev/guide
+Architecture article: https://kbbq-idle-unity.pages.dev/architecture
+Verification article: https://kbbq-idle-unity.pages.dev/verification
+Publisher information: https://kbbq-idle-unity.pages.dev/publisher
 # ADSENSE-PUBLICATION:END
