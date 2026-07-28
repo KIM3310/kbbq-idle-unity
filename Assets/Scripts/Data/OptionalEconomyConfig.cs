@@ -14,8 +14,8 @@ public struct IapPack
 [CreateAssetMenu(menuName = "KBBQ/OptionalEconomy Config")]
 public class OptionalEconomyConfig : ScriptableObject
 {
-    public bool enableAds = true;
-    public bool enableIap = true;
+    public bool enableAds = false;
+    public bool enableIap = false;
     public float rewardedMultiplier = 2f;
     public float rewardedDuration = 120f;
     public double interstitialReward = 100;

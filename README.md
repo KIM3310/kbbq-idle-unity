@@ -18,6 +18,7 @@ Updated: **February 18, 2026**
 - **Unity 2022.3 LTS:** 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 확인할 수 있습니다.
 - **Static hosting:** 배포 문서, 정적 호스팅 경로, fallback UI가 명확하게 정리되어 있습니다.
 - **FastAPI optional backend:** 리더보드, analytics, release readiness 경로를 선택적으로 붙일 수 있습니다.
+- **Monetization boundary:** 광고와 IAP 설정은 기본 비활성입니다. 현재 저장소는 live ad network, mobile store checkout, verified IAP fulfillment가 활성 상태라고 주장하지 않습니다.
 
 ## System Overview
 
@@ -211,12 +212,13 @@ Requires Python 3.11+. If your default `python3` is older, run `make PYTHON=/pat
 ## Search And Service Surface
 
 - Public entry: free WebGL build on Pages/itch.io
-- Paid boundary: cosmetic packs, ad-free mode, event boosts, and supporter bundle
+- Paid boundary: private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff
 - Canonical URL: https://kbbq-idle-unity.pages.dev/
-- Lead capture: https://github.com/KIM3310/kbbq-idle-unity/issues/new?template=service-inquiry.yml&title=Private+workspace+inquiry%3A+KBBQ+Idle+Unity
+- Lead capture: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry
 - Commercial route: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers
 - Machine-readable offer: [docs/service-offer.json](docs/service-offer.json)
 - Search growth implementation: [docs/search-growth-implementation.md](docs/search-growth-implementation.md)
 - Revenue architecture: [docs/revenue-architecture.md](docs/revenue-architecture.md)
+- Claim boundary: ads and IAP are disabled by default; any mobile ads, store checkout, or purchase fulfillment must be integrated and verified before public activation claims.
 
 <!-- search-growth-readme:end -->

@@ -31,7 +31,7 @@
 
 ## 운영 모델
 - `OptionalEconomyConfig`에 보상형 이벤트 부스트, 전면 이벤트 보상, 선택형 패키지를 정의합니다.
-- `OptionalEconomyService`는 로컬 안전 지급 플로우와 선택적 서버 검증(`POST /iap/verify`) 경로를 지원합니다.
+- `OptionalEconomyService`는 기본 비활성 상태이며, 설정된 게이트웨이가 백엔드 검증(`POST /iap/verify`)과 중복되지 않은 거래 ID를 확인한 뒤에만 구매 재화를 지급합니다.
 - 실제 스토어 영수증 검증(App Store / Play Store)은 운영 배포 단계의 연동 과제로 남겨두었습니다.
   - 백엔드에 `mock` / `structured` / `store` 검증 모드가 추가되어 운영 전환 경로를 제공.
 

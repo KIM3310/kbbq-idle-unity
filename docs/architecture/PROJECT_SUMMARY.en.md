@@ -31,7 +31,7 @@
 
 ## Optional economy
 - `OptionalEconomyConfig` defines rewarded boost, interstitial reward, and optional packs.
-- `OptionalEconomyService` supports local-safe grant flow and optional backend verification (`/iap/verify`) before currency is granted.
+- `OptionalEconomyService` fails closed and grants purchase currency only after a configured gateway confirms backend verification (`/iap/verify`) with a non-replayed transaction id.
 - Real store receipt verification (App Store / Play Store) remains an integration step for production deployment.
   - Added production-ready store verification mode hooks (`mock` / `structured` / `store`) on backend.
 

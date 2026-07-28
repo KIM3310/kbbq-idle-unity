@@ -12,8 +12,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ae2b22ce191134498b2581baf3bb6bcd, type: 3}
   m_Name: OptionalEconomyConfig
   m_EditorClassIdentifier: Assembly-CSharp::OptionalEconomyConfig
-  enableAds: 1
-  enableIap: 1
+  enableAds: 0
+  enableIap: 0
   rewardedMultiplier: 2
   rewardedDuration: 120
   interstitialReward: 100

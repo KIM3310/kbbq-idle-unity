@@ -1183,8 +1183,8 @@ public static class KBBQAutoSetup
             AssetDatabase.CreateAsset(asset, path);
         }
 
-        asset.enableAds = true;
-        asset.enableIap = true;
+        asset.enableAds = false;
+        asset.enableIap = false;
         asset.rewardedMultiplier = 2f;
         asset.rewardedDuration = 120f;
         asset.interstitialReward = 100;

@@ -5,9 +5,9 @@
   "repository_url": "https://github.com/KIM3310/kbbq-idle-unity",
   "architecture_url": "https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/system-architecture.md",
   "revenue_architecture_url": "https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/revenue-architecture.md",
-  "lead_capture_url": "https://github.com/KIM3310/kbbq-idle-unity/issues/new?template=service-inquiry.yml&title=Private+workspace+inquiry%3A+KBBQ+Idle+Unity",
+  "lead_capture_url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry",
   "productized_offer": "Korean BBQ idle game with progression, leaderboard, events, and collectible content",
-  "first_paid_sku": "cosmetic packs, ad-free mode, event boosts, and supporter bundle",
+  "first_paid_sku": "private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff",
   "free_lead_magnet": "free WebGL build on Pages/itch.io",
   "search_positioning": {
     "primary_query": "KBBQ Idle Unity Korean BBQ game",
@@ -21,7 +21,7 @@
   },
   "monetization_boundary": {
     "free": "free WebGL build on Pages/itch.io",
-    "paid": "cosmetic packs, ad-free mode, event boosts, and supporter bundle",
+    "paid": "private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff",
     "metering_hooks": [
       "workspace_id",
       "plan",
@@ -45,7 +45,7 @@
     "operatingSystem": "Web, serverless, and local development environments",
     "url": "https://kbbq-idle-unity.pages.dev/",
     "codeRepository": "https://github.com/KIM3310/kbbq-idle-unity",
-    "description": "KBBQ Idle Unity: Korean BBQ idle game with progression, leaderboard, events, and collectible content. Free entry point: free WebGL build on Pages/itch.io. Paid path: cosmetic packs, ad-free mode, event boosts, and.",
+    "description": "KBBQ Idle Unity: Korean BBQ idle game prototype with progression, leaderboard, events, and collectible content. Ads and IAP are disabled by default; private customization is handled through inquiry, not live checkout.",
     "creator": {
       "@type": "Person",
       "name": "KIM3310",
@@ -62,30 +62,30 @@
       },
       {
         "@type": "Offer",
-        "name": "cosmetic packs, ad-free mode, event boosts, and supporter bundle",
+        "name": "private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff",
         "availability": "https://schema.org/LimitedAvailability",
-        "url": "https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/revenue-architecture.md"
+        "url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry"
       }
     ],
     "isAccessibleForFree": true,
-    "keywords": "kbbq-idle-unity, KBBQ, Idle, Unity, Korean, BBQ, idle, game, progression, leaderboard, events, collectible, content, cosmetic, packs, ad-free, mode, event, boosts, supporter, bundle, WebGL, build, Pages"
+    "keywords": "kbbq-idle-unity, KBBQ, Idle, Unity, Korean, BBQ, idle, game, progression, leaderboard, events, collectible, content, WebGL, build, Pages, prototype, customization"
   },
   "commerce": {
     "gateway_url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers",
-    "lane_id": "consumer-learning-supporter-lane",
-    "lane_name": "Consumer Learning Supporter Lane",
-    "billing_mode": "supporter",
-    "price_unit": "supporter bundle from USD 5/month or one-time theme and report packs from USD 20",
-    "fulfillment_kind": "supporter access, export or theme pack, classroom setup notes, and content publishing",
+    "lane_id": "consumer-prototype-customization",
+    "lane_name": "Consumer Prototype Customization",
+    "billing_mode": "one-time",
+    "price_unit": "fixed customization from USD 1,000",
+    "fulfillment_kind": "one audience-specific flow, branded content set, privacy and claim boundary, deployment package, and handoff notes",
     "risk_bucket": "consumer-guarded",
     "checkout": {
-      "provider": "lemon-squeezy",
-      "status": "account-onboarding-required",
-      "fallback_url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers"
+      "provider": null,
+      "status": "not-configured",
+      "fallback_url": "https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry"
     },
     "sponsorship": {
       "provider": "github-sponsors",
-      "eligible": true,
+      "eligible": false,
       "status": "sponsors-listing-not-configured"
     },
     "advertising": {

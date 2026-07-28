@@ -8,6 +8,9 @@ STRICT_RUNTIME_GATE="${STRICT_RUNTIME_GATE:-0}"
 
 echo "[RUNTIME] Root: $ROOT_DIR"
 
+echo "[RUNTIME] Validating monetization trust boundary..."
+"$PYTHON_BIN" "$ROOT_DIR/tools/validate_monetization_boundary.py"
+
 if command -v dotnet >/dev/null 2>&1; then
   echo "[RUNTIME] Running deterministic sim tests..."
   dotnet test "$ROOT_DIR/sim/KbbqIdle.Sim.Tests/KbbqIdle.Sim.Tests.csproj"

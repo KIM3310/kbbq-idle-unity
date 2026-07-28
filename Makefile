@@ -28,5 +28,6 @@ backend-test: install
 repository-verify:
 	$(PYTHON) scripts/validate_repository_surface.py
 	$(PYTHON) scripts/validate_architecture_blueprint.py
+	$(PYTHON) tools/validate_monetization_boundary.py
 
 verify: backend-test repository-verify

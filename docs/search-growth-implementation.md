@@ -10,7 +10,7 @@ This repository now exposes a search-readable service surface in addition to the
 | Revenue architecture | [docs/revenue-architecture.md](./revenue-architecture.md) |
 | System architecture | [docs/system-architecture.md](./system-architecture.md) |
 | Public canonical URL | https://kbbq-idle-unity.pages.dev/ |
-| Lead capture URL | https://github.com/KIM3310/kbbq-idle-unity/issues/new?template=service-inquiry.yml&title=Private+workspace+inquiry%3A+KBBQ+Idle+Unity |
+| Lead capture URL | https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&inquiry=consumer-prototype-customization#private-inquiry |
 | Commercial route | https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers |
 
 ## Search Positioning
@@ -18,7 +18,7 @@ This repository now exposes a search-readable service surface in addition to the
 - Primary query: KBBQ Idle Unity Korean BBQ game
 - Secondary queries: KBBQ Idle Unity demo; KBBQ Idle Unity system architecture; KBBQ Idle Unity game tool; Korean BBQ idle game with progression, leaderboard, events, and collectible content service
 - Public entry point: free WebGL build on Pages/itch.io
-- Paid boundary: cosmetic packs, ad-free mode, event boosts, and supporter bundle
+- Paid boundary: private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff
 
 ## Conversion Boundary
 
@@ -28,5 +28,6 @@ The public surface stays crawlable and free. Paid value starts when a visitor wa
 
 - Keep the sitemap and robots file aligned with the final production domain.
 - Submit the canonical URL and sitemap in Google Search Console after the domain is connected.
-- The lead-capture path is a GitHub Issue Form so private workspace and paid-package requests create a trackable queue before payment infrastructure is added.
+- The lead-capture path is the central private inquiry route for the `consumer-prototype-customization` lane; no self-serve checkout is configured.
+- Ads and IAP remain disabled by default. Public copy should describe monetization-readiness work, not live ad inventory, active mobile checkout, or verified purchase fulfillment.
 - Keep exact free-tier quotas out of public promises because provider limits change.

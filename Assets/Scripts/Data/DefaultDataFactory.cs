@@ -94,8 +94,8 @@ public static class DefaultDataFactory
     public static OptionalEconomyConfig CreateOptionalEconomyConfig()
     {
         var config = ScriptableObject.CreateInstance<OptionalEconomyConfig>();
-        config.enableAds = true;
-        config.enableIap = true;
+        config.enableAds = false;
+        config.enableIap = false;
         config.rewardedMultiplier = 2f;
         config.rewardedDuration = 120f;
         config.interstitialReward = 100;
