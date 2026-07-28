@@ -4,7 +4,7 @@ VENV ?= .venv
 VENV_PYTHON := $(VENV)/bin/python
 VENV_STAMP := $(VENV)/.installed-dev
 
-.PHONY: check-python install backend-test repository-verify verify
+.PHONY: check-python install backend-test repository-verify pages-deploy verify
 
 check-python:
 	$(PYTHON) -c 'import sys; raise SystemExit(0 if sys.version_info >= (3, 11) else "Python 3.11+ is required")'
@@ -29,5 +29,8 @@ repository-verify:
 	$(PYTHON) scripts/validate_repository_surface.py
 	$(PYTHON) scripts/validate_architecture_blueprint.py
 	$(PYTHON) tools/validate_monetization_boundary.py
+
+pages-deploy:
+	npx --yes wrangler@latest pages deploy docs --project-name=kbbq-idle-unity --branch=main
 
 verify: backend-test repository-verify
