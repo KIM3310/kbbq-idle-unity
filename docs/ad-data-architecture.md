@@ -8,7 +8,7 @@ Free idle-game economy tuning sheet for Unity prototype balancing.
 
 - Audience: indie game developers and Unity learners
 - Central resource: https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/
-- Live system: https://kbbq-idle-unity.pages.dev
+- Live system: https://kbbq-idle-unity.pages.dev/
 - Advertising boundary: ads allowed only on public game-design resource pages; gameplay telemetry, saves, and purchase-related flows are ad-free
 - Current ad state: code-ready on the central resource; serving depends on Google AdSense site approval and consent policy.
 

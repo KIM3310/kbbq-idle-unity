@@ -6,7 +6,7 @@
   "audience": "indie game developers and Unity learners",
   "public_resource": {
     "url": "https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/",
-    "live_demo": "https://kbbq-idle-unity.pages.dev",
+    "live_demo": "https://kbbq-idle-unity.pages.dev/",
     "readiness_checklist": [
       "Architecture Summary",
       "Runtime And Data Flow",

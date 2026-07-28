@@ -1,0 +1,160 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Project Guide | KBBQ Idle Unity</title>
+  <meta name="description" content="Free idle-game economy tuning sheet for Unity prototype balancing. Source-backed guide for indie game developers and Unity learners.">
+  <meta name="robots" content="index,follow,max-image-preview:large">
+  <meta name="google-adsense-account" content="ca-pub-4973160293737562">
+  <link rel="canonical" href="https://kbbq-idle-unity.pages.dev/guide.html">
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Project Guide | KBBQ Idle Unity">
+  <meta property="og:description" content="Free idle-game economy tuning sheet for Unity prototype balancing. Source-backed guide for indie game developers and Unity learners.">
+  <meta property="og:url" content="https://kbbq-idle-unity.pages.dev/guide.html">
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Project Guide | KBBQ Idle Unity","description":"Free idle-game economy tuning sheet for Unity prototype balancing. Source-backed guide for indie game developers and Unity learners.","url":"https://kbbq-idle-unity.pages.dev/guide.html","dateModified":"2026-07-28","author":{"@type":"Person","name":"KIM3310","url":"https://github.com/KIM3310"},"publisher":{"@type":"Person","name":"KIM3310","url":"https://kim3310-doeon-kim-portfolio.pages.dev"},"isAccessibleForFree":true}</script>
+  <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4973160293737562" crossorigin="anonymous"></script>
+  <style>
+    :root { color-scheme: light; --ink: #17201f; --muted: #52605d; --line: #cbd2ce; --paper: #ffffff; --ground: #f5f6f4; --green: #126455; --coral: #c94732; --gold: #b67a00; }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body { margin: 0; background: var(--ground); color: var(--ink); font: 17px/1.72 Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; }
+    a { color: var(--green); text-underline-offset: 3px; }
+    .site-header { border-bottom: 1px solid var(--line); background: rgba(245, 246, 244, .97); }
+    .site-nav, .article-shell, .site-footer-inner { width: min(920px, calc(100% - 32px)); margin: 0 auto; }
+    .site-nav { min-height: 62px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .site-nav strong { font-size: .92rem; }
+    .nav-links { display: flex; flex-wrap: wrap; gap: 14px; font-size: .84rem; }
+    .article-shell { padding: 54px 0 72px; }
+    .breadcrumbs { color: var(--muted); font-size: .82rem; }
+    .article-intro { padding: 28px 0 36px; border-bottom: 2px solid var(--ink); }
+    .kicker { color: var(--coral); font-size: .76rem; font-weight: 800; text-transform: uppercase; }
+    h1 { margin: 10px 0 16px; max-width: 18ch; font-size: 3.5rem; line-height: 1.04; letter-spacing: 0; overflow-wrap: anywhere; }
+    .lede { max-width: 68ch; color: var(--muted); font-size: 1.08rem; }
+    .review-note { margin-top: 18px; color: var(--muted); font-size: .84rem; }
+    article { padding-top: 24px; }
+    article h2 { margin: 42px 0 12px; padding-top: 6px; font-size: 1.75rem; line-height: 1.2; letter-spacing: 0; }
+    article h3 { margin: 30px 0 8px; font-size: 1.2rem; letter-spacing: 0; }
+    article h4 { margin: 24px 0 6px; font-size: 1.02rem; letter-spacing: 0; }
+    article p, article li { max-width: 76ch; }
+    article li + li { margin-top: 6px; }
+    pre { max-width: 100%; overflow: auto; border-left: 4px solid var(--gold); background: #1d2423; color: #f6f8f7; padding: 18px; border-radius: 4px; font-size: .86rem; }
+    code { overflow-wrap: anywhere; }
+    :not(pre) > code { border: 1px solid var(--line); background: var(--paper); padding: 1px 5px; border-radius: 3px; font-size: .9em; }
+    .table-scroll { overflow-x: auto; margin: 20px 0; }
+    table { width: 100%; border-collapse: collapse; background: var(--paper); font-size: .9rem; }
+    th, td { border: 1px solid var(--line); padding: 10px; text-align: left; vertical-align: top; }
+    th { background: #e9eeeb; }
+    .boundary-note { margin: 30px 0 4px; border-left: 4px solid var(--coral); background: var(--paper); padding: 18px; }
+    .source-basis { margin-top: 48px; border-top: 1px solid var(--line); padding-top: 22px; color: var(--muted); }
+    .site-footer { border-top: 1px solid var(--line); background: var(--paper); }
+    .site-footer-inner { padding: 28px 0 44px; color: var(--muted); font-size: .84rem; }
+    .site-footer-links { display: flex; flex-wrap: wrap; gap: 14px; margin-bottom: 12px; }
+    @media (max-width: 720px) {
+      .site-nav { align-items: flex-start; flex-direction: column; padding: 14px 0; }
+      .article-shell { padding-top: 32px; }
+      h1 { font-size: 2.35rem; }
+    }
+  </style>
+</head>
+<body data-ad-surface="editorial">
+  <header class="site-header">
+    <nav class="site-nav" aria-label="Primary">
+      <strong>KBBQ Idle Unity</strong>
+      <div class="nav-links"><a href="/">Home</a><a href="/guide.html">Project guide</a><a href="/architecture.html">Architecture</a><a href="/verification.html">Verification</a><a href="/publisher.html">Publisher</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a></div>
+    </nav>
+  </header>
+  <main class="article-shell">
+    <p class="breadcrumbs"><a href="/">Home</a> / Project guide</p>
+    <header class="article-intro">
+      <div class="kicker">Project guide</div>
+      <h1>Project Guide | KBBQ Idle Unity</h1>
+      <p class="lede">Free idle-game economy tuning sheet for Unity prototype balancing. This guide organizes the repository&#039;s original implementation notes for indie game developers and Unity learners.</p>
+      <p class="review-note">Reviewed 2026-07-28. This page is derived from checked-in repository evidence and links back to its source.</p>
+    </header>
+
+    <article><h2>KBBQ Idle WebGL (Unity 2022.3 LTS)</h2>
+<p><strong>Curated supporting repo</strong> This repository is kept as optional product proof beside the B2B flagship repositories. Current technical entry points: <strong>doeon-kim-portfolio and the B2B flagship repositories</strong>. Reason: Consumer gameplay work is useful as runtime evidence, but it is not the main enterprise AI story.</p>
+<p>K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드, 정적 배포 표면, 선택형 FastAPI 백엔드까지 함께 확인할 수 있도록 정리되어 있습니다.</p>
+<p>Updated: <strong>February 18, 2026</strong></p>
+<h3>기술 포지셔닝</h3>
+<ul><li>이 저장소는 “웹에 올린 Unity 빌드”보다, 실제 플레이 루프와 배포 검증을 같이 보여주는 게임 런타임 샘플에 가깝습니다.</li><li>핵심 증거는 플레이 가능한 빌드, build preflight, 정적 배포 표면, 그리고 배포 전 점검 문서가 한 세트로 이어지는지입니다.</li><li>빠르게 보려면 WebGL surface -&gt; core loop 설명 -&gt; docs/Build preflight 순서로 보는 편이 좋습니다.</li></ul>
+<h3>기술 스택 신호</h3>
+<ul><li><strong>Unity 2022.3 LTS:</strong> 실제 게임 루프, WebGL 빌드, build preflight까지 한 흐름으로 확인할 수 있습니다.</li><li><strong>Static hosting:</strong> 배포 문서, 정적 호스팅 경로, fallback UI가 명확하게 정리되어 있습니다.</li><li><strong>FastAPI optional backend:</strong> 리더보드, analytics, release readiness 경로를 선택적으로 붙일 수 있습니다.</li><li><strong>Monetization boundary:</strong> 광고와 IAP 설정은 기본 비활성입니다. 현재 저장소는 live ad network, mobile store checkout, verified IAP fulfillment가 활성 상태라고 주장하지 않습니다.</li></ul>
+<h3>System Overview</h3>
+<div class="table-scroll"><table><thead><tr><th>Lens</th><th>Decision signal</th></tr></thead><tbody><tr><td>Technical stack</td><td>Unity WebGL runtime, static hosting, optional FastAPI backend, and deterministic economy harness.</td></tr><tr><td>Product proof</td><td>The demo, workflow loop, and static proof surface show the current product direction without extra claims.</td></tr><tr><td>Review proof</td><td>Unity scene, docs front door, build preflight, deterministic economy harness, and runtime pages make the system reviewable in minutes.</td></tr><tr><td>Safety posture</td><td>Fallback behavior is explicit when WebGL artifacts are absent, and optional server paths are separated from the core playable review path.</td></tr></tbody></table></div>
+<h3>Evaluation Path</h3>
+<ul><li><strong>Start here:</strong> Open <code>Assets/Scenes/Main.unity</code>, play the grill loop, then inspect the WebGL <code>docs/</code> surface.</li><li><strong>Local demo:</strong> Build WebGL with <code>./tools/build_webgl_docs.sh</code>; optional backend review starts from <code>server/</code>.</li><li><strong>Checks:</strong> Run <code>python -m pytest</code> for the optional backend and <code>KBBQ/Validate Data</code> inside Unity for data checks.</li></ul>
+<h3>Architecture Notes</h3>
+<ul><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/architecture-evidence-map.md" rel="noopener">Review guide</a> summarizes the system scope, first files to inspect, verification commands, and known boundaries.</li><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/quality-gate.md" rel="noopener">Quality notes</a> lists the local checks, CI surface, and release expectations for this repository.</li><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/enterprise-readiness.md" rel="noopener">Enterprise readiness notes</a> outlines security, data, operations, integration, and handoff expectations.</li><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/repository-positioning.md" rel="noopener">Repository positioning</a> explains why this repository is archived/supporting and where the current technical entry points live.</li></ul>
+<h3>프로젝트 맥락</h3>
+<ul><li><strong>패밀리:</strong> 사람 중심 / 인터랙티브 제품군</li><li><strong>이 레포의 역할:</strong> 실제 플레이 루프와 배포 검증을 같이 보여주는 인터랙티브 런타임 샘플입니다.</li><li><strong>연결해서 볼 레포:</strong> <code>SteadyTap</code>, <code>ecotide</code>, <code>the-savior</code></li></ul>
+<h3>Start Here</h3>
+<ul><li>Primary game surface: <code>Assets/</code>, <code>Packages/</code>, <code>ProjectSettings/</code></li><li>WebGL publish surface: <code>docs/</code></li><li>Optional backend surface: <code>server/</code></li><li>Deterministic economy test harness: <code>sim/</code></li><li>Build/release helpers: <code>tools/</code></li></ul>
+<p>루트에는 설계 문서와 운영 자산이 함께 있지만, 실제 게임 작업은 <code>Assets/</code>에서 시작하고 배포 검증은 <code>docs/</code> 또는 <code>server/</code>에서 이어집니다.</p>
+<h3>First Review Move</h3>
+<ul><li>실제 게임 런타임을 보려면 <code>Assets/Scenes/Main.unity</code>를 열고 Play를 누르세요. 이 경로가 기준 런타임입니다.</li><li><code>docs/</code>는 Cloudflare Pages용 정적 런타임 surface입니다. <code>docs/Build/</code>에 실제 WebGL 산출물이 없으면 fallback screen이 보이는 것이 정상입니다.</li><li><code>server/</code>는 delivery/ops 증거를 위한 선택 경로이며, 기본 플레이 루프 확인의 필수 조건은 아닙니다.</li></ul>
+<h3>What Is In This Version</h3>
+<ul><li>4-slot grill gameplay loop (<code>load -&gt; flip -&gt; collect -&gt; serve</code>)</li><li>Pixel customer queue cards with speech bubbles + requested-cut icon</li><li>Manual serving flow with customer eating reaction animation</li><li>Upgrade modal UX + upgrade tier based grill visual changes</li><li>Stronger layered sizzling audio (loop + crackle)</li><li>Clearer HUD metrics (<code>$ currency</code>, served/customers/queue summary)</li><li>Gameplay summary surfaced directly in the perf overlay</li><li>Mobile/desktop responsive UI pass for WebGL embedding</li><li>Cloudflare Pages + review-friendly static pages (<code>docs/</code>)</li></ul>
+<h3>Core Gameplay Loop</h3>
+<ol><li>Buy raw meat.</li><li>Place meat on one of 4 grill slots.</li><li>Flip at the right timing.</li><li>Collect cooked meat to inventory.</li><li>Serve waiting customers for tips/combo.</li><li>Buy upgrades and repeat for higher throughput.</li></ol>
+<h3>Quick Start (Unity)</h3>
+<ol><li>Open with <strong>Unity 2022.3.62f3</strong>.</li><li>Open scene: <code>Assets/Scenes/Main.unity</code>.</li><li>Press Play.</li></ol>
+<p>Optional editor helpers:</p>
+<ul><li><code>KBBQ/Run Auto Setup</code></li><li><code>KBBQ/Validate Data</code></li></ul>
+<h3>WebGL Build</h3>
+<p>Build to <code>docs/</code>:</p>
+<pre><code>./tools/build_webgl_docs.sh</code></pre>
+<p>Output path:</p>
+<ul><li><code>docs/index.html</code></li><li><code>docs/Build/*</code></li></ul>
+<h3>Cloudflare Pages Deploy</h3>
+<p>Required settings:</p>
+<ul><li>Framework preset: <code>None</code></li><li>Root directory: <code>.</code></li><li>Build command: <code>(none)</code></li><li>Build output directory: <code>docs</code></li></ul>
+<p>Pre-deploy review gate:</p>
+<pre><code>./tools/release_ops.sh check</code></pre>
+<p>Production review configuration:</p>
+<pre><code></code></pre>
+<h3>Quality Gates</h3>
+<p>Full local gate:</p>
+<pre><code>tools/runtime_quality_gate.sh</code></pre>
+<p>This validates:</p>
+<ul><li>Unity checks (<code>tools/ci_unity_checks.sh</code>)</li><li>backend tests (<code>server/tests</code>)</li><li>deterministic sim tests (<code>sim/</code>)</li></ul>
+<h3>Repository Map</h3>
+<ul><li>Game code: <code>Assets/Scripts/</code></li><li>WebGL publish site: <code>docs/</code></li><li>Optional backend: <code>server/</code></li><li>Sim tests: <code>sim/</code></li><li>Ops/build tools: <code>tools/</code></li><li>Supporting review docs: <code>README.ko.md</code>, <code>README.en.md</code>, <code>docs/ops/RUNBOOK.md</code>, <code>docs/deployment/CLOUDFLARE_PAGES.md</code></li></ul>
+<h3>Docs Map</h3>
+<ul><li><code>README.md</code>: primary project overview and verification flow</li><li><code>README.ko.md</code>, <code>README.en.md</code>: language-specific summaries</li><li><code>docs/ops/RUNBOOK.md</code>: release/ops handoff notes</li><li><code>docs/deployment/CLOUDFLARE_PAGES.md</code>: WebGL publishing notes for Pages</li><li><code>server/README.md</code>: backend-only setup and API notes</li></ul>
+<h3>Review Surface</h3>
+<ul><li>Unity perf overlay now exposes <code>kbbq-idle-architecture-pack-v1</code> with live tier, queue, income, and service launch posture.</li><li>Optional backend exposes <code>GET /health</code>, <code>GET /meta</code>, <code>GET /readiness</code>, <code>GET /architecture-pack</code>, and <code>GET /ops/release-readiness</code> for delivery and ops review.</li><li>Recommended review order: inspect backend posture, play the grill loop in Unity/WebGL, then verify service launch remains optional.</li></ul>
+<h3>Review Flow</h3>
+<ul><li>Open <code>/health</code> and <code>/meta</code> to confirm runtime posture, enabled surfaces, and next action.</li><li>Open <code>/ops/release-readiness</code> before <code>/architecture-pack</code> to confirm launch blockers, operator rules, and release posture.</li><li>Open <code>/architecture-pack</code> to pin gameplay loop, economy contract, and service launch posture.</li><li>Run the Unity WebGL build or Editor scene and validate the grill -&gt; serve -&gt; upgrade loop.</li><li>Read the live perf overlay before claiming delivery or service launch readiness.</li></ul>
+<h3>Proof Assets</h3>
+<ul><li><code>Health Envelope</code> -&gt; <code>/health</code></li><li><code>Runtime Profile</code> -&gt; <code>/meta</code></li><li><code>Release Readiness</code> -&gt; <code>/ops/release-readiness</code></li><li><code>Review Pack</code> -&gt; <code>/architecture-pack</code></li><li><code>Economy Balance Drill</code> -&gt; <code>/ops/economy-balance-drill</code></li><li><code>Perf Overlay</code> -&gt; <code>Assets/Scripts/UI/PerfOverlayView.cs</code></li></ul>
+<h3>Documentation</h3>
+<ul><li>Korean README: <code>README.ko.md</code></li><li>English README: <code>README.en.md</code></li><li>Cloudflare deploy note: <code>docs/deployment/CLOUDFLARE_PAGES.md</code></li><li>Technical summaries: <code>docs/architecture/PROJECT_SUMMARY.ko.md</code>, <code>docs/architecture/PROJECT_SUMMARY.en.md</code></li></ul>
+<h3>Local Verification</h3>
+<pre><code>make verify</code></pre>
+<p>Requires Python 3.11+. If your default <code>python3</code> is older, run <code>make PYTHON=/path/to/python3.11 verify</code>.</p>
+<h3>Repository Hygiene</h3>
+<ul><li>Keep runtime artifacts out of commits (<code>.codex_runs/</code>, cache folders, temporary venvs).</li><li>Prefer running runtime commands above before opening a PR.</li></ul>
+<h3>Cloud + AI Architecture</h3>
+<ul><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/cloud-ai-architecture.md" rel="noopener">Cloud + AI architecture blueprint</a></li><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/architecture/blueprint.json" rel="noopener">Machine-readable architecture manifest</a></li><li>Validation command: <code>python3 scripts/validate_architecture_blueprint.py</code></li></ul>
+<h3>Enterprise Productization</h3>
+<ul><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/product-operating-model.md" rel="noopener">Product operating model</a> defines the product scope, trust boundary, operating checks, and service path for this repository.</li></ul>
+<h3>System Architecture</h3>
+<ul><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/system-architecture.md" rel="noopener">System architecture</a> maps the runtime boundary, data/control flow, cloud or local deployment surface, and operating assumptions for this repository.</li></ul>
+<h3>Service Architecture</h3>
+<ul><li><a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/service-architecture.md" rel="noopener">Service architecture</a> defines the cloud resources, account information, cost controls, and production guardrails needed to turn this repo into a scoped service without publishing public financial assumptions.</li></ul>
+<h3>Search And Service Surface</h3>
+<ul><li>Public entry: free WebGL build on Pages/itch.io</li><li>Paid boundary: private prototype customization for branded WebGL review builds, content planning, and monetization-readiness handoff</li><li>Canonical URL: https://kbbq-idle-unity.pages.dev/</li><li>Lead capture: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity&amp;inquiry=consumer-prototype-customization#private-inquiry</li><li>Resource route: https://kim3310-doeon-kim-portfolio.pages.dev/resources/kbbq-idle-unity/</li><li>Commercial route: https://kim3310-doeon-kim-portfolio.pages.dev/?offer=kbbq-idle-unity#service-offers</li><li>Machine-readable offer: <a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/service-offer.json" rel="noopener">docs/service-offer.json</a></li><li>Search growth implementation: <a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/search-growth-implementation.md" rel="noopener">docs/search-growth-implementation.md</a></li><li>Revenue architecture: <a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/docs/revenue-architecture.md" rel="noopener">docs/revenue-architecture.md</a></li><li>Claim boundary: ads and IAP are disabled by default; any mobile ads, store checkout, or purchase fulfillment must be integrated and verified before public activation claims.</li></ul></article>
+    <aside class="source-basis">
+      <strong>Source basis:</strong> <a href="https://github.com/KIM3310/kbbq-idle-unity/blob/main/README.md" rel="noopener">README.md</a>. Corrections can be proposed through the public repository without submitting private data.
+    </aside>
+  </main>
+  <footer class="site-footer">
+    <div class="site-footer-inner">
+      <div class="site-footer-links"><a href="/">Home</a><a href="/guide.html">Project guide</a><a href="/architecture.html">Architecture</a><a href="/verification.html">Verification</a><a href="/publisher.html">Publisher</a><a href="/privacy.html">Privacy</a><a href="/terms.html">Terms</a><a href="https://kim3310-doeon-kim-portfolio.pages.dev/">Resource atlas</a></div>
+      <p>Advertising may appear on this public editorial page after Google approves the site. Ads are not placed inside private, transactional, diagnostic, security-response, or operational workflows.</p>
+    </div>
+  </footer>
+</body>
+</html>
