@@ -1,4 +1,5 @@
 import json
+import logging
 import os
 import time
 import uuid
@@ -28,6 +29,9 @@ from server.security import (
     token_sha256,
     verify_signed_headers,
 )
+
+
+LOGGER = logging.getLogger(__name__)
 
 
 def _is_truthy(value: str) -> bool:
@@ -178,8 +182,9 @@ def _build_readiness_report() -> dict[str, object]:
         with _db_session() as db:
             db.execute("SELECT 1").fetchone()
         checks.append({"name": "db", "ok": True})
-    except Exception as exc:  # noqa: BLE001
-        checks.append({"name": "db", "ok": False, "error": str(exc)})
+    except Exception:  # noqa: BLE001
+        LOGGER.exception("Database readiness check failed")
+        checks.append({"name": "db", "ok": False, "error": "database health check failed"})
 
     if not _ops_token():
         warnings.append("KBBQ_OPS_TOKEN is not configured")
