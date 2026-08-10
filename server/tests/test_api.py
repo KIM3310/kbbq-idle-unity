@@ -196,6 +196,25 @@ class TestApi(unittest.TestCase):
         self.assertIn("kbbq_players_total", m.text)
         self.assertIn("kbbq_uptime_seconds", m.text)
 
+    def test_readiness_hides_database_exception_details(self):
+        private_detail = "unable to open /srv/private/customer-records.db: authorization denied"
+
+        with patch("server.app.get_db", side_effect=RuntimeError(private_detail)):
+            with self.assertLogs("server.app", level="ERROR") as captured_logs:
+                response = self._request("GET", "/readiness")
+
+        self.assertEqual(response.status_code, 200)
+        self.assertNotIn(private_detail, response.text)
+        payload = response.json()
+        self.assertFalse(payload.get("ready"))
+        self.assertEqual(payload.get("status"), "degraded")
+        db_check = next(check for check in payload["checks"] if check.get("name") == "db")
+        self.assertEqual(db_check, {"name": "db", "ok": False, "error": "database health check failed"})
+
+        server_logs = "\n".join(captured_logs.output)
+        self.assertIn("Database readiness check failed", server_logs)
+        self.assertIn(private_detail, server_logs)
+
     def test_ops_alerts_requires_token(self):
         denied = self._request("GET", "/ops/alerts")
         self.assertEqual(denied.status_code, 401)
