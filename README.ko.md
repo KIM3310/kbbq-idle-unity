@@ -2,8 +2,6 @@
 
 KBBQ Idle는 고기 굽기 루프 중심의 방치형/타이쿤 게임 프로젝트입니다. 현재 버전은 Unity WebGL 기준으로 Cloudflare Pages 배포에 맞춰 정리되어 있습니다.
 
-업데이트 기준: **2026년 2월 18일**
-
 ## 이번 버전 핵심 변경점
 - 4개 그릴 슬롯 기반의 조리 루프 강화
 - 손님 큐를 도트 카드 + 말풍선 + 요청 고기 아이콘으로 개선
@@ -54,7 +52,10 @@ KBBQ Idle는 고기 굽기 루프 중심의 방치형/타이쿤 게임 프로젝
 ./tools/release_ops.sh check
 ```
 
+엄격한 프로덕션 검토(외부 스크립트 플레이스홀더가 남아 있으면 실패):
+
 ```bash
+STRICT_EXTERNAL_SCRIPT_VALUES=1 ./tools/release_ops.sh check
 ```
 
 ## 품질 게이트

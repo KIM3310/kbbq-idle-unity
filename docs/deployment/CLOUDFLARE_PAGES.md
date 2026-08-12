@@ -1,7 +1,5 @@
 # Cloudflare Pages Deployment (KBBQ Idle WebGL)
 
-Updated: **February 18, 2026**
-
 ## Required Pages Settings
 - Framework preset: `None`
 - Root directory: `.`
@@ -30,9 +28,10 @@ Run policy/deploy checks:
 Expected result:
 - `PASS review gate`
 
-Placeholders exist by default. For production values:
+Placeholders exist by default. After replacing them, run the strict gate:
 
 ```bash
+STRICT_EXTERNAL_SCRIPT_VALUES=1 ./tools/release_ops.sh check
 ```
 
 Then run:

@@ -2,8 +2,6 @@
 
 KBBQ Idle is an idle/tycoon game project focused on a grill-management gameplay loop. The current version is tuned for Unity WebGL deployment on Cloudflare Pages.
 
-Updated: **February 18, 2026**
-
 ## System Overview
 
 A playable Unity WebGL project that proves shipping discipline through game loop, build pipeline, and release checks.
@@ -66,7 +64,10 @@ Run deployment review checks:
 ./tools/release_ops.sh check
 ```
 
+Strict production review (fails while placeholder external-script values remain):
+
 ```bash
+STRICT_EXTERNAL_SCRIPT_VALUES=1 ./tools/release_ops.sh check
 ```
 
 ## Quality Gate

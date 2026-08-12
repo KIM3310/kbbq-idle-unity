@@ -1,5 +1,7 @@
 # KBBQ Idle WebGL (Unity 2022.3 LTS)
 
+[한국어](README.md) | [English](README.en.md) | [한국어 요약](README.ko.md)
+
 > **Curated supporting repo**
 > This repository is kept as optional product proof beside the B2B flagship repositories.
 > Current technical entry points: **doeon-kim-portfolio and the B2B flagship repositories**.
@@ -7,7 +9,6 @@
 
 K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드, 정적 배포 표면, 선택형 FastAPI 백엔드까지 함께 확인할 수 있도록 정리되어 있습니다.
 
-Updated: **February 18, 2026**
 
 ## 기술 포지셔닝
 - 이 저장소는 “웹에 올린 Unity 빌드”보다, 실제 플레이 루프와 배포 검증을 같이 보여주는 게임 런타임 샘플에 가깝습니다.
@@ -117,9 +118,10 @@ Pre-deploy review gate:
 ./tools/release_ops.sh check
 ```
 
-Production review configuration:
+Production review configuration (fails while placeholder external-script values remain):
 
 ```bash
+STRICT_EXTERNAL_SCRIPT_VALUES=1 ./tools/release_ops.sh check
 ```
 
 ## Quality Gates
