@@ -12,7 +12,7 @@
   <meta property="og:title" content="Project Guide | KBBQ Idle Unity">
   <meta property="og:description" content="Free idle-game economy tuning sheet for Unity prototype balancing. Source-backed guide for indie game developers and Unity learners.">
   <meta property="og:url" content="https://kbbq-idle-unity.pages.dev/guide">
-  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Project Guide | KBBQ Idle Unity","description":"Free idle-game economy tuning sheet for Unity prototype balancing. Source-backed guide for indie game developers and Unity learners.","url":"https://kbbq-idle-unity.pages.dev/guide","dateModified":"2026-07-28","author":{"@type":"Person","name":"KIM3310","url":"https://github.com/KIM3310"},"publisher":{"@type":"Person","name":"KIM3310","url":"https://kim3310-doeon-kim-portfolio.pages.dev"},"isAccessibleForFree":true}</script>
+  <script type="application/ld+json">{"@context":"https://schema.org","@type":"TechArticle","headline":"Project Guide | KBBQ Idle Unity","description":"Free idle-game economy tuning sheet for Unity prototype balancing. Source-backed guide for indie game developers and Unity learners.","url":"https://kbbq-idle-unity.pages.dev/guide","dateModified":"2026-07-28","author":{"@type":"Person","name":"Doeon Kim","alternateName":"KIM3310","url":"https://github.com/KIM3310","sameAs":["https://kim3310-doeon-kim-portfolio.pages.dev","https://www.linkedin.com/in/doeon-kim-4742a2388"]},"publisher":{"@type":"Person","name":"Doeon Kim","alternateName":"KIM3310","url":"https://kim3310-doeon-kim-portfolio.pages.dev","sameAs":["https://github.com/KIM3310","https://www.linkedin.com/in/doeon-kim-4742a2388"]},"isAccessibleForFree":true}</script>
   <script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4973160293737562" crossorigin="anonymous"></script>
   <style>
     :root { color-scheme: light; --ink: #17201f; --muted: #52605d; --line: #cbd2ce; --paper: #ffffff; --ground: #f5f6f4; --green: #126455; --coral: #c94732; --gold: #b67a00; }
@@ -76,7 +76,6 @@
     <article><h2>KBBQ Idle WebGL (Unity 2022.3 LTS)</h2>
 <p><strong>Curated supporting repo</strong> This repository is kept as optional product proof beside the B2B flagship repositories. Current technical entry points: <strong>doeon-kim-portfolio and the B2B flagship repositories</strong>. Reason: Consumer gameplay work is useful as runtime evidence, but it is not the main enterprise AI story.</p>
 <p>K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity WebGL 빌드, 정적 배포 표면, 선택형 FastAPI 백엔드까지 함께 확인할 수 있도록 정리되어 있습니다.</p>
-<p>Updated: <strong>February 18, 2026</strong></p>
 <h3>기술 포지셔닝</h3>
 <ul><li>이 저장소는 “웹에 올린 Unity 빌드”보다, 실제 플레이 루프와 배포 검증을 같이 보여주는 게임 런타임 샘플에 가깝습니다.</li><li>핵심 증거는 플레이 가능한 빌드, build preflight, 정적 배포 표면, 그리고 배포 전 점검 문서가 한 세트로 이어지는지입니다.</li><li>빠르게 보려면 WebGL surface -&gt; core loop 설명 -&gt; docs/Build preflight 순서로 보는 편이 좋습니다.</li></ul>
 <h3>기술 스택 신호</h3>
@@ -112,8 +111,8 @@
 <ul><li>Framework preset: <code>None</code></li><li>Root directory: <code>.</code></li><li>Build command: <code>(none)</code></li><li>Build output directory: <code>docs</code></li></ul>
 <p>Pre-deploy review gate:</p>
 <pre><code>./tools/release_ops.sh check</code></pre>
-<p>Production review configuration:</p>
-<pre><code></code></pre>
+<p>Production review configuration (fails while placeholder external-script values remain):</p>
+<pre><code>STRICT_EXTERNAL_SCRIPT_VALUES=1 ./tools/release_ops.sh check</code></pre>
 <h3>Quality Gates</h3>
 <p>Full local gate:</p>
 <pre><code>tools/runtime_quality_gate.sh</code></pre>
