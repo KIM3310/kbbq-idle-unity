@@ -13,11 +13,10 @@ license = { text = "MIT" }
 dependencies = [
   "fastapi==0.141.1",
   "starlette>=1.4.1",
-  "uvicorn[standard]==0.52.1",
+  "uvicorn[standard]==0.52.4",
   "pydantic==2.13.4",
-  "python-dotenv==1.2.2",
-  "httpx==0.28.1",
-  "pytest==9.1.1"
+  "python-dotenv==1.2.3",
+  "httpx==0.28.1"
 ]
 
 [project.optional-dependencies]
