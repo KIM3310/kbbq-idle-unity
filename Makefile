@@ -1,4 +1,4 @@
-.SHELLFLAGS := -eu -o pipefail -c
+.SHELLFLAGS := -eu -c
 PYTHON ?= python3
 VENV ?= .venv
 VENV_PYTHON := $(VENV)/bin/python
@@ -23,7 +23,9 @@ $(VENV_STAMP): pyproject.toml $(VENV_PYTHON)
 install: $(VENV_STAMP)
 
 backend-test: install
-	$(VENV_PYTHON) -m pytest -q
+	$(VENV_PYTHON) -m pip check
+	$(VENV_PYTHON) -m compileall -q server
+	$(VENV_PYTHON) -m pytest -W error -q
 
 repository-verify:
 	$(PYTHON) scripts/validate_repository_surface.py

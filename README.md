@@ -1,5 +1,7 @@
 # KBBQ Idle WebGL (Unity 2022.3 LTS)
 
+[![CI](https://github.com/KIM3310/kbbq-idle-unity/actions/workflows/ci.yml/badge.svg)](https://github.com/KIM3310/kbbq-idle-unity/actions/workflows/ci.yml)
+
 [한국어](README.md) | [English](README.en.md) | [한국어 요약](README.ko.md)
 
 > **Curated supporting repo**
@@ -45,7 +47,7 @@ K-BBQ 테마의 idle/tycoon 게임 프로젝트입니다. 최신 버전은 Unity
 - [Review guide](docs/architecture-evidence-map.md) summarizes the system scope, first files to inspect, verification commands, and known boundaries.
 - [Quality notes](docs/quality-gate.md) lists the local checks, CI surface, and release expectations for this repository.
 - [Enterprise readiness notes](docs/enterprise-readiness.md) outlines security, data, operations, integration, and handoff expectations.
-- [Repository positioning](docs/repository-positioning.md) explains why this repository is archived/supporting and where the current technical entry points live.
+- [Repository positioning](docs/repository-positioning.md) explains why this active repository is a supporting project rather than a portfolio flagship and where the current technical entry points live.
 
 ## 프로젝트 맥락
 - **패밀리:** 사람 중심 / 인터랙티브 제품군

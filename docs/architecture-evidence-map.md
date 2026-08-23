@@ -9,7 +9,7 @@ This repository is now curated as supporting material. Use it only after the fla
 | Field | Notes |
 |---|---|
 | Repository | `kbbq-idle-unity` |
-| Status | Archived supporting repository |
+| Status | Supporting (active; not a flagship) |
 | Lane | B2C gameplay prototype |
 | Technical stack | Unity WebGL, static hosting, optional FastAPI backend, deterministic simulation tests. |
 | Why it moved back | Consumer gameplay work distracts from the enterprise AI and infrastructure story. |
@@ -20,7 +20,7 @@ This repository is now curated as supporting material. Use it only after the fla
 1. Start with the successor repositories named above.
 2. Use this repository only for optional domain breadth or historical product exploration.
 3. Check `docs/repository-positioning.md` before presenting it externally.
-4. Keep the archived/supporting status visible in any external writeup or technical walkthrough.
+4. Keep its active supporting (not flagship) status visible in any external writeup or technical walkthrough.
 
 ## Evidence
 
