@@ -40,6 +40,34 @@ public class MathTests
         Assert.Equal(10 * (8 * 3600) * 0.6, income, 6);
     }
 
+    [Theory]
+    [InlineData(0)]
+    [InlineData(-1)]
+    public void DisabledOfflineCapGrantsNothing(int cap)
+    {
+        Assert.Equal(0, OfflineEarningsMath.Calculate(10000, 1, 10, cap));
+    }
+
+    [Theory]
+    [InlineData(double.NaN)]
+    [InlineData(double.PositiveInfinity)]
+    [InlineData(-1)]
+    [InlineData(double.MaxValue)]
+    public void InvalidOrOverflowingIncomeGrantsNothing(double income)
+    {
+        Assert.Equal(0, OfflineEarningsMath.Calculate(10000, 1, income));
+    }
+
+    [Fact]
+    public void FutureMissingAndExtremeClocksAreBounded()
+    {
+        Assert.Equal(0, OfflineEarningsMath.Calculate(100, 101, 10));
+        Assert.Equal(0, OfflineEarningsMath.Calculate(100, 0, 10));
+        Assert.Equal(10 * 8 * 3600 * 0.6, OfflineEarningsMath.Calculate(long.MaxValue, 1, 10));
+        Assert.Equal(0, OfflineEarningsMath.Calculate(100, 1, 10, 8, double.NaN));
+        Assert.Equal(0, OfflineEarningsMath.Calculate(100, 1, 10, 8, 1.1));
+    }
+
     [Fact]
     public void PrestigeMath_NotReady_UnderThreshold()
     {

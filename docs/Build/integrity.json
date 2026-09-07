@@ -1,0 +1,23 @@
+{
+  "schema": "kbbq-webgl-integrity-v1",
+  "buildGeneratedAtUtc": "2026-02-20T09:43:13.9661220Z",
+  "scope": "Existing historical WebGL build, not rebuilt from the current source. Shared offline earnings fix is verified separately by .NET.",
+  "files": {
+    "Build/KBBQIdleWebGL.data": {
+      "bytes": 2914295,
+      "sha256": "52f7764c0dd85e130bbd5bb88072bb4c2b0ba6430ac69dcd6dd44965c16924de"
+    },
+    "Build/KBBQIdleWebGL.framework.js": {
+      "bytes": 356575,
+      "sha256": "719e86d52af50c6cd1d989674ae2f5a8d3393408febc580e6302c636d6b84a34"
+    },
+    "Build/KBBQIdleWebGL.loader.js": {
+      "bytes": 20680,
+      "sha256": "95d413ec942c6764ee89174a13da7a4c7f80567f6a4fb43992a6e8273c3b93d2"
+    },
+    "Build/KBBQIdleWebGL.wasm": {
+      "bytes": 11729016,
+      "sha256": "0264193009a005760a2cccd87aade94e7cee3ef626b9df488b89b6623c9895a8"
+    }
+  }
+}
