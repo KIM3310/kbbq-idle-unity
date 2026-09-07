@@ -4,7 +4,7 @@ A Unity idle-management prototype with economy progression, offline earnings, sa
 
 **Game systems · C# · bounded economy calculations**
 
-[Preview](https://kim3310.github.io/kbbq-idle-unity/) · [Verification and design](docs/VERIFICATION.md) · [CI](https://github.com/KIM3310/kbbq-idle-unity/actions) · [Detailed setup](REFERENCE.md)
+[Preview](https://kbbq-idle-unity.pages.dev) · [Verification and design](docs/VERIFICATION.md) · [CI](https://github.com/KIM3310/kbbq-idle-unity/actions) · [Detailed setup](REFERENCE.md)
 
 ```mermaid
 flowchart LR
