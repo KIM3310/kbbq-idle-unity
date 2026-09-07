@@ -1,18 +1,11 @@
-# Repository Positioning - KBBQ Idle WebGL (Unity 2022.3 LTS)
+# KBBQ Idle Unity in Selected Work
 
-Updated: 2026-05-30
+Updated 2026-09-07.
 
-## Curation Decision
+This project adds **game systems · c# · bounded economy calculations** to the portfolio. Selection is based on distinct, inspectable implementation rather than a particular employment role or startup category.
 
-| Field | Decision |
-|---|---|
-| Status | Supporting (active; not a flagship) |
-| Why | Consumer gameplay work distracts from the enterprise AI and infrastructure story. |
-| Show instead | doeon-kim-portfolio and the B2B flagship repositories |
-| Still useful for | Keep as a creative side experiment only. |
+12 .NET tests pass, including zero/negative caps, invalid/overflowing income and extreme clocks. 10 backend tests and repository/architecture/monetization checks pass. The existing WebGL files match recorded hashes and the complete WASM module validates.
 
-## Operating Rule
+The playable WebGL artifact was generated on 2026-02-20 and has not been rebuilt from this revision. The new shared economy fix is verified by .NET, not by a fresh Unity player build. Unity Editor/gameplay execution and release rebuild require an available licensed Unity environment.
 
-- Keep this repository available, but do not lead with it.
-- Use it only when this exact domain, stack, or product pattern is relevant.
-- Do not lead with it unless its portfolio role changes based on fresh operating data and a narrow architecture path.
+[Implementation entry points](../README.md) · [Verification](VERIFICATION.md)

@@ -54,5 +54,8 @@ jobs:
           sudo apt-get update
           sudo apt-get install -y ripgrep
 
+      - name: Verify historical WebGL files
+        run: python3 scripts/verify_webgl_integrity.py
+
       - name: Deployment review gate
         run: bash tools/release_ops.sh check
